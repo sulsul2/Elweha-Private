@@ -1,16 +1,24 @@
+import { FormEventHandler, MouseEventHandler } from "react";
+
 function Button({
   text,
   type,
   style,
+  onClick,
+  onSubmit,
 }: {
   text: string;
   type: "button" | "submit" | "reset" | undefined;
   style: "primary" | "seccondary" | "third";
+  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+  onSubmit?: FormEventHandler<HTMLButtonElement> | undefined;
 }) {
   return (
     <>
       <button
         type={type}
+        onClick={onClick}
+        onSubmit={onSubmit}
         className={`h-[41px] w-[173px] rounded-[10px] text-16 font-bold ${
           style == "primary"
             ? "bg-kOrange-400 text-white hover:bg-kOrange-300 active:bg-kOrange-500"
