@@ -5,12 +5,15 @@ export default {
     extend: {
       fontFamily: { lato: ["Lato", "sans-serif", "system-ui"] },
       colors: {
-        orange: "#FD6701",
-        seccondaryOrange: "#FFD7BC",
-        green: "#00C653",
-        red: "#EE0000",
-        text: "#424242",
-        grey: { 100: "#B8B5B5", 200: "#A8A8A8", 300: "#6B6B6B" },
+        kOrange: {
+          primary: "#FD6701",
+          seccondary: "F5BA93",
+          third: "#FFD7BC",
+        },
+        kGreen: "#00C653",
+        kRed: "#EE0000",
+        kText: "#424242",
+        kGrey: { 100: "#B8B5B5", 200: "#A8A8A8", 300: "#6B6B6B" },
         background: "#FFFAF6",
         seccondaryWhite: "#F5F5F5",
       },
