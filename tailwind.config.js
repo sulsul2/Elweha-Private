@@ -6,9 +6,11 @@ export default {
       fontFamily: { lato: ["Lato", "sans-serif", "system-ui"] },
       colors: {
         kOrange: {
-          primary: "#FD6701",
-          seccondary: "F5BA93",
-          third: "#FFD7BC",
+          100: "#FFD7BC",
+          200: "#F5BA93",
+          300: "#FF9954",
+          400: "#FD6701",
+          500: "#C85100",
         },
         kGreen: "#00C653",
         kRed: "#EE0000",
