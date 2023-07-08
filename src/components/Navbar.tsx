@@ -73,6 +73,17 @@ function Navbar() {
           alt="Elweha"
           className="hidden h-[66px] p-2 lg:block"
         />
+        <h1 className="mx-auto text-24 font-bold text-kText lg:hidden">
+          {active == 0
+            ? "Dashboard"
+            : active == 1
+            ? "Pendapatan"
+            : active == 2
+            ? "Pengeluaran"
+            : active == 3
+            ? "Pajak"
+            : "Stok"}
+        </h1>
         <div
           className={`${
             !navOpen && "-left-full"
