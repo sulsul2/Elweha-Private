@@ -68,11 +68,13 @@ function Navbar() {
             } duration-300 ease-in-out`}
           ></span>
         </button>
-        <img
-          src="assets/logo.svg"
-          alt="Elweha"
-          className="hidden h-[66px] p-2 lg:block"
-        />
+        <a href="#">
+          <img
+            src="assets/logo.svg"
+            alt="Elweha"
+            className="hidden h-[66px] p-2 lg:block"
+          />
+        </a>
         <h1 className="mx-auto text-24 font-bold text-kText lg:hidden">
           {active == 0
             ? "Dashboard"
@@ -89,11 +91,13 @@ function Navbar() {
             !navOpen && "-left-full"
           } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] lg:static lg:block lg:h-auto lg:w-auto lg:bg-transparent lg:py-0 lg:shadow-none`}
         >
-          <img
-            src="assets/logo.svg"
-            alt="Elweha"
-            className="mx-auto mb-7 mt-2 h-[60px] lg:hidden"
-          />
+          <a href="#">
+            <img
+              src="assets/logo.svg"
+              alt="Elweha"
+              className="mx-auto mb-7 mt-2 h-[60px] lg:hidden"
+            />
+          </a>
           <div className="flex flex-col px-7 lg:mt-0 lg:flex-row lg:items-center lg:gap-[24px] lg:px-0">
             <a
               href="#"
@@ -149,7 +153,7 @@ function Navbar() {
                 <img
                   src=""
                   className="account-detail hamburger h-12 w-12 shrink-0 rounded-full bg-kGrey-100"
-                  alt=""
+                  alt="Profile"
                 />
                 <div className="account-detail hamburger ml-3">
                   <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] lg:w-[60px] xl:w-[240px]">
