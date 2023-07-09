@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { LegacyRef, MouseEventHandler, forwardRef, useState } from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,8 +13,8 @@ function DateFieldRange({ text }: { text: string }) {
   };
   const CustomInput = forwardRef(
     (
-      { value, onClick }: { value: any | undefined; onClick: any | undefined },
-      ref: any
+      { value, onClick }: { value: string | number | readonly string[] | undefined; onClick: MouseEventHandler<HTMLInputElement> | undefined;},
+      ref: LegacyRef<HTMLInputElement> | undefined
     ) => (
       <input
         value={value}
