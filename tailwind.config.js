@@ -13,6 +13,7 @@ export default {
           500: "#C85100",
         },
         kGreen: "#00C653",
+        kBlue: "#3D8DF5",
         kRed: "#EE0000",
         kText: "#424242",
         kGrey: { 100: "#B8B5B5", 200: "#A8A8A8", 300: "#6B6B6B" },
