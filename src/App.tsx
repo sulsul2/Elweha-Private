@@ -1,9 +1,10 @@
-import Dropdown from "./components/Dropdown";
+// import Dropdown from "./components/Dropdown";
+import TextField from "./components/TextField";
 
 function App() {
   return (
     <>
-      <Dropdown placeholder="Kategori" type="Kategori" />
+      <TextField style="px-80" type="action right" label="Label" placeholder="Placeholder" helpertext="Helper Text" />
     </>
   );
 }

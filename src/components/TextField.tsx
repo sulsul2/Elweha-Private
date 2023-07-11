@@ -1,5 +1,5 @@
 // import as from '../../public/Union.svg'
-import { useState } from 'react';
+import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 function TextField({
@@ -19,7 +19,7 @@ function TextField({
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
   value?: string | number | readonly string[] | undefined;
 }) {
-  const [inputValue, setInputValue] = useState(value || '');
+  const [inputValue, setInputValue] = useState(value || "");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -40,126 +40,158 @@ function TextField({
     }
   };
   const handleClear = () => {
-    setInputValue('');
+    setInputValue("");
   };
 
   return (
     <>
-
-          
-        {type == "standart" && (
+      {type == "standart" && (
         <div className={style + " w-full"}>
-          <label htmlFor={label} className="text-[#161616]">
+          <label
+            htmlFor={label}
+            className="disabled:opacity-30 text-[18px] font-semibold text-black"
+          >
             {label}
-          </label>    
+          </label>
           <div className="relative">
             <input
               type="text"
               placeholder={placeholder}
-              className="w-full  p-3 border-2 border-[#A8A8A8] rounded-lg placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] caret-[#186ADE]"
+              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full  rounded-lg border-2 border-[#A8A8A8] p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
               value={inputValue}
               onChange={handleChange}
             />
             {inputValue && (
               <button
-                className="font-semibold absolute top-[27%] right-[5%] md:right-[3%] lg:right-[2%] focus:text-[#186ADE]"
+                className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
                 onClick={handleClear}
               >
                 ✖
               </button>
             )}
           </div>
-        </div>)}
+          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+        </div>
+      )}
 
-        {type == 'action right' && (
+      {type == "action right" && (
         <div className={style + " w-full"}>
-          <label htmlFor={label} className="text-[#161616]">
+          <label
+            htmlFor={label}
+            className="text-[18px] font-semibold text-black"
+          >
             {label}
           </label>
           <div className="relative">
             <input
               type={currType}
               placeholder={placeholder}
-              className="w-full  p-3 border-2 border-[#A8A8A8] rounded-lg placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] caret-[#186ADE]"
+              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full  rounded-lg border-2 border-[#A8A8A8] p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
               value={inputValue}
               onChange={handleChange}
             />
             <span
-            className="absolute top-[27%] right-[2%] text-lg lg:text-2xl cursor-pointer"
-            onClick={handleToggle}>
-            {icon}
+              className="absolute right-[2%] top-[27%] cursor-pointer text-lg lg:text-2xl"
+              onClick={handleToggle}
+            >
+              {icon}
             </span>
           </div>
-        </div>)}
-          
-        {type == 'icon left' && (
+          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+        </div>
+      )}
+
+      {type == "icon left" && (
         <div className={style + " w-full"}>
-          <label htmlFor={label} className="text-[#161616]">
+          <label
+            htmlFor={label}
+            className="text-[18px] font-semibold text-black"
+          >
             {label}
           </label>
           <div className="relative">
-            <img src="../../public/assets/Union.svg" alt="" className='absolute top-[30%] left-[3%] md:left-[2%] lg:left-[1%]' />
+            <img
+              src="../../public/assets/Union.svg"
+              alt=""
+              className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
+            />
             <input
               type="text"
               placeholder={placeholder}
-              className="w-full px-10 p-3 border-2 border-[#A8A8A8] rounded-lg placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] caret-[#186ADE]"
+              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
               value={inputValue}
               onChange={handleChange}
             />
             {inputValue && (
               <button
-                className="font-semibold absolute top-[27%] right-[5%] md:right-[3%] lg:right-[2%] focus:text-[#186ADE]"
+                className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
                 onClick={handleClear}
               >
                 ✖
               </button>
             )}
           </div>
-        </div>)}
+          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+        </div>
+      )}
 
-        {type == 'icon + action' && (
+      {type == "icon + action" && (
         <div className={style + " w-full"}>
-          <label htmlFor={label} className="text-[#161616]">
+          <label
+            htmlFor={label}
+            className="text-[18px] font-semibold text-black"
+          >
             {label}
           </label>
-            <div className="relative">
-            <img src="../../public/assets/lock.svg" alt="" className='absolute top-[30%] left-[3%] md:left-[2%] lg:left-[1%]' />
+          <div className="relative">
+            <img
+              src="../../public/assets/lock.svg"
+              alt=""
+              className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
+            />
             <input
               type={currType}
               placeholder={placeholder}
-              className="w-full px-10 p-3 border-2 border-[#A8A8A8] rounded-lg placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] caret-[#186ADE]"
+              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
               value={inputValue}
               onChange={handleChange}
             />
             <span
-            className="absolute top-[27%] right-[2%] text-lg lg:text-2xl cursor-pointer"
-            onClick={handleToggle}>
-            {icon}
+              className="absolute right-[2%] top-[27%] cursor-pointer text-lg lg:text-2xl"
+              onClick={handleToggle}
+            >
+              {icon}
             </span>
           </div>
-        </div>)}
+          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+        </div>
+      )}
 
-          {type == 'search' && (
-          <div className="relative">
-            <img src="../../public/assets/search.svg" alt="" className='absolute top-[30%] left-[3%] md:left-[2%] lg:left-[1%]' />
-            <input
-              type='text'
-              placeholder={placeholder}
-              className="w-full px-10 p-3 border-2 border-[#A8A8A8] rounded-lg placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] caret-[#186ADE]"
-              value={inputValue}
-              onChange={handleChange}
-            />
-            {inputValue && (
-              <button
-                className="font-semibold absolute top-[27%] right-[5%] md:right-[3%] lg:right-[2%] focus:text-[#186ADE]"
-                onClick={handleClear}
-              >
-                ✖
-              </button>
-            )}
-          </div>)}
-
-          <span className="text-[#6B6B6B]">{helpertext}</span>
+      {type == "search" && (
+        <div className="relative">
+          <img
+            src="../../public/assets/search.svg"
+            alt=""
+            className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
+          />
+          <input
+            type="text"
+            placeholder={placeholder}
+            className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+            value={inputValue}
+            onChange={handleChange}
+          />
+          {inputValue && (
+            <button
+              className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
+              onClick={handleClear}
+            >
+              ✖
+            </button>
+          )}
+          <span className="text-14 text-[#6B6B6B]">{helpertext}</span>
+        </div>
+      )}
     </>
   );
 }
