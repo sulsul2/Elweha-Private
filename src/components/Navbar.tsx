@@ -88,7 +88,7 @@ function Navbar() {
         </h1>
         <div
           className={`${
-            !navOpen && "-left-full"
+            !navOpen && "-translate-x-full"
           } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] lg:static lg:block lg:h-auto lg:w-auto lg:bg-transparent lg:py-0 lg:shadow-none`}
         >
           <a href="#">
