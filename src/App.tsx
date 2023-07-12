@@ -1,9 +1,7 @@
-import Dropdown from "./components/Dropdown";
-
 function App() {
   return (
     <>
-      <Dropdown placeholder="Kategori" type="Kategori" />
+      <p className="">Click on the Vite and React logos to learn more</p>
     </>
   );
 }
