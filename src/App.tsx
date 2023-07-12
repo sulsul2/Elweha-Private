@@ -1,10 +1,9 @@
-import DateFieldNormal from "./components/DateFieldNormal";
-import DateFieldRange from "./components/DateFieldRange";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
   <>
-  <DateFieldNormal text="Pick a date"/>
+  <Navbar/>
   </>);
 }
 
