@@ -11,7 +11,9 @@ function Paginate({ totalPages }: { totalPages: number }) {
     pageNumbers.push(
       <li
         key={i}
-        className={`cursor-pointer px-2 ${currentPage === i ? "border-2 border-[#FD6701]" : ""}`}
+        className={`cursor-pointer px-2 ${
+          currentPage === i ? "border-2 border-[#FD6701]" : ""
+        }`}
         onClick={() => handlePageChange(i)}
       >
         {i}
@@ -47,19 +49,27 @@ function Paginate({ totalPages }: { totalPages: number }) {
   };
   return (
     <>
-      <ul className="w-auto flex justify-center items-center gap-2">
+      <ul className="flex w-auto items-center justify-center gap-2">
         <li
-          className={currentPage > 1 ? "w-6 h-6 flex justify-center items-center cursor-pointer bg-[#FD6701] text-white html" : "hidden"}
+          className={
+            currentPage > 1
+              ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-[#FD6701] text-white"
+              : "hidden"
+          }
           onClick={() => handlePageChange(currentPage - 1)}
         >
-          <img src="/less.svg"/>
+          <img src="assets/less.svg" />
         </li>
         {renderPage()}
         <li
-          className={currentPage < totalPages ? "w-6 h-6 flex justify-center items-center cursor-pointer bg-[#FD6701] text-white html" : "hidden"}
+          className={
+            currentPage < totalPages
+              ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-[#FD6701] text-white"
+              : "hidden"
+          }
           onClick={() => handlePageChange(currentPage + 1)}
         >
-          <img src="/more.svg"/>
+          <img src="assets/more.svg" />
         </li>
       </ul>
     </>
