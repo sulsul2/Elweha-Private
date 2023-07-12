@@ -1,4 +1,4 @@
-import Select from "react-select";
+import Select, { ActionMeta, SingleValue } from "react-select";
 
 const options = [
   { value: "chocolate", label: "Chocolate" },
@@ -18,7 +18,18 @@ const options = [
 interface DropdownProps {
   placeholder: string;
   type: string;
-  onChange?: any;
+  onChange?:
+    | ((
+        newValue: SingleValue<{
+          value: string;
+          label: string;
+        }>,
+        actionMeta: ActionMeta<{
+          value: string;
+          label: string;
+        }>
+      ) => void)
+    | undefined;
   value?: string;
 }
 
