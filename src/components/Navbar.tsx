@@ -32,7 +32,7 @@ function Navbar() {
 
   return (
     <>
-      <div className="fixed flex h-[80px] w-full items-center justify-between bg-white px-3 lg:px-3 xl:px-7">
+      <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white px-3 lg:px-3 xl:px-7">
         <button
           type="button"
           className={`${
