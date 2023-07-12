@@ -1,4 +1,4 @@
-// import as from '../../public/Union.svg'
+// import as from 'Union.svg'
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
@@ -11,7 +11,7 @@ function TextField({
   onChange,
   value,
 }: {
-  style: string;
+  style?: string;
   type: "standart" | "action right" | "icon left" | "icon + action" | "search";
   label: string;
   placeholder: string;
@@ -49,7 +49,7 @@ function TextField({
         <div className={style + " w-full"}>
           <label
             htmlFor={label}
-            className="disabled:opacity-30 text-[18px] font-semibold text-black"
+            className="text-[18px] font-semibold text-black disabled:opacity-30"
           >
             {label}
           </label>
@@ -57,7 +57,9 @@ function TextField({
             <input
               type="text"
               placeholder={placeholder}
-              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full  rounded-lg border-2 border-[#A8A8A8] p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+              className={`w-full rounded-lg border-2  ${
+                helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
+              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -70,7 +72,9 @@ function TextField({
               </button>
             )}
           </div>
-          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+          {helpertext != "" && (
+            <span className="text-14 text-kRed">{helpertext}</span>
+          )}
         </div>
       )}
 
@@ -86,18 +90,22 @@ function TextField({
             <input
               type={currType}
               placeholder={placeholder}
-              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full  rounded-lg border-2 border-[#A8A8A8] p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+              className={`w-full rounded-lg border-2  ${
+                helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
+              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
             <span
-              className="absolute right-[2%] top-[27%] cursor-pointer text-lg lg:text-2xl"
+              className="absolute right-[2%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
               onClick={handleToggle}
             >
               {icon}
             </span>
           </div>
-          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+          {helpertext != "" && (
+            <span className="text-14 text-kRed">{helpertext}</span>
+          )}
         </div>
       )}
 
@@ -111,14 +119,16 @@ function TextField({
           </label>
           <div className="relative">
             <img
-              src="../../public/assets/Union.svg"
+              src="assets/Union.svg"
               alt=""
               className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
             />
             <input
               type="text"
               placeholder={placeholder}
-              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+              className={`w-full rounded-lg border-2 ${
+                helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
+              } p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -131,7 +141,9 @@ function TextField({
               </button>
             )}
           </div>
-          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+          {helpertext != "" && (
+            <span className="text-14 text-kRed">{helpertext}</span>
+          )}
         </div>
       )}
 
@@ -145,39 +157,43 @@ function TextField({
           </label>
           <div className="relative">
             <img
-              src="../../public/assets/lock.svg"
+              src="assets/lock.svg"
               alt=""
-              className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
+              className="absolute left-[5%] top-[30%] md:left-[2%] lg:left-[1%]"
             />
             <input
               type={currType}
               placeholder={placeholder}
-              className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+              className={`w-full rounded-lg border-2 ${
+                helpertext != "" ? "text-kRed" : "border-[#A8A8A8]"
+              } p-3 px-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:px-12`}
               value={inputValue}
               onChange={handleChange}
             />
             <span
-              className="absolute right-[2%] top-[27%] cursor-pointer text-lg lg:text-2xl"
+              className="absolute right-[2%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
               onClick={handleToggle}
             >
               {icon}
             </span>
           </div>
-          <span className="text-[#6B6B6B] text-14">{helpertext}</span>
+          {helpertext != "" && (
+            <span className="text-14 text-kRed">{helpertext}</span>
+          )}
         </div>
       )}
 
       {type == "search" && (
         <div className="relative">
           <img
-            src="../../public/assets/search.svg"
+            src="assets/search.svg"
             alt=""
             className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
           />
           <input
             type="text"
             placeholder={placeholder}
-            className="disabled:opacity-30 disabled:border-[#6B6B6B] w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE]"
+            className="w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
             value={inputValue}
             onChange={handleChange}
           />
@@ -189,7 +205,6 @@ function TextField({
               ✖
             </button>
           )}
-          <span className="text-14 text-[#6B6B6B]">{helpertext}</span>
         </div>
       )}
     </>

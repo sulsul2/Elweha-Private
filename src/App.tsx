@@ -1,11 +1,5 @@
-import Dropdown from "./components/Dropdown";
-
 function App() {
-  return (
-    <>
-      <Dropdown placeholder="Kategori" type="Kategori" />
-    </>
-  );
+  return <></>;
 }
 
 export default App;
