@@ -32,7 +32,7 @@ function Navbar() {
 
   return (
     <>
-      <div className="fixed flex h-[80px] w-full items-center justify-between bg-white px-3 lg:px-14">
+      <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white px-3 lg:px-3 xl:px-7">
         <button
           type="button"
           className={`${
@@ -83,12 +83,16 @@ function Navbar() {
             : active == 2
             ? "Pengeluaran"
             : active == 3
-            ? "Pajak"
-            : "Stok"}
+            ? "Pajak Rekan"
+            : active == 4
+            ? "Stok"
+            : active == 5
+            ? "Pajak Perusahaan"
+            : "Gaji"}
         </h1>
         <div
           className={`${
-            !navOpen && "-left-full"
+            navOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
           } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] lg:static lg:block lg:h-auto lg:w-auto lg:bg-transparent lg:py-0 lg:shadow-none`}
         >
           <a href="#">
@@ -98,7 +102,7 @@ function Navbar() {
               className="mx-auto mb-7 mt-2 h-[60px] lg:hidden"
             />
           </a>
-          <div className="flex flex-col px-7 lg:mt-0 lg:flex-row lg:items-center lg:gap-[24px] lg:px-0">
+          <div className="flex flex-col gap-[8px] px-7 lg:mt-0 lg:flex-row lg:items-center lg:px-0">
             <a
               href="#"
               onClick={() => setActive(0)}
@@ -133,7 +137,7 @@ function Navbar() {
                 active == 3 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white `}
             >
-              Pajak
+              Pajak Rekan
             </a>
             <a
               href="#"
@@ -143,6 +147,24 @@ function Navbar() {
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Stok
+            </a>
+            <a
+              href="#"
+              onClick={() => setActive(5)}
+              className={`${
+                active == 5 ? "text-kOrange-400" : "text-kText"
+              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+            >
+              Pajak Perusahaan
+            </a>
+            <a
+              href="#"
+              onClick={() => setActive(6)}
+              className={`${
+                active == 6 ? "text-kOrange-400" : "text-kText"
+              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+            >
+              Gaji
             </a>
             <div className="hidden h-12 w-[1px] bg-kGrey-100 lg:block"></div>
             <div className="account-detail group absolute bottom-3 p-3 lg:relative lg:bottom-0">
@@ -156,8 +178,8 @@ function Navbar() {
                   alt="Profile"
                 />
                 <div className="account-detail hamburger ml-3">
-                  <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] lg:w-[60px] xl:w-[240px]">
-                    Nama User Panjang Sekaliiiiiiiiii
+                  <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] lg:w-[60px] xl:w-[180px]">
+                    Nama User Panjang Sekali
                   </p>
                   <p className="hamburger account-detail text-14 text-kText group-hover:text-kOrange-400">
                     Role
