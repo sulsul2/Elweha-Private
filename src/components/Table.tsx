@@ -9,7 +9,7 @@ function Table({ data, column }: { data: any; column: any }) {
                 return (
                   <th
                     key={idx}
-                    className="h-auto w-auto border-collapse bg-kOrange-100 py-1 px-16 xl:px-8 text-center font-normal"
+                    className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-normal xl:px-4"
                   >
                     {row}
                   </th>
@@ -25,7 +25,7 @@ function Table({ data, column }: { data: any; column: any }) {
                     return (
                       <td
                         key={idx}
-                        className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 py-3 px-16 xl:px-8 text-center"
+                        className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 px-2 py-3 text-center xl:px-4"
                       >
                         {row}
                       </td>

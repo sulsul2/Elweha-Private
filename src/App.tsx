@@ -1,11 +1,7 @@
-import Pendapatan from "./pages/Pendapatan/Pendapatan";
+import DashboardOfficer from "./pages/DashboardOfficer/DashboardOfficer";
 
 function App() {
-  return (
-    <>
-      <Pendapatan />
-    </>
-  );
+  return <DashboardOfficer />;
 }
 
 export default App;

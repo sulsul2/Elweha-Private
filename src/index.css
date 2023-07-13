@@ -7,3 +7,24 @@
     @apply font-lato;
   }
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply z-50 rounded-[5px] bg-kOrange-500;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-kOrange-400;
+}
