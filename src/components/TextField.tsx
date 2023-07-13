@@ -63,14 +63,6 @@ function TextField({
               value={inputValue}
               onChange={handleChange}
             />
-            {inputValue && (
-              <button
-                className="absolute top-[15%] sm:top-[27%] font-semibold focus:text-[#186ADE] right-[2%] md:right-[2%] xl:right-[1%]"
-                onClick={handleClear}
-              >
-                ✖
-              </button>
-            )}
           </div>
           {helpertext != "" && (
             <span className="text-14 text-kRed">{helpertext}</span>
@@ -86,18 +78,18 @@ function TextField({
           >
             {label}
           </label>
-          <div className="relative">
+          <div className="relative flex items-center">
             <input
               type={currType}
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3  caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
               value={inputValue}
               onChange={handleChange}
             />
             <span
-              className="absolute right-[3%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
+              className="absolute flex justify-around items-center right-[3%] xl:right-[2%] cursor-pointer text-lg lg:text-2xl"
               onClick={handleToggle}
             >
               {icon}
@@ -185,20 +177,16 @@ function TextField({
 
       {type == "search" && (
         <div className={style + " w-full"}>
-
-          <div className="relative ">
-            {/* <img
-              src="assets/search.svg"
-              alt=""
-              className="absolute left-[3%] top-[30%] sm:left-[3%] md:left-[2%] lg:left-[1%]"
-            /> */}
+          <div className="w-full border-2 border-[#A8A8A8] hover:border-[#6B6B6B] hover:focus-within:border-[#186ADE] disabled:border-[#6B6B6B] focus-within:border-[#186ADE] rounded-lg flex justify-between px-2 pointer-events-none">
             <input
+              tabIndex={0}
               type="text"
               placeholder={placeholder}
-              className="bg-[url(./assets/search.svg)] bg-no-repeat bg-origin-content bg-right w-full rounded-lg border-2 border-[#A8A8A8] p-1 sm:p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
-              value={inputValue}
+              className="w-full border-none outline-none p-1 sm:p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
+              value={inputValue} 
               onChange={handleChange}
             />
+            <img src="assets/search.svg" alt="" />
           </div>
         </div>
       )}
