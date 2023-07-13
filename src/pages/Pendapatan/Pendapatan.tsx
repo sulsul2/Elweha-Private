@@ -4,6 +4,7 @@ import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import TextField from "../../components/TextField";
 import Table from "../../components/Table";
+import Paginate from "../../components/Paginate";
 
 function Pendapatan() {
   const [month, setMonth] = useState("Januari 2023");
@@ -14,7 +15,8 @@ function Pendapatan() {
       kategori: "uhuyy",
       jumlah: 2,
       pengirim: "kopeng",
-      notes: "Lorem Ipsum asjausyuav oaosuba hatyss aushsh ashyab iabsauyvsa aaaaaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaa",
+      notes:
+        "Lorem Ipsum asjausyuav oaosuba hatyss aushsh ashyab iabsauyvsa aaaaaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaa",
     },
     {
       id: 2,
@@ -33,33 +35,26 @@ function Pendapatan() {
       notes: "Lorem Ipsum",
     },
   ];
-  const kolom = [
-    "No",
-    "Tanggal",
-    "Kategori",
-    "Jumlah",
-    "Pengirim",
-    "Notes",
-  ];
+  const kolom = ["No", "Tanggal", "Kategori", "Jumlah", "Pengirim", "Notes"];
   return (
     <>
       <Navbar />
       <div className="w-full px-5 pt-[104px] xl:px-24">
-        <h1 className="mb-12 text-40 font-bold">Pendapatan</h1>
+        <h1 className="mb-12 hidden text-40 font-bold xl:block">Pendapatan</h1>
         <div className="mb-5 flex w-full justify-between lg:justify-start lg:gap-4">
-          <p className="text-24 font-bold">Total Pendapatan</p>
-          <p className="text-24 font-semibold text-kText">
+          <p className="text-16 font-bold xl:text-24">Total Pendapatan</p>
+          <p className="text-16 font-semibold text-kText xl:text-24">
             Rp 100.000.000.000,-
           </p>
         </div>
         <div className="mb-5 flex flex-col justify-between gap-11 lg:flex-row">
           <div className="flex w-full justify-between lg:justify-start lg:gap-4">
-            <p className="text-24 font-bold">Periode</p>
+            <p className="text-16 font-bold xl:text-24">Periode</p>
             <div className="w-[180px] drop-shadow-button">
               <Dropdown placeholder={""} type={"month"} value={month} />
             </div>
           </div>
-          <div className="flex w-full justify-center lg:justify-end gap-4">
+          <div className="flex w-full justify-center gap-4 lg:justify-end">
             <Button text={"Tambah Data +"} type={"button"} style={"primary"} />
             <Button
               text={"Tambah Kategori +"}
@@ -68,9 +63,14 @@ function Pendapatan() {
             />
           </div>
         </div>
-        <div className="mb-5 flex w-full items-center justify-between px-5">
-          <p className="text-24 font-bold">Daftar Pendapatan</p>
-          <div className="flex gap-2">
+        <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
+          Daftar Pendapatan
+        </p>
+        <div className="mb-5 flex w-full items-center justify-between gap-1">
+          <p className="hidden text-16 font-bold xl:block xl:text-24">
+            Daftar Pendapatan
+          </p>
+          <div className="flex items-center gap-2">
             <TextField
               type={"search"}
               label={""}
@@ -82,6 +82,9 @@ function Pendapatan() {
           <Button text={"Hapus"} type={"button"} style={"delete"} />
         </div>
         <Table data={data} column={kolom} />
+        <div className="mt-8">
+          <Paginate totalPages={10} />
+        </div>
       </div>
     </>
   );
