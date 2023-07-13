@@ -59,13 +59,13 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
             {inputValue && (
               <button
-                className="absolute right-[10%] top-[27%] font-semibold focus:text-[#186ADE] sm:right-[6%] md:right-[5%] lg:right-[4%]"
+                className="absolute top-[15%] sm:top-[27%] font-semibold focus:text-[#186ADE] right-[2%] md:right-[2%] xl:right-[1%]"
                 onClick={handleClear}
               >
                 ✖
@@ -92,7 +92,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -195,7 +195,7 @@ function TextField({
             <input
               type="text"
               placeholder={placeholder}
-              className="bg-[url(./assets/search.svg)] bg-no-repeat bg-origin-content bg-right w-full rounded-lg border-2 border-[#A8A8A8] p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
+              className="bg-[url(./assets/search.svg)] bg-no-repeat bg-origin-content bg-right w-full rounded-lg border-2 border-[#A8A8A8] p-1 sm:p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
               value={inputValue}
               onChange={handleChange}
             />
