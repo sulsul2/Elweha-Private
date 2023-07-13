@@ -19,7 +19,7 @@ function Button({
         type={type}
         onClick={onClick}
         onSubmit={onSubmit}
-        className={`h-[41px] w-[173px] rounded-[10px] text-16 font-bold ${
+        className={`h-[36px] w-[160px] rounded-[10px] text-12 font-bold md:h-[41px] md:w-[173px] md:text-16 ${
           style == "primary"
             ? "bg-kOrange-400 text-white hover:bg-kOrange-300 active:bg-kOrange-500"
             : style == "seccondary"
