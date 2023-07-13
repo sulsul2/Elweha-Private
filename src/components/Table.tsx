@@ -1,12 +1,16 @@
-function Table({ data, column}: { data: any; column: any}) {
+function Table({ data, column }: { data: any; column: any }) {
   return (
     <>
-        <table className="flex h-[600px] w-[1200px] flex-col items-center overflow-y-visible">
+      <div className="flex overflow-x-auto">
+        <table className="w-full">
           <thead>
             <tr>
               {column.map((row: any, idx: number) => {
                 return (
-                  <th key={idx} className = "h-auto w-[120px] bg-kOrange-100 py-1 font-normal">
+                  <th
+                    key={idx}
+                    className="h-auto w-auto border-collapse bg-kOrange-100 py-1 px-16 xl:px-8 text-center font-normal"
+                  >
                     {row}
                   </th>
                 );
@@ -21,7 +25,7 @@ function Table({ data, column}: { data: any; column: any}) {
                     return (
                       <td
                         key={idx}
-                        className="h-auto w-[120px] text-center border-b-2 border-kGrey-100 py-3"
+                        className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 py-3 px-16 xl:px-8 text-center"
                       >
                         {row}
                       </td>
@@ -32,6 +36,7 @@ function Table({ data, column}: { data: any; column: any}) {
             })}
           </tbody>
         </table>
+      </div>
     </>
   );
 }
