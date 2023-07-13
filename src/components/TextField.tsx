@@ -59,13 +59,13 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
             {inputValue && (
               <button
-                className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
+                className="absolute top-[15%] sm:top-[27%] font-semibold focus:text-[#186ADE] right-[2%] md:right-[2%] xl:right-[1%]"
                 onClick={handleClear}
               >
                 ✖
@@ -92,12 +92,12 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
             <span
-              className="absolute right-[2%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
+              className="absolute right-[3%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
               onClick={handleToggle}
             >
               {icon}
@@ -184,27 +184,22 @@ function TextField({
       )}
 
       {type == "search" && (
-        <div className="relative">
-          <img
-            src="assets/search.svg"
-            alt=""
-            className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
-          />
-          <input
-            type="text"
-            placeholder={placeholder}
-            className="w-full rounded-lg border-2 border-[#A8A8A8] p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
-            value={inputValue}
-            onChange={handleChange}
-          />
-          {inputValue && (
-            <button
-              className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
-              onClick={handleClear}
-            >
-              ✖
-            </button>
-          )}
+        <div className={style + " w-full"}>
+
+          <div className="relative ">
+            {/* <img
+              src="assets/search.svg"
+              alt=""
+              className="absolute left-[3%] top-[30%] sm:left-[3%] md:left-[2%] lg:left-[1%]"
+            /> */}
+            <input
+              type="text"
+              placeholder={placeholder}
+              className="bg-[url(./assets/search.svg)] bg-no-repeat bg-origin-content bg-right w-full rounded-lg border-2 border-[#A8A8A8] p-1 sm:p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30"
+              value={inputValue}
+              onChange={handleChange}
+            />
+          </div>
         </div>
       )}
     </>
