@@ -39,7 +39,7 @@ function Pengeluaran() {
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-6 pt-[104px] xl:px-24">
+      <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pengeluaran</h1>
         <div className="mb-5 flex w-full justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24">
