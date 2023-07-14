@@ -1,7 +1,7 @@
-import DashboardOfficer from "./pages/DashboardOfficer/DashboardOfficer";
+import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 
 function App() {
-  return <DashboardOfficer />;
+  return <DaftarAkun />;
 }
 
 export default App;
