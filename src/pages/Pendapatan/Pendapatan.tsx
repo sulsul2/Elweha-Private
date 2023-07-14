@@ -57,15 +57,19 @@ function Pendapatan() {
       <Navbar />
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-6 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pendapatan</h1>
-        <div className="mb-5 flex w-full justify-between xl:justify-start xl:gap-4">
-          <p className="text-16 font-bold xl:text-24">Total Pendapatan</p>
+        <div className="mb-5 flex w-full justify-between xl:justify-start">
+          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24">
+            Total Pendapatan
+          </p>
           <p className="text-16 font-semibold text-kText xl:text-24">
-            Rp 100.000.000.000,-
+            Rp 100.000.000.000000,-
           </p>
         </div>
         <div className="mb-5 flex flex-col justify-between gap-11 xl:flex-row">
-          <div className="flex w-full items-center justify-between xl:justify-start xl:gap-28">
-            <p className="text-16 font-bold xl:text-24">Periode</p>
+          <div className="flex w-full items-center justify-between xl:justify-start">
+            <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
+              Periode
+            </p>
             <div className="w-[180px] drop-shadow-button">
               <Dropdown placeholder={""} type={"month"} value={month} />
             </div>
