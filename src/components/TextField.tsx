@@ -59,7 +59,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-1 sm:p-3 pr-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } p-1 sm:p-3 pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -84,7 +84,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-1 sm:p-3  caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
+              } p-1 sm:p-3  caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -177,12 +177,12 @@ function TextField({
 
       {type == "search" && (
         <div className={style + " w-full"}>
-          <div className="w-full border-2 border-[#A8A8A8] hover:border-[#6B6B6B] hover:focus-within:border-[#186ADE] disabled:border-[#6B6B6B] focus-within:border-[#186ADE] rounded-lg flex justify-between px-2 pointer-events-none">
+          <div className="w-full border-2 border-[#A8A8A8] hover:border-kOrange-200 hover:focus-within:border-kOrange-400 disabled:border-[#6B6B6B] focus-within:border-kOrange-400 rounded-lg flex justify-between px-2 pointer-events-none">
             <input
               tabIndex={0}
               type="text"
               placeholder={placeholder}
-              className="w-full border-none outline-none p-1 sm:p-3 caret-[#186ADE] placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
+              className="w-full border-none outline-none p-1 sm:p-3 caret-kOrange-400 placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
               value={inputValue} 
               onChange={handleChange}
             />
