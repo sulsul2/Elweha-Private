@@ -57,11 +57,6 @@ function Gaji() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button text={"Tambah Data +"} type={"button"} style={"primary"} />
-            <Button
-              text={"Tambah Kategori +"}
-              type={"button"}
-              style={"third"}
-            />
           </div>
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
