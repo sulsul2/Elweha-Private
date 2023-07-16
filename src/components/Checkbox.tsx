@@ -13,7 +13,7 @@ function Checkbox({
 }) {
   return (
     <>
-      <div className="flex h-auto w-full gap-3">
+      <div className="flex h-auto w-full gap-3 justify-center">
         <input
           className={`${
             type == "indeter"
