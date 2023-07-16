@@ -45,6 +45,10 @@ export default {
         button: "0px 4px 4px rgba(50, 50, 71, 0.08)",
         card: "0px 12px 12px rgba(50, 50, 71, 0.08)",
       },
+      boxShadow: {
+        button: "0px 4px 4px rgba(50, 50, 71, 0.08)",
+        card: "0px 12px 12px rgba(50, 50, 71, 0.08)",
+      },
     },
   },
   plugins: [],

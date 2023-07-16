@@ -1,6 +1,7 @@
 import Checkbox from "./Checkbox";
 import { BiSolidPencil } from "react-icons/bi";
 
+
 function Table({ data, column }: { data: any; column: any }) {
   return (
     <>
@@ -15,7 +16,7 @@ function Table({ data, column }: { data: any; column: any }) {
                 return (
                   <th
                     key={idx}
-                    className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 font-normal xl:px-4"
+                    className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-normal xl:px-4"
                   >
                     {row}
                   </th>
