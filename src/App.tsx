@@ -1,7 +1,5 @@
-import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
-
 function App() {
-  return <DaftarAkun />;
+  return <></>;
 }
 
 export default App;
