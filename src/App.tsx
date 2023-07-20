@@ -1,5 +1,7 @@
+import Pendapatan from "./pages/Pendapatan/Pendapatan";
+
 function App() {
-  return <></>;
+  return <Pendapatan></Pendapatan>;
 }
 
 export default App;
