@@ -60,18 +60,26 @@ function Stok() {
     },
   ];
   const kolom1 = ["No", "Barang", "Jenis", "Jumlah", "Satuan"];
-  const kolom2 = ["No", "Tanggal", "Nama", "Barang", "Jenis", "Jumlah", "Satuan"];
+  const kolom2 = [
+    "No",
+    "Tanggal",
+    "Nama",
+    "Barang",
+    "Jenis",
+    "Jumlah",
+    "Satuan",
+  ];
   return (
     <>
       <Navbar />
-      <div className="w-full px-5 xl:px-24 pt-[104px]">
+      <div className="w-full px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="text-40 font-bold">Stok</h1>
         <div className="mt-[52px] flex gap-11">
           <p className="text-24 font-bold">Periode</p>
-          <Dropdown type="period" placeholder="Select Period!" />
+          <Dropdown type="period" placeholder="Select Period" />
         </div>
-        <div className="flex flex-col xl:flex-row justify-between gap-5">
-          <div className="w-full xl:w-1/2 shadow-lg shadow-kGrey-100 rounded-xl px-1">
+        <div className="flex flex-col justify-between gap-5 xl:flex-row">
+          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
               <Button type="button" style="primary" text="Tambah Barang +" />
               <Button type="button" style="third" text="Tambah Jenis +" />
@@ -92,7 +100,7 @@ function Stok() {
               <Button text={"Hapus"} type={"button"} style={"delete"} />
             </div>
             <Table data={data1} column={kolom1} />
-            <div className="mt-8 mb-4 px-5 flex w-full grow flex-col items-center justify-between lg:flex-row lg:items-end">
+            <div className="mb-4 mt-8 flex w-full grow flex-col items-center justify-between px-5 lg:flex-row lg:items-end">
               <p className="hidden lg:block">
                 Menunjukkan Entri 1 sampai xx dari xx
               </p>
@@ -102,7 +110,7 @@ function Stok() {
               </p>
             </div>
           </div>
-          <div className="w-full xl:w-1/2 shadow-lg shadow-kGrey-100 rounded-xl px-1">
+          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
               <Button type="button" style="primary" text="Ambil Stok" />
             </div>
@@ -122,7 +130,7 @@ function Stok() {
               <Button text={"Hapus"} type={"button"} style={"delete"} />
             </div>
             <Table data={data2} column={kolom2} />
-            <div className="mt-8 mb-4 px-5 flex w-full grow flex-col items-center justify-between lg:flex-row lg:items-end">
+            <div className="mb-4 mt-8 flex w-full grow flex-col items-center justify-between px-5 lg:flex-row lg:items-end">
               <p className="hidden lg:block">
                 Menunjukkan Entri 1 sampai xx dari xx
               </p>
