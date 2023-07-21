@@ -1,7 +1,8 @@
 import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
+import PajakPerusahaan from "./pages/PajakPerusahaan/PajakPerusahaan";
 
 function App() {
-  return <DaftarAkun />;
+  return <PajakPerusahaan />;
 }
 
 export default App;
