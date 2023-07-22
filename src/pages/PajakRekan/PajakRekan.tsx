@@ -184,7 +184,7 @@ function PajakRekan() {
               type={"button"}
               style={"third"}
             />
-            <Button text={"Simpan Data"} type={"button"} style={"primary"} />
+            <Button text={"Tambah Data"} type={"button"} style={"primary"} />
           </div>
         </div>
       </Modal>
@@ -227,7 +227,7 @@ function PajakRekan() {
               type={"button"}
               style={"third"}
             />
-            <Button text={"Simpan Data"} type={"button"} style={"primary"} />
+            <Button text={"Tambah Data"} type={"button"} style={"primary"} />
           </div>
         </div>
       </Modal>
