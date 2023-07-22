@@ -5,9 +5,13 @@ import Navbar from "../../components/Navbar";
 import Paginate from "../../components/Paginate";
 import Table from "../../components/Table";
 import TextField from "../../components/TextField";
+import Modal from "../../components/Modal";
+import DateFieldNormal from "../../components/DateFieldNormal";
+import TextArea from "../../components/TextArea";
 
 function Gaji() {
   const [month, setMonth] = useState("Januari 2023");
+  const [showModal, setShowModal] = useState(false);
   const data = [
     {
       id: 1,
@@ -36,6 +40,39 @@ function Gaji() {
   return (
     <>
       <Navbar />
+      <Modal visible={showModal} onClose={() => setShowModal(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Tambah Karyawan
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Karyawan</p>
+              <TextField style={""} type={"standart"} label={""} placeholder={"Masukkan Nama Karyawan"} helpertext={""}/>
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Gaji</p>
+              <Dropdown placeholder={"Jenis"} type={"Jenis"} />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2"></div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Gaji</p>
+              <TextField style={""} type={"standart"} label={""} placeholder={"Rp"} helpertext={""}/>
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowModal(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Simpan Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Gaji</h1>
         <div className="mb-5 flex w-full justify-between xl:justify-start">
@@ -56,7 +93,7 @@ function Gaji() {
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button text={"Tambah Data +"} type={"button"} style={"primary"} />
+            <Button onClick={() => setShowModal(true)} text={"Tambah Data +"} type={"button"} style={"primary"} />
           </div>
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
