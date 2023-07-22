@@ -27,7 +27,7 @@ function TextArea({
           id="desc"
           value={value}
           placeholder={placeholder}
-          className="disabled:opacity-30 disabled:border-[#6B6B6B] p-3 text-primaryBlue placeholder:text-seccondaryBlue h-40 w-full rounded-lg border-2 border-[#A8A8A8] hover:border-[#6B6B6B] focus:outline-kOrange-400 caret-kOrange-400 bg-white text-small lg:h-[200px]"
+          className="disabled:opacity-30 disabled:border-[#6B6B6B] p-3 text-primaryBlue placeholder:text-seccondaryBlue h-40 w-full rounded-lg border-2 border-[#A8A8A8] hover:border-kOrange-200 focus:outline-kOrange-400 caret-kOrange-400 bg-white text-small lg:h-[200px]"
         ></textarea>
         <div className="flex justify-between">
           <span className="text-[#6B6B6B] text-14 font-normal">{helpertext}</span>
