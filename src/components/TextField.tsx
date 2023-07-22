@@ -59,7 +59,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-1 sm:p-3 pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } px-3 py-2 pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -84,7 +84,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } p-1 sm:p-3  caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
+              } px-3 py-2  caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
               value={inputValue}
               onChange={handleChange}
             />
@@ -182,7 +182,7 @@ function TextField({
               tabIndex={0}
               type="text"
               placeholder={placeholder}
-              className="w-full border-none outline-none p-1 sm:p-3 caret-kOrange-400 placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
+              className="w-full border-none outline-none px-3 py-2 caret-kOrange-400 placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
               value={inputValue} 
               onChange={handleChange}
             />
