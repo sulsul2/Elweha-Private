@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
 
-function Navbar() {
-  const [active, setActive] = useState(0);
+function Navbar({ active }: { active?: number }) {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
 
@@ -32,7 +31,7 @@ function Navbar() {
 
   return (
     <>
-      <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white px-3 xl:px-7">
+      <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white bg-opacity-50 px-3 shadow-button backdrop-blur-sm xl:px-7">
         <button
           type="button"
           className={`${
@@ -95,7 +94,7 @@ function Navbar() {
             navOpen ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
           } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] xl:static xl:block xl:h-auto xl:w-auto xl:bg-transparent xl:py-0 xl:shadow-none`}
         >
-          <a href="#">
+          <a href="/">
             <img
               src="assets/logo.svg"
               alt="Elweha"
@@ -104,8 +103,7 @@ function Navbar() {
           </a>
           <div className="flex flex-col gap-[8px] px-7 xl:mt-0 xl:flex-row xl:items-center xl:gap-[16px] xl:px-0">
             <a
-              href="#"
-              onClick={() => setActive(0)}
+              href="/"
               className={`${
                 active == 0 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -113,8 +111,7 @@ function Navbar() {
               Dashboard
             </a>
             <a
-              href="#"
-              onClick={() => setActive(1)}
+              href="/pendapatan"
               className={`${
                 active == 1 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -122,8 +119,7 @@ function Navbar() {
               Pendapatan
             </a>
             <a
-              href="#"
-              onClick={() => setActive(2)}
+              href="/pengeluaran"
               className={`${
                 active == 2 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -131,8 +127,7 @@ function Navbar() {
               Pengeluaran
             </a>
             <a
-              href="#"
-              onClick={() => setActive(3)}
+              href="/pajak-rekan"
               className={`${
                 active == 3 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white `}
@@ -140,8 +135,7 @@ function Navbar() {
               Pajak Rekan
             </a>
             <a
-              href="#"
-              onClick={() => setActive(4)}
+              href="/stok"
               className={`${
                 active == 4 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -149,8 +143,7 @@ function Navbar() {
               Stok
             </a>
             <a
-              href="#"
-              onClick={() => setActive(5)}
+              href="/pajak-perusahaan"
               className={`${
                 active == 5 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -158,8 +151,7 @@ function Navbar() {
               Pajak Perusahaan
             </a>
             <a
-              href="#"
-              onClick={() => setActive(6)}
+              href="/gaji"
               className={`${
                 active == 6 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}

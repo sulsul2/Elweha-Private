@@ -6,87 +6,85 @@ import Paginate from "../../components/Paginate";
 import Table from "../../components/Table";
 import TextField from "../../components/TextField";
 
-function Stok() {
+function PajakRekanOfficer() {
   const data1 = [
     {
       id: 1,
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      nama_rekan: "Kontol",
+      biaya_jasa: "10.000,-",
+      jumlah_akta: 2,
     },
     {
       id: 2,
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      nama_rekan: "Kontol",
+      biaya_jasa: "10.000,-",
+      jumlah_akta: 2,
     },
     {
       id: 3,
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      nama_rekan: "Kontol",
+      biaya_jasa: "10.000,-",
+      jumlah_akta: 2,
     },
   ];
   const data2 = [
     {
       id: 1,
       Tanggal: "15 Juli 2023",
-      Nama: "Agus",
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      no_awal: "Agus",
+      no_akhir: "Kontol",
+      jumlah_akta: 2,
+      update_terakhir: "Vixell pada 16 Jul 2023 12:54",
     },
     {
       id: 2,
       Tanggal: "15 Juli 2023",
-      Nama: "Agus",
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      no_awal: "Agus",
+      no_akhir: "Kontol",
+      jumlah_akta: 2,
+      update_terakhir: "Vixell pada 16 Jul 2023 12:54",
     },
     {
       id: 3,
       Tanggal: "15 Juli 2023",
-      Nama: "Agus",
-      Barang: "Kontol",
-      jenis: "kopeng",
-      jumlah: 2,
-      satuan: 1,
+      no_awal: "Agus",
+      no_akhir: "Kontol",
+      jumlah_akta: 2,
+      update_terakhir: "Vixell pada 16 Jul 2023 12:54",
     },
   ];
-  const kolom1 = ["No", "Barang", "Jenis", "Jumlah", "Satuan"];
+  const kolom1 = ["No", "Nama Rekan", "Biaya Jasa", "Jumlah Akta"];
   const kolom2 = [
     "No",
     "Tanggal",
-    "Nama",
-    "Barang",
-    "Jenis",
-    "Jumlah",
-    "Satuan",
+    "No. Awal",
+    "No. Akhir",
+    "Jumlah Akta",
+    "Update Terakhir",
   ];
   return (
     <>
-      <Navbar active={4} />
-      <div className="w-full px-5 pb-24 pt-[104px] xl:px-24">
-        <h1 className="text-40 font-bold">Stok</h1>
-        <div className="mt-[52px] flex gap-11">
-          <p className="text-24 font-bold">Periode</p>
-          <Dropdown type="period" placeholder="Select Period" />
+      <Navbar />
+      <div className="w-full px-5 pt-[104px] xl:px-24">
+        <h1 className="hidden text-40 font-bold xl:block">Pajak Rekan</h1>
+        <div className="mb-[77px] flex flex-col justify-between gap-[14px] xl:mb-[14px] xl:mt-[52px] xl:flex-row">
+          <div className="flex justify-between gap-11 xl:justify-start">
+            <p className="text-16 font-bold xl:text-24">Total Pengeluaran</p>
+            <p className="text-16 font-bold xl:text-24">Rp 100.000.000,-</p>
+          </div>
+          <div className="flex justify-between gap-11 xl:justify-start">
+            <p className="text-16 font-bold xl:text-24">Periode</p>
+            <Dropdown type="period" placeholder="Select Period!" />
+          </div>
         </div>
         <div className="flex flex-col justify-between gap-5 xl:flex-row">
-          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
+          <div className="w-full rounded-xl px-1 shadow-lg shadow-kGrey-100 xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
-              <Button type="button" style="primary" text="Tambah Barang +" />
-              <Button type="button" style="third" text="Tambah Jenis +" />
+              <Button type="button" style="primary" text="Tambah Rekan +" />
             </div>
             <div className="mb-5 flex w-full items-center justify-between gap-8">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
-                Daftar Pendapatan
+                Daftar Pajak Rekan
               </p>
               <div className="flex items-center gap-2">
                 <TextField
@@ -110,13 +108,13 @@ function Stok() {
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
+          <div className="w-full rounded-xl px-1 shadow-lg shadow-kGrey-100 xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
-              <Button type="button" style="primary" text="Ambil Stok" />
+              <Button type="button" style="primary" text="Tambah Data +" />
             </div>
             <div className="mb-5 flex w-full items-center justify-between gap-8">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
-                Daftar Pengambil
+                Daftar Akta
               </p>
               <div className="flex items-center gap-2">
                 <TextField
@@ -147,4 +145,4 @@ function Stok() {
   );
 }
 
-export default Stok;
+export default PajakRekanOfficer;

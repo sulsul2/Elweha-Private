@@ -36,10 +36,11 @@ interface DropdownProps {
 const Dropdown = ({ placeholder, type, onChange, value }: DropdownProps) => {
   return (
     <Select
-      className="basic-single shadow-button w-[180px] rounded-lg bg-slate-700"
+      className="basic-single w-full rounded-lg bg-slate-700 shadow-button"
       onChange={onChange}
       placeholder={placeholder}
       name={type}
+      maxMenuHeight={200}
       options={options}
       defaultValue={value == null ? null : { value: value, label: value }}
       isSearchable={false}

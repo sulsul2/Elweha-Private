@@ -3,7 +3,7 @@ import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import Table from "../../components/Table";
 
-function DashboardOfficer() {
+function Dashboard() {
   const data = [
     {
       id: 1,
@@ -30,7 +30,7 @@ function DashboardOfficer() {
   const kolom = ["No", "Tanggal", "No.Awal", "No.Akhir", "Jumlah Akta"];
   return (
     <>
-      <Navbar />
+      <Navbar active={0} />
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] md:px-24">
         <div className="xl:flex xl:justify-between xl:pr-16">
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>
@@ -109,7 +109,7 @@ function DashboardOfficer() {
             </div>
             <div className="mt-5 flex w-full justify-center xl:justify-end">
               <Button
-                text={"Tambah Pendapatan +"}
+                text={"Tambah Pengeluaran +"}
                 type={"button"}
                 style={"primary"}
               />
@@ -177,4 +177,4 @@ function DashboardOfficer() {
   );
 }
 
-export default DashboardOfficer;
+export default Dashboard;
