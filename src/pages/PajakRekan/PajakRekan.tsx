@@ -154,7 +154,7 @@ function PajakRekan() {
   ];
   return (
     <>
-      <Navbar />
+      <Navbar active={3} />
       <Modal visible={showModal1} onClose={() => setShowModal1(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
@@ -163,7 +163,13 @@ function PajakRekan() {
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Nama Rekan</p>
-              <TextField style={""} type={"standart"} placeholder={"Masukkan Nama Rekan"} label={""} helpertext={""}/>
+              <TextField
+                style={""}
+                type={"standart"}
+                placeholder={"Masukkan Nama Rekan"}
+                label={""}
+                helpertext={""}
+              />
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
@@ -197,7 +203,7 @@ function PajakRekan() {
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Tanggal</p>
-              <DateFieldNormal text={"Masukkan Tanggel"}/>
+              <DateFieldNormal text={"Masukkan Tanggel"} />
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
@@ -252,7 +258,12 @@ function PajakRekan() {
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button onClick={() => setShowModal1(true)} text={"Tambah Rekan +"} type={"button"} style={"primary"} />
+            <Button
+              onClick={() => setShowModal1(true)}
+              text={"Tambah Rekan +"}
+              type={"button"}
+              style={"primary"}
+            />
           </div>
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
@@ -288,14 +299,24 @@ function PajakRekan() {
       </div>
       {/* daftar akta */}
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24  xl:px-48">
-        <div className="hidden xl:text-end xl:block pb-1">
-          <Button onClick={() => setShowModal2(true)} text={"Tambah Data +"} type={"button"} style={"primary"} />
+        <div className="hidden pb-1 xl:block xl:text-end">
+          <Button
+            onClick={() => setShowModal2(true)}
+            text={"Tambah Data +"}
+            type={"button"}
+            style={"primary"}
+          />
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Akta
         </p>
-        <div className="block xl:hidden xl:justify-end pb-1">
-          <Button onClick={() => setShowModal2(true)} text={"Tambah Data +"} type={"button"} style={"primary"} />
+        <div className="block pb-1 xl:hidden xl:justify-end">
+          <Button
+            onClick={() => setShowModal2(true)}
+            text={"Tambah Data +"}
+            type={"button"}
+            style={"primary"}
+          />
         </div>
         <div className="flex grow flex-col rounded-lg bg-white py-3 shadow-card">
           <div className="mb-5 flex w-full items-center justify-between gap-1 px-3">
@@ -303,7 +324,11 @@ function PajakRekan() {
               Daftar Akta
             </p>
             <div className="flex items-center gap-2">
-              <Dropdown placeholder={"Pilih Rekan"} type={"month"} value={month} />
+              <Dropdown
+                placeholder={"Pilih Rekan"}
+                type={"month"}
+                value={month}
+              />
             </div>
             <Button text={"Hapus"} type={"button"} style={"delete"} />
           </div>

@@ -60,7 +60,7 @@ function Pendapatan() {
   const kolom = ["No", "Tanggal", "Kategori", "Jumlah", "Pengirim", "Notes"];
   return (
     <>
-      <Navbar />
+      <Navbar active={1} />
       <Modal
         visible={showTambahPendapatan}
         onClose={() => setShowTambahPendapatan(false)}

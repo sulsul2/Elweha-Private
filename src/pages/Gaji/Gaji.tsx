@@ -34,12 +34,22 @@ function Gaji() {
       pphDipotong: "Rp. 200.000,-",
       pajakAkumulasi: "Rp. 200.000,-",
       transfer: "Rp. 200.000,-",
-    }
-  ]
-  const kolom = ["No", "Nama Karyawan", "Kehadiran", "Jenis Gaji", "Jumlah Gaji", "Jumlah Bonus", "PPH Dipotong", "Pajak Akumulasi", "Transfer"];
+    },
+  ];
+  const kolom = [
+    "No",
+    "Nama Karyawan",
+    "Kehadiran",
+    "Jenis Gaji",
+    "Jumlah Gaji",
+    "Jumlah Bonus",
+    "PPH Dipotong",
+    "Pajak Akumulasi",
+    "Transfer",
+  ];
   return (
     <>
-      <Navbar />
+      <Navbar active={6} />
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
@@ -48,18 +58,30 @@ function Gaji() {
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Nama Karyawan</p>
-              <TextField style={""} type={"standart"} label={""} placeholder={"Masukkan Nama Karyawan"} helpertext={""}/>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Masukkan Nama Karyawan"}
+                helpertext={""}
+              />
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jenis Gaji</p>
               <Dropdown placeholder={"Jenis"} type={"Jenis"} />
             </div>
           </div>
-          <div className="flex flex-col justify-between xl:gap-4 xl:flex-row">
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
             <div className="w-full xl:w-1/2"></div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jumlah Gaji</p>
-              <TextField style={""} type={"standart"} label={""} placeholder={"Rp"} helpertext={""}/>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
@@ -93,13 +115,18 @@ function Gaji() {
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button onClick={() => setShowModal(true)} text={"Tambah Data +"} type={"button"} style={"primary"} />
+            <Button
+              onClick={() => setShowModal(true)}
+              text={"Tambah Data +"}
+              type={"button"}
+              style={"primary"}
+            />
           </div>
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Gaji
         </p>
-        <div className="shadow-card flex grow flex-col rounded-lg bg-white py-3">
+        <div className="flex grow flex-col rounded-lg bg-white py-3 shadow-card">
           <div className="mb-5 flex w-full items-center justify-between gap-1 px-3">
             <p className="hidden text-16 font-bold xl:block xl:text-24">
               Daftar Gaji

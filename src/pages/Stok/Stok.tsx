@@ -71,7 +71,7 @@ function Stok() {
   ];
   return (
     <>
-      <Navbar />
+      <Navbar active={4} />
       <div className="w-full px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="text-40 font-bold">Stok</h1>
         <div className="mt-[52px] flex gap-11">

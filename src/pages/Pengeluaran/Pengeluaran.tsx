@@ -44,7 +44,7 @@ function Pengeluaran() {
   const kolom = ["No", "Tanggal", "Kategori", "Jenis", "Jumlah", "Notes"];
   return (
     <>
-      <Navbar />
+      <Navbar active={2} />
       <Modal
         visible={showTambahPengeluaran}
         onClose={() => setShowTambahPengeluaran(false)}
