@@ -3,7 +3,7 @@ import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import Table from "../../components/Table";
 
-function DashboardOfficer() {
+function Dashboard() {
   const data = [
     {
       id: 1,
@@ -177,4 +177,4 @@ function DashboardOfficer() {
   );
 }
 
-export default DashboardOfficer;
+export default Dashboard;
