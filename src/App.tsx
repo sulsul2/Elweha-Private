@@ -1,7 +1,7 @@
-import Pendapatan from "./pages/Pendapatan/Pendapatan";
+import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 
 function App() {
-  return <Pendapatan></Pendapatan>;
+  return <DaftarAkun></DaftarAkun>;
 }
 
 export default App;
