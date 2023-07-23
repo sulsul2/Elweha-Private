@@ -11,7 +11,8 @@ import TextArea from "../../components/TextArea";
 
 function Pendapatan() {
   const [month, setMonth] = useState("Januari 2023");
-  const [showModal, setShowModal] = useState(false);
+  const [showTambahPendapatan, setShowTambahPendapatan] = useState(false);
+  const [showEditPendapatan, setShowEditPendapatan] = useState(false);
 
   const data = [
     {
@@ -60,10 +61,13 @@ function Pendapatan() {
   return (
     <>
       <Navbar />
-      <Modal visible={showModal} onClose={() => setShowModal(false)}>
+      <Modal
+        visible={showTambahPendapatan}
+        onClose={() => setShowTambahPendapatan(false)}
+      >
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Pengeluaran
+            Tambah Pendapatan
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
@@ -77,7 +81,7 @@ function Pendapatan() {
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Jumlah Pengeluaran</p>
+              <p className="mb-2 text-16 font-semibold">Jumlah Pendapatan</p>
               <TextField
                 type={"standart"}
                 label={""}
@@ -101,7 +105,7 @@ function Pendapatan() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => setShowModal(false)}
+              onClick={() => setShowTambahPendapatan(false)}
               text={"Batalkan"}
               type={"button"}
               style={"third"}
@@ -110,6 +114,61 @@ function Pendapatan() {
           </div>
         </div>
       </Modal>
+
+      <Modal
+        visible={showEditPendapatan}
+        onClose={() => setShowEditPendapatan(false)}
+      >
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Edit Pendapatan
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal text={"Masukkan Tanggal"} />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Kategori</p>
+              <Dropdown placeholder={"Kategori"} type={"Kategori"} />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Pendapatan</p>
+              <TextField
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis</p>
+              <Dropdown placeholder={"Jenis"} type={"Jenis"} />
+            </div>
+          </div>
+          <div className="w-full">
+            <p className="mb-2 text-16 font-semibold">Deskripsi</p>
+            <TextArea
+              style={""}
+              label={""}
+              placeholder={"Deskripsi"}
+              helpertext={""}
+            />
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowEditPendapatan(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Edit Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
+
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pendapatan</h1>
         <div className="mb-5 flex w-full justify-between xl:justify-start">
@@ -131,7 +190,7 @@ function Pendapatan() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowTambahPendapatan(true)}
               text={"Tambah Data +"}
               type={"button"}
               style={"primary"}

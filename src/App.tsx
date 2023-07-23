@@ -1,7 +1,7 @@
-import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
+import Pengeluaran from "./pages/Pengeluaran/Pengeluaran";
 
 function App() {
-  return <DaftarAkun></DaftarAkun>;
+  return <Pengeluaran></Pengeluaran>;
 }
 
 export default App;
