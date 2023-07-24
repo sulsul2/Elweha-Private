@@ -76,7 +76,7 @@ function Stok() {
       <Navbar active={4} />
       <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Stok</h1>
-        <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
+        <div className="flex w-full items-center justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
             Periode
           </p>
@@ -84,7 +84,7 @@ function Stok() {
             <Dropdown placeholder={""} type={"month"} value={month} />
           </div>
         </div>
-        <div className="flex flex-col justify-between gap-5 xl:flex-row">
+        <div className="mt-10 flex flex-col justify-between gap-5 xl:flex-row">
           <div className="flex w-full flex-col rounded-xl bg-white px-1 shadow-card xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
               <Button type="button" style="primary" text="Tambah Barang +" />

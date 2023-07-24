@@ -33,7 +33,7 @@ function Dashboard() {
   return (
     <>
       <Navbar active={0} />
-      <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] md:px-24">
+      <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <div className="xl:flex xl:justify-between xl:pr-16">
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>
           <div className="flex items-center justify-between">

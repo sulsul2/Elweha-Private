@@ -95,8 +95,8 @@ function PajakPerusahaan() {
             </div>
           </div>
         </div>
-        <div className="grid-cols-2 gap-x-12 xl:grid">
-          <div className=" mt-5 rounded-[10px] bg-white p-[30px] drop-shadow-card">
+        <div className="mt-10 grid-cols-2 gap-x-12 xl:grid">
+          <div className="rounded-[10px] bg-white p-[30px] drop-shadow-card">
             <div className=" md:flex md:justify-between ">
               <p className="text-20 font-bold">Total Pendapatan</p>
               <span className="text-20">
@@ -112,7 +112,7 @@ function PajakPerusahaan() {
               value={100000000000}
             />
           </div>
-          <div className=" mt-5 rounded-[10px] bg-white p-[30px] drop-shadow-card">
+          <div className="rounded-[10px] bg-white p-[30px] drop-shadow-card">
             <div className=" md:flex md:justify-between ">
               <p className="text-20 font-bold">Total Pengeluaran</p>
               <span className="text-20">
