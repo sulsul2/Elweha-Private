@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
 
-function Navbar() {
-  const [active, setActive] = useState(0);
+function Navbar({ active }: { active?: number }) {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
 
@@ -32,12 +31,12 @@ function Navbar() {
 
   return (
     <>
-      <div className="fixed flex h-[80px] w-full items-center justify-between bg-white px-3 lg:px-14">
+      <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white bg-opacity-50 px-3 shadow-button backdrop-blur-sm xl:px-7">
         <button
           type="button"
           className={`${
             navOpen ? "bg-kOrange-400" : "bg-white"
-          } hamburger absolute z-10 h-[40px] w-[40px] cursor-pointer lg:hidden`}
+          } hamburger absolute z-10 h-[40px] w-[40px] cursor-pointer xl:hidden`}
           onClick={() => setNavOpen(!navOpen)}
         >
           <span
@@ -72,10 +71,10 @@ function Navbar() {
           <img
             src="assets/logo.svg"
             alt="Elweha"
-            className="hidden h-[66px] p-2 lg:block"
+            className="hidden h-[66px] p-2 xl:block"
           />
         </a>
-        <h1 className="mx-auto text-24 font-bold text-kText lg:hidden">
+        <h1 className="mx-auto text-24 font-bold text-kText xl:hidden">
           {active == 0
             ? "Dashboard"
             : active == 1
@@ -83,25 +82,28 @@ function Navbar() {
             : active == 2
             ? "Pengeluaran"
             : active == 3
-            ? "Pajak"
-            : "Stok"}
+            ? "Pajak Rekan"
+            : active == 4
+            ? "Stok"
+            : active == 5
+            ? "Pajak Perusahaan"
+            : "Gaji"}
         </h1>
         <div
           className={`${
-            !navOpen && "-left-full"
-          } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] lg:static lg:block lg:h-auto lg:w-auto lg:bg-transparent lg:py-0 lg:shadow-none`}
+            navOpen ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
+          } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] xl:static xl:block xl:h-auto xl:w-auto xl:bg-transparent xl:py-0 xl:shadow-none`}
         >
-          <a href="#">
+          <a href="/">
             <img
               src="assets/logo.svg"
               alt="Elweha"
-              className="mx-auto mb-7 mt-2 h-[60px] lg:hidden"
+              className="mx-auto mb-7 mt-2 h-[60px] xl:hidden"
             />
           </a>
-          <div className="flex flex-col px-7 lg:mt-0 lg:flex-row lg:items-center lg:gap-[24px] lg:px-0">
+          <div className="flex flex-col gap-[8px] px-7 xl:mt-0 xl:flex-row xl:items-center xl:gap-[16px] xl:px-0">
             <a
-              href="#"
-              onClick={() => setActive(0)}
+              href="/"
               className={`${
                 active == 0 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -109,8 +111,7 @@ function Navbar() {
               Dashboard
             </a>
             <a
-              href="#"
-              onClick={() => setActive(1)}
+              href="/pendapatan"
               className={`${
                 active == 1 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -118,8 +119,7 @@ function Navbar() {
               Pendapatan
             </a>
             <a
-              href="#"
-              onClick={() => setActive(2)}
+              href="/pengeluaran"
               className={`${
                 active == 2 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
@@ -127,25 +127,39 @@ function Navbar() {
               Pengeluaran
             </a>
             <a
-              href="#"
-              onClick={() => setActive(3)}
+              href="/pajak-rekan"
               className={`${
                 active == 3 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white `}
             >
-              Pajak
+              Pajak Rekan
             </a>
             <a
-              href="#"
-              onClick={() => setActive(4)}
+              href="/stok"
               className={`${
                 active == 4 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Stok
             </a>
-            <div className="hidden h-12 w-[1px] bg-kGrey-100 lg:block"></div>
-            <div className="account-detail group absolute bottom-3 p-3 lg:relative lg:bottom-0">
+            <a
+              href="/pajak-perusahaan"
+              className={`${
+                active == 5 ? "text-kOrange-400" : "text-kText"
+              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+            >
+              Pajak Perusahaan
+            </a>
+            <a
+              href="/gaji"
+              className={`${
+                active == 6 ? "text-kOrange-400" : "text-kText"
+              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+            >
+              Gaji
+            </a>
+            <div className="hidden h-12 w-[1px] bg-kGrey-100 xl:block"></div>
+            <div className="account-detail group absolute bottom-3 p-3 xl:relative xl:bottom-0">
               <div
                 className="account-detail hamburger flex cursor-pointer items-center"
                 onClick={() => setAccount(!isAccount)}
@@ -156,8 +170,8 @@ function Navbar() {
                   alt="Profile"
                 />
                 <div className="account-detail hamburger ml-3">
-                  <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] lg:w-[60px] xl:w-[240px]">
-                    Nama User Panjang Sekaliiiiiiiiii
+                  <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] xl:w-[180px]">
+                    Nama User Panjang Sekali
                   </p>
                   <p className="hamburger account-detail text-14 text-kText group-hover:text-kOrange-400">
                     Role
@@ -165,7 +179,7 @@ function Navbar() {
                 </div>
               </div>
               {isAccount && (
-                <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg lg:translate-y-4">
+                <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
                   <a
                     href="#"
                     className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
