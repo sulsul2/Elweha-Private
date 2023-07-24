@@ -85,12 +85,12 @@ function Stok() {
           </div>
         </div>
         <div className="mt-10 flex flex-col justify-between gap-5 xl:flex-row">
-          <div className="flex w-full flex-col rounded-xl bg-white px-1 shadow-card xl:w-1/2">
-            <div className="mb-5 mt-5 flex justify-end gap-5">
+          <div className="flex w-full flex-col rounded-xl bg-white shadow-card xl:w-1/2">
+            <div className="mb-5 mt-5 flex justify-end gap-5 px-3">
               <Button type="button" style="primary" text="Tambah Barang +" />
               <Button type="button" style="third" text="Tambah Jenis +" />
             </div>
-            <div className="mb-5 flex w-full items-center justify-between gap-8">
+            <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
                 Daftar Barang
               </p>
@@ -116,11 +116,11 @@ function Stok() {
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col rounded-xl bg-white px-1 shadow-card xl:w-1/2">
-            <div className="mb-5 mt-5 flex justify-end gap-5">
+          <div className="flex w-full flex-col rounded-xl bg-white shadow-card xl:w-1/2">
+            <div className="mb-5 mt-5 flex justify-end gap-5 px-3">
               <Button type="button" style="primary" text="Ambil Stok" />
             </div>
-            <div className="mb-5 flex w-full items-center justify-between gap-8">
+            <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
                 Daftar Pengambil
               </p>

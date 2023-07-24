@@ -67,26 +67,26 @@ function PajakRekanOfficer() {
   return (
     <>
       <Navbar />
-      <div className="w-full px-5 pt-[104px] xl:px-24">
-        <h1 className="hidden text-40 font-bold xl:block">Pajak Rekan</h1>
-        <div className="mb-[77px] flex flex-col justify-between gap-[14px] xl:mb-[14px] xl:mt-[52px] xl:flex-row">
+      <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
+        <h1 className="mb-12 hidden text-40 font-bold xl:block">Pajak Rekan</h1>
+        <div className="flex flex-col justify-between gap-[14px] xl:flex-row">
           <div className="flex justify-between gap-11 xl:justify-start">
             <p className="text-16 font-bold xl:text-24">Total Pengeluaran</p>
             <p className="text-16 font-bold xl:text-24">Rp 100.000.000,-</p>
           </div>
-          <div className="flex justify-between gap-11 xl:justify-start">
+          <div className="flex items-center justify-between gap-11 xl:justify-start">
             <p className="text-16 font-bold xl:text-24">Periode</p>
             <div className="w-[160px] md:w-[200px]">
               <Dropdown placeholder={""} type={"month"} value={month} />
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-between gap-5 xl:flex-row">
-          <div className="w-full rounded-xl px-1 shadow-lg shadow-kGrey-100 xl:w-1/2">
-            <div className="mb-5 mt-5 flex justify-end gap-5">
+        <div className="mt-10 flex flex-col justify-between gap-5 xl:flex-row">
+          <div className="flex w-full flex-col rounded-xl bg-white shadow-lg xl:w-1/2">
+            <div className="mb-5 mt-5 flex justify-end gap-5 px-3">
               <Button type="button" style="primary" text="Tambah Rekan +" />
             </div>
-            <div className="mb-5 flex w-full items-center justify-between gap-8">
+            <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
                 Daftar Pajak Rekan
               </p>
@@ -112,11 +112,11 @@ function PajakRekanOfficer() {
               </p>
             </div>
           </div>
-          <div className="w-full rounded-xl px-1 shadow-lg shadow-kGrey-100 xl:w-1/2">
-            <div className="mb-5 mt-5 flex justify-end gap-5">
+          <div className="flex w-full flex-col rounded-xl bg-white shadow-lg xl:w-1/2">
+            <div className="mb-5 mt-5 flex justify-end gap-5 px-3">
               <Button type="button" style="primary" text="Tambah Data +" />
             </div>
-            <div className="mb-5 flex w-full items-center justify-between gap-8">
+            <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
                 Daftar Akta
               </p>
