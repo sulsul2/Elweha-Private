@@ -48,14 +48,22 @@ function PajakPerusahaan() {
             Tambah Rekan
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
-            <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Nama Rekan</p>
-              <Dropdown value={koreksiType} />
+            <div className="w-full items-center justify-between gap-16 xl:flex">
+              <div className=" xl:w-1/2">
+                <p className="mb-2 text-16 font-semibold">
+                  Sifat Koreksi (Positif / Negatif)
+                </p>
+                <Dropdown placeholder="Sifat" type="sifat" />
+              </div>
+              <div className=" xl:w-1/2">
+                <p className="mb-2 text-16 font-semibold">Jenis Koreksi</p>
+                <Dropdown placeholder="Jenis" type="jenis" />
+              </div>
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Biaya Jasa</p>
+              <p className="mb-2 text-16 font-semibold">Jumlah Koreksi</p>
               <TextField
                 type={"standart"}
                 label={""}
