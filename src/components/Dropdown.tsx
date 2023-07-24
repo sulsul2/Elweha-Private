@@ -63,7 +63,7 @@ const Dropdown = ({ placeholder, type, onChange, value }: DropdownProps) => {
         }),
         placeholder: (base) => ({
           ...base,
-          fontSize: "16px",
+          fontSize: "14px",
           color: "#A8A8A8",
           fontWeight: 400,
         }),

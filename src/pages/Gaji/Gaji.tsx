@@ -110,7 +110,7 @@ function Gaji() {
             <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
               Periode
             </p>
-            <div className="w-[180px] drop-shadow-button">
+            <div className="w-[160px] md:w-[200px]">
               <Dropdown placeholder={""} type={"month"} value={month} />
             </div>
           </div>

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import Table from "../../components/Table";
 
 function Dashboard() {
+  const [month, setMonth] = useState("Januari 2023");
   const data = [
     {
       id: 1,
@@ -36,7 +38,9 @@ function Dashboard() {
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>
           <div className="flex items-center justify-between">
             <h2 className="text-20 font-bold lg:mr-10">Periode</h2>
-            <Dropdown placeholder={"Select Date"} type={"Date"} />
+            <div className="w-[160px] md:w-[200px]">
+              <Dropdown placeholder={""} type={"month"} value={month} />
+            </div>
           </div>
         </div>
         <div className="mt-10 flex w-full flex-wrap justify-center gap-5">

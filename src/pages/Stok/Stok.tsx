@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Footer from "../../components/Footer";
@@ -7,6 +8,7 @@ import Table from "../../components/Table";
 import TextField from "../../components/TextField";
 
 function Stok() {
+  const [month, setMonth] = useState("Januari 2023");
   const data1 = [
     {
       id: 1,
@@ -72,21 +74,25 @@ function Stok() {
   return (
     <>
       <Navbar active={4} />
-      <div className="w-full px-5 pb-24 pt-[104px] xl:px-24">
-        <h1 className="text-40 font-bold">Stok</h1>
-        <div className="mt-[52px] flex gap-11">
-          <p className="text-24 font-bold">Periode</p>
-          <Dropdown type="period" placeholder="Select Period" />
+      <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
+        <h1 className="mb-12 hidden text-40 font-bold xl:block">Stok</h1>
+        <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
+          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
+            Periode
+          </p>
+          <div className="w-[160px] md:w-[200px]">
+            <Dropdown placeholder={""} type={"month"} value={month} />
+          </div>
         </div>
         <div className="flex flex-col justify-between gap-5 xl:flex-row">
-          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
+          <div className="flex w-full flex-col rounded-xl bg-white px-1 shadow-card xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
               <Button type="button" style="primary" text="Tambah Barang +" />
               <Button type="button" style="third" text="Tambah Jenis +" />
             </div>
             <div className="mb-5 flex w-full items-center justify-between gap-8">
               <p className="hidden text-16 font-bold xl:block xl:text-20">
-                Daftar Pendapatan
+                Daftar Barang
               </p>
               <div className="flex items-center gap-2">
                 <TextField
@@ -110,7 +116,7 @@ function Stok() {
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col rounded-xl px-1 shadow-card shadow-kGrey-100 xl:w-1/2">
+          <div className="flex w-full flex-col rounded-xl bg-white px-1 shadow-card xl:w-1/2">
             <div className="mb-5 mt-5 flex justify-end gap-5">
               <Button type="button" style="primary" text="Ambil Stok" />
             </div>

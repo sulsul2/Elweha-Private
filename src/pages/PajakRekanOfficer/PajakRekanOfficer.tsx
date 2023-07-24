@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Footer from "../../components/Footer";
@@ -7,6 +8,7 @@ import Table from "../../components/Table";
 import TextField from "../../components/TextField";
 
 function PajakRekanOfficer() {
+  const [month, setMonth] = useState("Januari 2023");
   const data1 = [
     {
       id: 1,
@@ -74,7 +76,9 @@ function PajakRekanOfficer() {
           </div>
           <div className="flex justify-between gap-11 xl:justify-start">
             <p className="text-16 font-bold xl:text-24">Periode</p>
-            <Dropdown type="period" placeholder="Select Period!" />
+            <div className="w-[160px] md:w-[200px]">
+              <Dropdown placeholder={""} type={"month"} value={month} />
+            </div>
           </div>
         </div>
         <div className="flex flex-col justify-between gap-5 xl:flex-row">
