@@ -257,7 +257,7 @@ function PajakRekan() {
               <Dropdown placeholder={""} type={"month"} value={month} />
             </div>
           </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
+          <div className="hidden w-full justify-center gap-4 xl:flex xl:justify-end">
             <Button
               onClick={() => setShowModal1(true)}
               text={"Tambah Rekan +"}
@@ -269,6 +269,14 @@ function PajakRekan() {
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Pajak Rekan
         </p>
+        <div className="mb-5 flex w-full gap-4 xl:hidden xl:justify-end">
+          <Button
+            onClick={() => setShowModal1(true)}
+            text={"Tambah Rekan +"}
+            type={"button"}
+            style={"primary"}
+          />
+        </div>
         <div className="flex grow flex-col rounded-lg bg-white py-5 shadow-card">
           <div className="mb-5 flex w-full items-center justify-between gap-1 px-3">
             <p className="hidden text-16 font-bold xl:block xl:text-24">
@@ -299,7 +307,7 @@ function PajakRekan() {
       </div>
       {/* daftar akta */}
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24  xl:px-48">
-        <div className="hidden pb-1 xl:block xl:text-end">
+        <div className="mb-5 hidden xl:block xl:text-end">
           <Button
             onClick={() => setShowModal2(true)}
             text={"Tambah Data +"}
@@ -310,7 +318,7 @@ function PajakRekan() {
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Akta
         </p>
-        <div className="block pb-1 xl:hidden xl:justify-end">
+        <div className="mb-5 block xl:hidden xl:justify-end">
           <Button
             onClick={() => setShowModal2(true)}
             text={"Tambah Data +"}
@@ -323,11 +331,11 @@ function PajakRekan() {
             <p className="hidden text-16 font-bold xl:block xl:text-24">
               Daftar Akta
             </p>
-            <div className="flex items-center gap-2">
+            <div className="w-[160px] md:w-[200px]">
               <Dropdown
                 placeholder={"Pilih Rekan"}
-                type={"month"}
-                value={month}
+                type={"Rekan"}
+                value={undefined}
               />
             </div>
             <Button text={"Hapus"} type={"button"} style={"delete"} />
