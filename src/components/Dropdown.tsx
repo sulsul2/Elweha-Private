@@ -1,20 +1,5 @@
 import Select, { ActionMeta, SingleValue } from "react-select";
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-];
-
 interface DropdownProps {
   placeholder: string;
   type: string;
@@ -31,12 +16,19 @@ interface DropdownProps {
       ) => void)
     | undefined;
   value?: string;
+  options: any;
 }
 
-const Dropdown = ({ placeholder, type, onChange, value }: DropdownProps) => {
+const Dropdown = ({
+  placeholder,
+  type,
+  onChange,
+  options,
+  value,
+}: DropdownProps) => {
   return (
     <Select
-      className="basic-single shadow-button w-[180px] rounded-lg bg-slate-700"
+      className="basic-single w-[180px] rounded-lg bg-slate-700 shadow-button"
       onChange={onChange}
       placeholder={placeholder}
       name={type}
