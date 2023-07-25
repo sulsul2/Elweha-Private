@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import Table from "../../components/Table";
 
 function Dashboard() {
+  const [month, setMonth] = useState("Januari 2023");
   const data = [
     {
       id: 1,
@@ -31,12 +33,14 @@ function Dashboard() {
   return (
     <>
       <Navbar active={0} />
-      <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] md:px-24">
+      <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <div className="xl:flex xl:justify-between xl:pr-16">
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>
           <div className="flex items-center justify-between">
-            <h2 className="text-20 font-bold lg:mr-10">Periode</h2>
-            <Dropdown placeholder={"Select Date"} type={"Date"} />
+            <h2 className="text-16 font-bold lg:mr-10 xl:text-24">Periode</h2>
+            <div className="w-[160px] md:w-[200px]">
+              <Dropdown placeholder={""} type={"month"} value={month} />
+            </div>
           </div>
         </div>
         <div className="mt-10 flex w-full flex-wrap justify-center gap-5">
