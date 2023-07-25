@@ -13,7 +13,7 @@ function DateFieldNormal({ text }: { text: string }) {
       <input
         value={value}
         placeholder={text}
-        className="w-full rounded border-2 border-kGrey-200 bg-[url(./assets/calendar_icon.svg)] bg-right bg-no-repeat bg-origin-content px-3 py-2 outline-kBlue"
+        className="w-full rounded-lg border-2 border-kGrey-200 bg-[url(./assets/calendar_icon.svg)] bg-right bg-no-repeat bg-origin-content px-3 py-2 hover:border-kOrange-200 focus:outline-kOrange-400"
         onClick={onClick}
         ref={ref}
       ></input>
