@@ -1,20 +1,5 @@
 import Select, { ActionMeta, SingleValue } from "react-select";
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-  { value: "vanilla", label: "Vanilla" },
-];
-
 interface DropdownProps {
   placeholder: string;
   type: string;
@@ -31,12 +16,19 @@ interface DropdownProps {
       ) => void)
     | undefined;
   value?: string;
+  options: any;
 }
 
-const Dropdown = ({ placeholder, type, onChange, value }: DropdownProps) => {
+const Dropdown = ({
+  placeholder,
+  type,
+  onChange,
+  options,
+  value,
+}: DropdownProps) => {
   return (
     <Select
-      className="basic-single w-full rounded-lg bg-slate-700 shadow-button"
+      className="basic-single w-full rounded-lg "
       onChange={onChange}
       placeholder={placeholder}
       name={type}
@@ -47,19 +39,23 @@ const Dropdown = ({ placeholder, type, onChange, value }: DropdownProps) => {
       theme={(theme) => ({
         ...theme,
         borderRadius: 0,
+        border: "2px",
         colors: {
           ...theme.colors,
-          primary25: "#FD6701",
-          primary: "#A8A8A8",
+          primary: "#FD6701",
         },
       })}
       styles={{
-        control: (baseStyles) => ({
+        control: (baseStyles, state) => ({
           ...baseStyles,
           borderRadius: "8px",
           paddingLeft: "8px",
           paddingTop: "2px",
           paddingBottom: "2px",
+          border: state.isFocused ? "" : "2px solid #A8A8A8",
+          '&:hover': {
+            borderColor: state.isFocused ? '' : '#F5BA93'
+          }
         }),
         placeholder: (base) => ({
           ...base,
