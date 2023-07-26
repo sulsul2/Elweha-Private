@@ -10,6 +10,7 @@ function TextField({
   helpertext,
   onChange,
   value,
+  required,
 }: {
   style?: string;
   type: "standart" | "action right" | "icon left" | "icon + action" | "search";
@@ -18,6 +19,7 @@ function TextField({
   helpertext: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
   value?: string | number | readonly string[] | undefined;
+  required?: boolean;
 }) {
   const [inputValue, setInputValue] = useState(value || "");
 
@@ -55,6 +57,7 @@ function TextField({
           </label>
           <div className="relative">
             <input
+              required={required}
               type="text"
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
@@ -80,16 +83,17 @@ function TextField({
           </label>
           <div className="relative flex items-center">
             <input
+              required={required}
               type={currType}
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } px-3 py-2  caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 pr-7 sm:pr-10 md:pr-10 lg:pr-14`}
+              } px-3 py-2  pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 sm:pr-10 md:pr-10 lg:pr-14`}
               value={inputValue}
               onChange={handleChange}
             />
             <span
-              className="absolute flex justify-around items-center right-[3%] xl:right-[2%] cursor-pointer text-lg lg:text-2xl"
+              className="absolute right-[3%] flex cursor-pointer items-center justify-around text-lg lg:text-2xl xl:right-[2%]"
               onClick={handleToggle}
             >
               {icon}
@@ -116,6 +120,7 @@ function TextField({
               className="absolute left-[3%] top-[30%] md:left-[2%] lg:left-[1%]"
             />
             <input
+              required={required}
               type="text"
               placeholder={placeholder}
               className={`w-full rounded-lg border-2 ${
@@ -154,6 +159,7 @@ function TextField({
               className="absolute left-[5%] top-[30%] md:left-[2%] lg:left-[1%]"
             />
             <input
+              required={required}
               type={currType}
               placeholder={placeholder}
               className={`w-full rounded-lg border-2 ${
@@ -177,13 +183,14 @@ function TextField({
 
       {type == "search" && (
         <div className={style + " w-full"}>
-          <div className="w-full border-2 border-[#A8A8A8] hover:border-kOrange-200 hover:focus-within:border-kOrange-400 disabled:border-[#6B6B6B] focus-within:border-kOrange-400 rounded-lg flex justify-between px-2 pointer-events-none">
+          <div className="pointer-events-none flex w-full justify-between rounded-lg border-2 border-[#A8A8A8] px-2 focus-within:border-kOrange-400 hover:border-kOrange-200 hover:focus-within:border-kOrange-400 disabled:border-[#6B6B6B]">
             <input
+              required={required}
               tabIndex={0}
               type="text"
               placeholder={placeholder}
-              className="w-full border-none outline-none px-3 py-2 caret-kOrange-400 placeholder:text-[#6B6B6B] disabled:opacity-30 pointer-events-auto"
-              value={inputValue} 
+              className="pointer-events-auto w-full border-none px-3 py-2 caret-kOrange-400 outline-none placeholder:text-[#6B6B6B] disabled:opacity-30"
+              value={inputValue}
               onChange={handleChange}
             />
             <img src="assets/search.svg" alt="" />

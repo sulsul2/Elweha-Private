@@ -39,7 +39,12 @@ function Dashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-16 font-bold lg:mr-10 xl:text-24">Periode</h2>
             <div className="w-[160px] md:w-[200px]">
-              <Dropdown placeholder={""} type={"month"} value={month} />
+              <Dropdown
+                placeholder={""}
+                type={"month"}
+                value={month}
+                options={undefined}
+              />
             </div>
           </div>
         </div>
