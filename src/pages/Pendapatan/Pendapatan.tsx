@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
@@ -8,8 +8,11 @@ import Paginate from "../../components/Paginate";
 import Modal from "../../components/Modal";
 import DateFieldNormal from "../../components/DateFieldNormal";
 import TextArea from "../../components/TextArea";
+import LoadingPage from "../../components/LoadingPage";
 
 function Pendapatan() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const [showTambahPendapatan, setShowTambahPendapatan] = useState(false);
   const [showEditPendapatan, setShowEditPendapatan] = useState(false);
@@ -58,9 +61,20 @@ function Pendapatan() {
     },
   ];
   const kolom = ["No", "Tanggal", "Kategori", "Jumlah", "Pengirim", "Notes"];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+  }, []);
+
   return (
     <>
-      <Navbar active={1} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={1}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
       <Modal
         visible={showTambahPendapatan}
         onClose={() => setShowTambahPendapatan(false)}
@@ -76,7 +90,11 @@ function Pendapatan() {
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Kategori</p>
-              <Dropdown placeholder={"Kategori"} type={"Kategori"} />
+              <Dropdown
+                placeholder={"Kategori"}
+                type={"Kategori"}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
@@ -91,7 +109,11 @@ function Pendapatan() {
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jenis</p>
-              <Dropdown placeholder={"Jenis"} type={"Jenis"} />
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="w-full">
@@ -130,7 +152,11 @@ function Pendapatan() {
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Kategori</p>
-              <Dropdown placeholder={"Kategori"} type={"Kategori"} />
+              <Dropdown
+                placeholder={"Kategori"}
+                type={"Kategori"}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
@@ -145,7 +171,11 @@ function Pendapatan() {
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jenis</p>
-              <Dropdown placeholder={"Jenis"} type={"Jenis"} />
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="w-full">
@@ -185,7 +215,12 @@ function Pendapatan() {
               Periode
             </p>
             <div className="w-[160px] md:w-[200px]">
-              <Dropdown placeholder={""} type={"month"} value={month} />
+              <Dropdown
+                placeholder={""}
+                type={"month"}
+                value={month}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">

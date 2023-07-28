@@ -28,16 +28,16 @@ export const postWithAuth = async (
 };
 
 export const get = async (
-  params?: string
+  apiParams: string
 ): Promise<AxiosResponse<any, any>> => {
-  return await axios.get(url + params);
+  return await axios.get(url + apiParams);
 };
 
 export const getWithAuth = async (
   token: string,
-  params?: string
+  apiParams: string
 ): Promise<AxiosResponse<any, any>> => {
-  return await axios.get(url + params, {
+  return await axios.get(url + apiParams, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",

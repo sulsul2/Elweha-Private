@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
@@ -8,8 +8,11 @@ import TextField from "../../components/TextField";
 import Modal from "../../components/Modal";
 import DateFieldNormal from "../../components/DateFieldNormal";
 import TextArea from "../../components/TextArea";
+import LoadingPage from "../../components/LoadingPage";
 
 function Gaji() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const [showModal, setShowModal] = useState(false);
   const data = [
@@ -47,9 +50,20 @@ function Gaji() {
     "Pajak Akumulasi",
     "Transfer",
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+  }, []);
+
   return (
     <>
-      <Navbar active={6} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={6}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
@@ -68,7 +82,11 @@ function Gaji() {
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jenis Gaji</p>
-              <Dropdown placeholder={"Jenis"} type={"Jenis"} />
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
@@ -111,7 +129,12 @@ function Gaji() {
               Periode
             </p>
             <div className="w-[160px] md:w-[200px]">
-              <Dropdown placeholder={""} type={"month"} value={month} />
+              <Dropdown
+                placeholder={""}
+                type={"month"}
+                value={month}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">

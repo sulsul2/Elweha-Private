@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
@@ -7,8 +7,11 @@ import Paginate from "../../components/Paginate";
 import TextField from "../../components/TextField";
 import Modal from "../../components/Modal";
 import DateFieldNormal from "../../components/DateFieldNormal";
+import LoadingPage from "../../components/LoadingPage";
 
 function PajakRekan() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -152,9 +155,20 @@ function PajakRekan() {
     "Jumlah Akta",
     "Terakhir Diupdate",
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+  }, []);
+
   return (
     <>
-      <Navbar active={3} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={3}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
       <Modal visible={showModal1} onClose={() => setShowModal1(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
@@ -254,7 +268,12 @@ function PajakRekan() {
               Periode
             </p>
             <div className="w-[160px] md:w-[200px]">
-              <Dropdown placeholder={""} type={"month"} value={month} />
+              <Dropdown
+                placeholder={""}
+                type={"month"}
+                value={month}
+                options={undefined}
+              />
             </div>
           </div>
           <div className="hidden w-full justify-center gap-4 xl:flex xl:justify-end">
@@ -336,6 +355,7 @@ function PajakRekan() {
                 placeholder={"Pilih Rekan"}
                 type={"Rekan"}
                 value={undefined}
+                options={undefined}
               />
             </div>
             <Button text={"Hapus"} type={"button"} style={"delete"} />

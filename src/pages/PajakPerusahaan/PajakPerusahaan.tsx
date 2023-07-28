@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
 import Navbar from "../../components/Navbar";
 import CardPajakPerusahaan from "./CardPajakPerusahaan";
@@ -9,6 +9,7 @@ import { IconContext } from "react-icons";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import TextField from "../../components/TextField";
+import LoadingPage from "../../components/LoadingPage";
 
 function KoreksiCard({ value }: { value: number }) {
   return (
@@ -33,15 +34,28 @@ function KoreksiCard({ value }: { value: number }) {
 }
 
 function PajakPerusahaan() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [navLoad, setNavLoad] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [month, setMonth] = useState("Januari 2023");
   const koreksiType = [
     { value: "Positif", label: "Positif" },
     { value: "Negatif", label: "Negatif" },
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+  }, []);
+
   return (
     <>
-      <Navbar active={5} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={5}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
@@ -53,11 +67,19 @@ function PajakPerusahaan() {
                 <p className="mb-2 text-16 font-semibold">
                   Sifat Koreksi (Positif / Negatif)
                 </p>
-                <Dropdown placeholder="Sifat" type="sifat" />
+                <Dropdown
+                  placeholder="Sifat"
+                  type="sifat"
+                  options={undefined}
+                />
               </div>
               <div className=" xl:w-1/2">
                 <p className="mb-2 text-16 font-semibold">Jenis Koreksi</p>
-                <Dropdown placeholder="Jenis" type="jenis" />
+                <Dropdown
+                  placeholder="Jenis"
+                  type="jenis"
+                  options={undefined}
+                />
               </div>
             </div>
           </div>
@@ -91,7 +113,12 @@ function PajakPerusahaan() {
           <div className="flex items-center justify-between">
             <h2 className="text-16 font-bold lg:mr-10 xl:text-24">Periode</h2>
             <div className="w-[160px] md:w-[200px]">
-              <Dropdown placeholder={""} type={"month"} value={month} />
+              <Dropdown
+                placeholder={""}
+                type={"month"}
+                value={month}
+                options={undefined}
+              />
             </div>
           </div>
         </div>

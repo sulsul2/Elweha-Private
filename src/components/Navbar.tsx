@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
+import { getWithAuth } from "../api/api";
+import { toastError } from "./Toast";
 
-function Navbar({ active }: { active?: number }) {
+function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any | null>(null);
 
   const documentRef = useRef<Document>(document);
   const onClickAccount = (event: Event) => {
@@ -28,6 +32,26 @@ function Navbar({ active }: { active?: number }) {
     }
   };
   useEventListener("click", onClickHamburger, documentRef);
+
+  const token = localStorage.getItem("access_token");
+  const getUser = async () => {
+    if (token) {
+      try {
+        const response = await getWithAuth(token, "user");
+        const data = response.data?.data;
+        setUser(data);
+      } catch (error) {
+        toastError((error as any).response.data.data as string);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    onLoading(isLoading);
+    getUser();
+  }, [isLoading]);
 
   return (
     <>
@@ -160,38 +184,50 @@ function Navbar({ active }: { active?: number }) {
             </a>
             <div className="hidden h-12 w-[1px] bg-kGrey-100 xl:block"></div>
             <div className="account-detail group absolute bottom-3 p-3 xl:relative xl:bottom-0">
-              <div
-                className="account-detail hamburger flex cursor-pointer items-center"
-                onClick={() => setAccount(!isAccount)}
-              >
-                <img
-                  src=""
-                  className="account-detail hamburger h-12 w-12 shrink-0 rounded-full bg-kGrey-100"
-                  alt="Profile"
-                />
-                <div className="account-detail hamburger ml-3">
-                  <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] xl:w-[180px]">
-                    Nama User Panjang Sekali
-                  </p>
-                  <p className="hamburger account-detail text-14 text-kText group-hover:text-kOrange-400">
-                    Role
-                  </p>
-                </div>
-              </div>
-              {isAccount && (
-                <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
-                  <a
-                    href="#"
-                    className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
+              {user ? (
+                <>
+                  <div
+                    className="account-detail hamburger flex cursor-pointer items-center"
+                    onClick={() => setAccount(!isAccount)}
                   >
-                    Daftar Akun
-                  </a>
-                  <a
-                    href="#"
-                    className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
-                  >
-                    Keluar
-                  </a>
+                    <img
+                      src={user.profile_photo_url}
+                      className="account-detail hamburger h-12 w-12 shrink-0 rounded-full bg-kGrey-100"
+                      alt="Profile"
+                    />
+                    <div className="account-detail hamburger ml-3">
+                      <p className="hamburger account-detail w-[160px] overflow-hidden text-ellipsis whitespace-nowrap text-16 font-bold text-kText group-hover:text-kOrange-400 md:w-[350px] xl:w-[180px]">
+                        {user.nama}
+                      </p>
+                      <p className="hamburger account-detail text-14 text-kText group-hover:text-kOrange-400">
+                        {user.role}
+                      </p>
+                    </div>
+                  </div>
+                  {isAccount && (
+                    <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
+                      <a
+                        href="#"
+                        className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
+                      >
+                        Daftar Akun
+                      </a>
+                      <a
+                        href="#"
+                        className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
+                      >
+                        Keluar
+                      </a>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="account-detail flex cursor-pointer items-center">
+                  <div className="account-detail h-12 w-12 shrink-0 animate-pulse rounded-full bg-kGrey-100" />
+                  <div className="account-detail ml-3 flex flex-col gap-2">
+                    <div className="account-detail h-4 w-[160px] animate-pulse  bg-kGrey-100 md:w-[350px] xl:w-[180px]"></div>
+                    <div className="account-detail h-4 w-[160px] animate-pulse  bg-kGrey-100 md:w-[350px] xl:w-[180px]"></div>
+                  </div>
                 </div>
               )}
             </div>

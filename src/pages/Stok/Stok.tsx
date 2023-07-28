@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Footer from "../../components/Footer";
@@ -6,8 +6,11 @@ import Navbar from "../../components/Navbar";
 import Paginate from "../../components/Paginate";
 import Table from "../../components/Table";
 import TextField from "../../components/TextField";
+import LoadingPage from "../../components/LoadingPage";
 
 function Stok() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const data1 = [
     {
@@ -71,9 +74,20 @@ function Stok() {
     "Jumlah",
     "Satuan",
   ];
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 0);
+  }, []);
+
   return (
     <>
-      <Navbar active={4} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={4}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
       <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Stok</h1>
         <div className="flex w-full items-center justify-between xl:justify-start">
@@ -81,7 +95,12 @@ function Stok() {
             Periode
           </p>
           <div className="w-[160px] md:w-[200px]">
-            <Dropdown placeholder={""} type={"month"} value={month} />
+            <Dropdown
+              placeholder={""}
+              type={"month"}
+              value={month}
+              options={undefined}
+            />
           </div>
         </div>
         <div className="mt-10 flex flex-col justify-between gap-5 xl:flex-row">
