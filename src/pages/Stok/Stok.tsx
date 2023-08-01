@@ -7,11 +7,18 @@ import Paginate from "../../components/Paginate";
 import Table from "../../components/Table";
 import TextField from "../../components/TextField";
 import LoadingPage from "../../components/LoadingPage";
+import Modal from "../../components/Modal";
+import DateFieldNormal from "../../components/DateFieldNormal";
 
 function Stok() {
   const [isLoading, setIsLoading] = useState(true);
   const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
+  const [showvisible1, setShowVisible1] = useState(false);
+  const [showvisible2, setShowVisible2] = useState(false);
+  const [showvisible3, setShowVisible3] = useState(false);
+  const [showvisible4, setShowVisible4] = useState(false);
+  const [showvisible5, setShowVisible5] = useState(false);
   const data1 = [
     {
       id: 1,
@@ -88,6 +95,270 @@ function Stok() {
         active={4}
         onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
       />
+      <Modal visible={showvisible1} onClose={() => setShowVisible1(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Ambil Barang
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal text="Pick a Date!"/>
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Barang</p>
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Pengambil</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Satuan</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowVisible1(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Tambah Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
+      <Modal visible={showvisible2} onClose={() => setShowVisible2(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Edit Ambil Barang
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal text="Pick a Date!"/>
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Barang</p>
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Pengambil</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Satuan</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowVisible2(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Simpan Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
+      <Modal visible={showvisible3} onClose={() => setShowVisible3(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Edit Barang
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+          <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Barang</p>
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Satuan</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowVisible3(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Simpan Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
+      <Modal visible={showvisible4} onClose={() => setShowVisible4(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Tambah Barang
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+          <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Nama Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Barang</p>
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={undefined}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jumlah Barang</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              /> 
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Satuan</p>
+              <TextField
+                style={""}
+                type={"standart"}
+                label={""}
+                placeholder={"Rp"}
+                helpertext={""}
+              />
+            </div>
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowVisible4(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button text={"Tambah Data"} type={"button"} style={"primary"} />
+          </div>
+        </div>
+      </Modal>
       <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Stok</h1>
         <div className="flex w-full items-center justify-between xl:justify-start">
