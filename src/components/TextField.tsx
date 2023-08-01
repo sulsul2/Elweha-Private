@@ -7,16 +7,16 @@ function TextField({
   type,
   label,
   placeholder,
-  helpertext,
+  helpertext = "",
   onChange,
   value,
   required,
 }: {
   style?: string;
   type: "standart" | "action right" | "icon left" | "icon + action" | "search";
-  label: string;
+  label?: string;
   placeholder: string;
-  helpertext: string;
+  helpertext?: string;
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined;
   value?: string | number | readonly string[] | undefined;
   required?: boolean;

@@ -35,7 +35,8 @@ const Dropdown = ({
       maxMenuHeight={200}
       options={options}
       defaultValue={value == null ? null : { value: value, label: value }}
-      isSearchable={false}
+      isSearchable={true}
+      isClearable={true}
       theme={(theme) => ({
         ...theme,
         borderRadius: 0,
@@ -53,9 +54,9 @@ const Dropdown = ({
           paddingTop: "2px",
           paddingBottom: "2px",
           border: state.isFocused ? "" : "2px solid #A8A8A8",
-          '&:hover': {
-            borderColor: state.isFocused ? '' : '#F5BA93'
-          }
+          "&:hover": {
+            borderColor: state.isFocused ? "" : "#F5BA93",
+          },
         }),
         placeholder: (base) => ({
           ...base,
