@@ -6,11 +6,13 @@ function Table({
   column,
   isLoading,
   page,
+  onEdit,
 }: {
   data: any;
   column: any;
   isLoading: boolean;
   page: number;
+  onEdit: (x: number) => void | undefined;
 }) {
   const Load = () => {
     const dummy = [1, 2, 3, 4, 5, 6, 7];
@@ -29,8 +31,7 @@ function Table({
             </td>
           );
         })}
-        <td className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 py-3 text-center">
-          {" "}
+        <td className="h-auto w-auto border-collapse cursor-pointer border-b-2 border-kGrey-100 py-3 text-center">
           <BiSolidPencil />
         </td>
       </tr>
@@ -79,6 +80,9 @@ function Table({
                       {num}
                     </td>
                     {Object.values(obj).map((row: any, idx: number) => {
+                      if (idx == 0) {
+                        return;
+                      }
                       return (
                         <td
                           key={idx}
@@ -88,8 +92,10 @@ function Table({
                         </td>
                       );
                     })}
-                    <td className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 py-3 text-center">
-                      {" "}
+                    <td
+                      onClick={() => onEdit(idx)}
+                      className="h-auto w-auto border-collapse cursor-pointer border-b-2 border-kGrey-100 py-3 text-center hover:text-kOrange-300 active:text-kOrange-400"
+                    >
                       <BiSolidPencil />
                     </td>
                   </tr>

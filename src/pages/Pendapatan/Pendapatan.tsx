@@ -14,6 +14,7 @@ import { getWithAuth, postWithAuth } from "../../api/api";
 import { toastError, toastSuccess } from "../../components/Toast";
 import moment from "moment";
 import Checkbox from "../../components/Checkbox";
+import { FormatRupiah } from "@arismun/format-rupiah";
 
 function Pendapatan() {
   // Loading
@@ -21,6 +22,7 @@ function Pendapatan() {
   const [isTableLoad, setIsTableLoad] = useState(false);
   const [isAddKategori, setIsAddKategori] = useState(false);
   const [isAddPendapatan, setIsAddPendapatan] = useState(false);
+  const [isEditPendapatan, setIsEditPendapatan] = useState(false);
 
   // User
   const [user, setUser] = useState<any | null>(null);
@@ -32,18 +34,15 @@ function Pendapatan() {
   const [showFilter, setShowFilter] = useState(false);
 
   // Dropdown
-  const [period, setPeriod] = useState<{ year: string; month: string }>({
-    month: "",
-    year: "",
-  });
   const [kategoriData, setKategoriData] = useState<
     Array<{ value: string; label: string }>
   >([]);
 
   //Field
+  const [period, setPeriod] = useState<{ value: string; label: string }>();
+  const [kategori, setKategori] = useState<{ value: string; label: string }>();
   const [addKategori, setAddKategori] = useState("");
   const [tanggal, setTanggal] = useState<Date | null>();
-  const [kategori, setKategori] = useState("");
   const [jumlah, setJumlah] = useState("");
   const [pengirim, setPengirim] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -51,19 +50,21 @@ function Pendapatan() {
 
   // Data
   const [data, setData] = useState([{}]);
+  const [totalPendapatan, setTotalPendapatan] = useState(0);
+
+  // Table
   const kolom = [
     "No",
     "Tanggal",
     "Kategori",
     "Jumlah",
     "Pengirim",
-    "deskripsi",
+    "Deskripsi",
   ];
-
-  // Table
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [totalData, setTotalData] = useState(0);
+  const [idEdit, setIdEdit] = useState(-1);
   const [kategoriId, setKategoriId] = useState<Array<number>>([]);
 
   const token = localStorage.getItem("access_token");
@@ -94,14 +95,18 @@ function Pendapatan() {
         kategoriId.forEach((id, idx) => {
           filter += `&kategori_id[${idx}]=${id}`;
         });
-        console.log(filter);
         const pendapatan = await getWithAuth(
           token,
-          `pendapatan?limit=10&page=${page}&month=${period?.month}&year=${period?.year}&search=${search}${filter}`
+          `pendapatan?limit=10&page=${page}&month=${
+            period ? period?.value.split("-")[0] : ""
+          }&year=${
+            period ? period?.value.split("-")[1] : ""
+          }&search=${search}${filter}`
         );
         setData(
-          pendapatan.data.data.data.map((data: any) => {
+          pendapatan.data.data.table.data.map((data: any) => {
             return {
+              id: data.id,
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
               kategori: data.kategori.nama,
               jumlah: data.jumlah,
@@ -110,8 +115,9 @@ function Pendapatan() {
             };
           })
         );
-        setTotalPage(pendapatan.data.data.last_page);
-        setTotalData(pendapatan.data.data.total);
+        setTotalPendapatan(pendapatan.data.data.total_pendapatan);
+        setTotalPage(pendapatan.data.data.table.last_page);
+        setTotalData(pendapatan.data.data.table.total);
       } catch (error) {
         console.log(error);
       } finally {
@@ -162,9 +168,8 @@ function Pendapatan() {
       const response = await postWithAuth(
         "pendapatan",
         {
-          user_id: user.id,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          kategori_pendapatan_id: kategori,
+          kategori_pendapatan_id: kategori!.value,
           jumlah: jumlah,
           pengirim: pengirim,
           deskripsi: deskripsi,
@@ -181,10 +186,38 @@ function Pendapatan() {
     }
   };
 
+  const editPendapatan = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsEditPendapatan(true);
+    try {
+      const response = await postWithAuth(
+        "update-pendapatan",
+        {
+          id: idEdit,
+          tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
+          kategori_pendapatan_id: kategori!.value,
+          jumlah: jumlah,
+          pengirim: pengirim,
+          deskripsi: deskripsi,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowEditPendapatan(false);
+      setTotalData(totalData + 1);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    } finally {
+      setIsEditPendapatan(false);
+    }
+  };
+
   return (
     <>
       <LoadingPage isLoad={isLoading} />
       <Navbar active={1} user={user} />
+
+      {/* Add Kategori */}
       <Modal
         visible={showTambahKategori}
         onClose={() => setShowTambahKategori(false)}
@@ -222,6 +255,7 @@ function Pendapatan() {
         </form>
       </Modal>
 
+      {/* Add Pendapatan */}
       <Modal
         visible={showTambahPendapatan}
         onClose={() => setShowTambahPendapatan(false)}
@@ -237,6 +271,7 @@ function Pendapatan() {
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Tanggal</p>
               <DateFieldNormal
+                required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
               />
@@ -244,10 +279,11 @@ function Pendapatan() {
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Kategori</p>
               <Dropdown
+                required
                 placeholder={"Kategori"}
                 type={"Kategori"}
                 options={kategoriData}
-                onChange={(e) => setKategori(e?.value!)}
+                onChange={(e) => setKategori(e!)}
               />
             </div>
           </div>
@@ -296,25 +332,37 @@ function Pendapatan() {
         </form>
       </Modal>
 
+      {/* Edit Pendapatan */}
       <Modal
         visible={showEditPendapatan}
         onClose={() => setShowEditPendapatan(false)}
       >
-        <div className="flex w-full flex-col gap-4">
+        <form
+          onSubmit={(e) => editPendapatan(e)}
+          className="flex w-full flex-col gap-4"
+        >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
             Edit Pendapatan
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Tanggal</p>
-              <DateFieldNormal text={"Masukkan Tanggal"} onChange={undefined} />
+              <DateFieldNormal
+                required
+                text={"Masukkan Tanggal"}
+                onChange={(val: Date) => setTanggal(val)}
+                value={tanggal}
+              />
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Kategori</p>
               <Dropdown
+                required
                 placeholder={"Kategori"}
                 type={"Kategori"}
-                options={undefined}
+                options={kategoriData}
+                onChange={(e) => setKategori(e!)}
+                value={kategori}
               />
             </div>
           </div>
@@ -322,28 +370,31 @@ function Pendapatan() {
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jumlah Pendapatan</p>
               <TextField
+                required
                 type={"standart"}
-                label={""}
                 placeholder={"Rp"}
-                helpertext={""}
+                onChange={(e) => setJumlah(e.target.value)}
+                value={jumlah}
               />
             </div>
             <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Jenis</p>
-              <Dropdown
-                placeholder={"Jenis"}
-                type={"Jenis"}
-                options={undefined}
+              <p className="mb-2 text-16 font-semibold">Pengirim</p>
+              <TextField
+                required
+                type={"standart"}
+                placeholder={"Masukkan Nama Pengirim"}
+                onChange={(e) => setPengirim(e.target.value)}
+                value={pengirim}
               />
             </div>
           </div>
           <div className="w-full">
             <p className="mb-2 text-16 font-semibold">Deskripsi</p>
             <TextArea
-              style={""}
-              label={""}
+              required
               placeholder={"Deskripsi"}
-              helpertext={""}
+              onChange={(e) => setDeskripsi(e.target.value)}
+              value={deskripsi}
             />
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
@@ -353,9 +404,14 @@ function Pendapatan() {
               type={"button"}
               style={"third"}
             />
-            <Button text={"Edit Data"} type={"button"} style={"primary"} />
+            <Button
+              text={"Edit Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isEditPendapatan}
+            />
           </div>
-        </div>
+        </form>
       </Modal>
 
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24 pt-[104px] xl:px-24">
@@ -365,7 +421,7 @@ function Pendapatan() {
             Total Pendapatan
           </p>
           <p className="text-16 font-semibold text-kText xl:text-24">
-            Rp 100.000.000.000000,-
+            <FormatRupiah value={totalPendapatan} />
           </p>
         </div>
         <div className="mb-5 flex flex-col justify-between gap-11 xl:flex-row">
@@ -378,13 +434,7 @@ function Pendapatan() {
                 placeholder={"Select Period"}
                 type={"month"}
                 options={dataMonth(new Date("01/01/2000"), new Date())}
-                onChange={(e) =>
-                  setPeriod(
-                    e?.value == undefined
-                      ? { month: "", year: "" }
-                      : (e?.value as any)
-                  )
-                }
+                onChange={(e) => setPeriod(e!)}
               />
             </div>
           </div>
@@ -434,26 +484,27 @@ function Pendapatan() {
                         var isChecked = kategoriId.includes(
                           Number.parseInt(kategori.value)
                         );
+                        const handleCheck = () =>
+                          isChecked
+                            ? setKategoriId(
+                                kategoriId.filter(
+                                  (item) =>
+                                    item !== Number.parseInt(kategori.value)
+                                )
+                              )
+                            : setKategoriId([
+                                ...kategoriId,
+                                Number.parseInt(kategori.value),
+                              ]);
                         return (
                           <li
                             key={idx}
-                            onClick={() =>
-                              isChecked
-                                ? setKategoriId(
-                                    kategoriId.filter(
-                                      (item) =>
-                                        item !== Number.parseInt(kategori.value)
-                                    )
-                                  )
-                                : setKategoriId([
-                                    ...kategoriId,
-                                    Number.parseInt(kategori.value),
-                                  ])
-                            }
+                            onClick={handleCheck}
                             className="my-4 flex cursor-pointer items-center gap-2 hover:text-kOrange-300"
                           >
                             <div>
                               <Checkbox
+                                onChange={handleCheck}
                                 checked={isChecked}
                                 type={"check"}
                                 id={kategori.label}
@@ -477,6 +528,21 @@ function Pendapatan() {
             column={kolom}
             isLoading={isTableLoad}
             page={page}
+            onEdit={(val) => {
+              setIdEdit((data[val] as any).id);
+              setShowEditPendapatan(true);
+              setKategori(
+                kategoriData.filter(
+                  (item) => item.label == (data[val] as any).kategori
+                )[0]
+              );
+              setTanggal(
+                moment(Date.parse((data[val] as any).tanggal)).toDate()
+              );
+              setPengirim((data[val] as any).pengirim);
+              setJumlah((data[val] as any).jumlah);
+              setDeskripsi((data[val] as any).deskripsi);
+            }}
           />
           <Paginate
             totalPages={totalPage}

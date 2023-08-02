@@ -1,3 +1,4 @@
+import { ChangeEventHandler } from "react";
 import "./Checkbox.css";
 
 function Checkbox({
@@ -6,12 +7,14 @@ function Checkbox({
   label,
   description,
   checked,
+  onChange,
 }: {
   type: "check" | "indeter" | undefined;
   id: string;
   label?: string;
   description?: string;
   checked?: boolean;
+  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 }) {
   return (
     <>
@@ -25,6 +28,7 @@ function Checkbox({
           type="checkbox"
           id={id}
           checked={checked}
+          onChange={onChange}
         />
         <label htmlFor={id} className="flex flex-col gap-[6px]">
           <p className="text-16 leading-none text-black">{label}</p>

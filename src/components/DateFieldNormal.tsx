@@ -3,7 +3,17 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-function DateFieldNormal({ text, onChange }: { text: string; onChange: any }) {
+function DateFieldNormal({
+  text,
+  onChange,
+  required,
+  value,
+}: {
+  text: string;
+  onChange: any;
+  required?: boolean;
+  value?: Date | null;
+}) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const CustomInput = forwardRef(
     (
@@ -17,6 +27,7 @@ function DateFieldNormal({ text, onChange }: { text: string; onChange: any }) {
       ref: LegacyRef<HTMLInputElement> | undefined
     ) => (
       <input
+        required={required}
         value={value}
         placeholder={text}
         onChange={onChange}
@@ -30,13 +41,13 @@ function DateFieldNormal({ text, onChange }: { text: string; onChange: any }) {
     <>
       <DatePicker
         wrapperClassName="w-full"
-        dateFormat={"dd.MM.yyyy"}
+        dateFormat={"dd MMMM yyyy"}
         showMonthDropdown
         showYearDropdown
         scrollableYearDropdown
         popperPlacement="bottom"
         showPopperArrow={false}
-        selected={startDate}
+        selected={startDate == null && value != null ? value : startDate}
         onChange={(date) => {
           setStartDate(date);
           onChange(date);

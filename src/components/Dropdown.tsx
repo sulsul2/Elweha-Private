@@ -15,8 +15,9 @@ interface DropdownProps {
         }>
       ) => void)
     | undefined;
-  value?: string;
+  value?: { value: string; label: string };
   options: any;
+  required?: boolean;
 }
 
 const Dropdown = ({
@@ -25,16 +26,20 @@ const Dropdown = ({
   onChange,
   options,
   value,
+  required,
 }: DropdownProps) => {
   return (
     <Select
+      required={required}
       className="basic-single w-full rounded-lg "
       onChange={onChange}
       placeholder={placeholder}
       name={type}
       maxMenuHeight={200}
       options={options}
-      defaultValue={value == null ? null : { value: value, label: value }}
+      value={
+        value == null ? undefined : { value: value!.value, label: value!.label }
+      }
       isSearchable={true}
       isClearable={true}
       theme={(theme) => ({

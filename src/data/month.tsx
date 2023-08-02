@@ -1,18 +1,18 @@
 export const dataMonth = (start: Date, end: Date) => {
   const data = [];
   const month = [
-    "Januari",
-    "Februari",
-    "Maret",
+    "January",
+    "February",
+    "March",
     "April",
-    "Mei",
-    "Juni",
-    "Juli",
-    "Agustus",
+    "May",
+    "June",
+    "July",
+    "August",
     "September",
-    "Oktober",
+    "October",
     "November",
-    "Desember",
+    "December",
   ];
 
   var monthIdxStart = start.getMonth();
@@ -22,10 +22,7 @@ export const dataMonth = (start: Date, end: Date) => {
 
   while (!(yearStart == yearEnd && monthIdxStart == monthIdxEnd)) {
     data.push({
-      value: {
-        month: monthIdxEnd + 1,
-        year: yearEnd,
-      },
+      value: `${monthIdxEnd + 1}-${yearEnd}`,
       label: `${month[monthIdxEnd]} ${yearEnd}`,
     });
     if (monthIdxEnd == 0) {
