@@ -1,9 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
+import { getWithAuth } from "../api/api";
+import { toastError } from "./Toast";
 
-function Navbar({ active, user }: { active?: number; user: any }) {
+function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<any | null>(null);
 
   const documentRef = useRef<Document>(document);
   const onClickAccount = (event: Event) => {
@@ -28,6 +32,26 @@ function Navbar({ active, user }: { active?: number; user: any }) {
     }
   };
   useEventListener("click", onClickHamburger, documentRef);
+
+  const token = localStorage.getItem("access_token");
+  const getUser = async () => {
+    if (token) {
+      try {
+        const response = await getWithAuth(token, "user");
+        const data = response.data?.data;
+        setUser(data);
+      } catch (error) {
+        toastError("Get User Failed");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    onLoading(isLoading);
+    getUser();
+  }, [isLoading]);
 
   return (
     <>

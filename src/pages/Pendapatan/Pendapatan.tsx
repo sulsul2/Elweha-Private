@@ -18,19 +18,19 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 
 function Pendapatan() {
   // Loading
+  const [navLoad, setNavLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoad, setIsTableLoad] = useState(false);
   const [isAddKategori, setIsAddKategori] = useState(false);
   const [isAddPendapatan, setIsAddPendapatan] = useState(false);
   const [isEditPendapatan, setIsEditPendapatan] = useState(false);
-
-  // User
-  const [user, setUser] = useState<any | null>(null);
+  const [isHapusPendapatan, setIsHapusPendapatan] = useState(false);
 
   // PopUp
   const [showTambahKategori, setShowTambahKategori] = useState(false);
   const [showTambahPendapatan, setShowTambahPendapatan] = useState(false);
   const [showEditPendapatan, setShowEditPendapatan] = useState(false);
+  const [showHapusPendapatan, setShowHapusPendapatan] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
 
   // Dropdown
@@ -66,13 +66,12 @@ function Pendapatan() {
   const [totalData, setTotalData] = useState(0);
   const [idEdit, setIdEdit] = useState(-1);
   const [kategoriId, setKategoriId] = useState<Array<number>>([]);
+  const [onSelected, setOnSelected] = useState<Array<number>>([]);
 
   const token = localStorage.getItem("access_token");
   const getData = async () => {
     if (token) {
       try {
-        const user = await getWithAuth(token, "user");
-        setUser(user.data.data);
         const kategori = await getWithAuth(token, "kategori-pendapatan");
         setKategoriData(
           kategori.data.data.map((data: any) => {
@@ -80,7 +79,7 @@ function Pendapatan() {
           })
         );
       } catch (error) {
-        console.log(error);
+        toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
       }
@@ -119,7 +118,7 @@ function Pendapatan() {
         setTotalPage(pendapatan.data.data.table.last_page);
         setTotalData(pendapatan.data.data.table.total);
       } catch (error) {
-        console.log(error);
+        toastError("Get Data Table Failed");
       } finally {
         setIsTableLoad(false);
       }
@@ -212,10 +211,35 @@ function Pendapatan() {
     }
   };
 
+  const hapusPendapatan = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsHapusPendapatan(true);
+    try {
+      const response = await postWithAuth(
+        "delete-pendapatan",
+        {
+          selectedId: onSelected,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowHapusPendapatan(false);
+      setTotalData(totalData + 1);
+      setOnSelected([]);
+    } catch (error) {
+      toastError((error as any).response.data.meta.message as string);
+    } finally {
+      setIsHapusPendapatan(false);
+    }
+  };
+
   return (
     <>
-      <LoadingPage isLoad={isLoading} />
-      <Navbar active={1} user={user} />
+      <LoadingPage isLoad={navLoad || isLoading} />
+      <Navbar
+        active={1}
+        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
+      />
 
       {/* Add Kategori */}
       <Modal
@@ -414,6 +438,38 @@ function Pendapatan() {
         </form>
       </Modal>
 
+      {/* Hapus Pendapatan */}
+      <Modal
+        visible={showHapusPendapatan}
+        onClose={() => setShowHapusPendapatan(false)}
+      >
+        <form
+          onSubmit={(e) => hapusPendapatan(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Hapus Pendapatan
+          </h1>
+          <p className="mb-5 w-full text-center text-12 xl:text-left xl:text-16">
+            Apakah Anda yakin menghapus data?
+          </p>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowHapusPendapatan(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              isLoading={isHapusPendapatan}
+              text={"Hapus Data"}
+              type={"submit"}
+              style={"primary"}
+            />
+          </div>
+        </form>
+      </Modal>
+
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pendapatan</h1>
         <div className="mb-5 flex w-full justify-between xl:justify-start">
@@ -521,13 +577,19 @@ function Pendapatan() {
                 )}
               </div>
             </div>
-            <Button text={"Hapus"} type={"button"} style={"delete"} />
+            <Button
+              onClick={() => setShowHapusPendapatan(true)}
+              text={"Hapus"}
+              type={"button"}
+              style={"delete"}
+            />
           </div>
           <Table
             data={data}
             column={kolom}
             isLoading={isTableLoad}
             page={page}
+            dataLimit={10}
             onEdit={(val) => {
               setIdEdit((data[val] as any).id);
               setShowEditPendapatan(true);
@@ -543,11 +605,14 @@ function Pendapatan() {
               setJumlah((data[val] as any).jumlah);
               setDeskripsi((data[val] as any).deskripsi);
             }}
+            onSelected={(val) => setOnSelected(val)}
+            selected={onSelected}
           />
           <Paginate
             totalPages={totalPage}
             current={(page) => setPage(page)}
             totalData={totalData}
+            dataLimit={10}
           />
         </div>
       </div>

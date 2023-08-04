@@ -6,13 +6,19 @@ function Table({
   column,
   isLoading,
   page,
+  dataLimit,
   onEdit,
+  onSelected,
+  selected,
 }: {
   data: any;
   column: any;
   isLoading: boolean;
   page: number;
-  onEdit: (x: number) => void | undefined;
+  dataLimit: number;
+  onEdit?: (x: number) => void | undefined;
+  onSelected?: (x: Array<number>) => void | undefined;
+  selected?: Array<number>;
 }) {
   const Load = () => {
     const dummy = [1, 2, 3, 4, 5, 6, 7];
@@ -38,7 +44,18 @@ function Table({
     ));
   };
 
-  var num = (page - 1) * 10;
+  var num = (page - 1) * dataLimit;
+
+  const selectAll = () => {
+    if (onSelected && selected) {
+      if (selected.length == data.length) {
+        onSelected([]);
+      } else {
+        const AllId = data.map((obj: any) => obj.id);
+        onSelected(AllId);
+      }
+    }
+  };
 
   return (
     <>
@@ -47,7 +64,12 @@ function Table({
           <thead>
             <tr>
               <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-normal xl:px-4">
-                <Checkbox type={"check"} id={""} />
+                <Checkbox
+                  checked={selected?.length == data.length && data.length != 0}
+                  onChange={selectAll}
+                  type={"check"}
+                  id={""}
+                />
               </th>
               {column.map((row: any, idx: number) => {
                 return (
@@ -71,10 +93,25 @@ function Table({
             ) : (
               Object.values(data).map((obj: any, idx: number) => {
                 num++;
+                var isChecked = selected?.includes(obj.id);
+                const handleCheck = () => {
+                  if (onSelected && selected) {
+                    if (isChecked) {
+                      onSelected(selected.filter((item) => item !== obj.id));
+                    } else {
+                      onSelected([...selected, obj.id]);
+                    }
+                  }
+                };
                 return (
                   <tr key={idx}>
                     <td className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 px-2 py-3 xl:px-4">
-                      <Checkbox type={"check"} id={""} />
+                      <Checkbox
+                        checked={isChecked}
+                        onChange={handleCheck}
+                        type={"check"}
+                        id={""}
+                      />
                     </td>
                     <td className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 px-2 py-3 text-center xl:px-4">
                       {num}
@@ -93,7 +130,7 @@ function Table({
                       );
                     })}
                     <td
-                      onClick={() => onEdit(idx)}
+                      onClick={onEdit ? () => onEdit(idx) : undefined}
                       className="h-auto w-auto border-collapse cursor-pointer border-b-2 border-kGrey-100 py-3 text-center hover:text-kOrange-300 active:text-kOrange-400"
                     >
                       <BiSolidPencil />

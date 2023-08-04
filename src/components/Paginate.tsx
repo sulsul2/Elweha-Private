@@ -4,9 +4,11 @@ function Paginate({
   totalPages,
   current,
   totalData,
+  dataLimit,
 }: {
   totalPages: number;
   totalData: number;
+  dataLimit: number;
   current: (x: number) => void | undefined;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -68,9 +70,11 @@ function Paginate({
       <div className="mt-8 flex w-full grow flex-col items-center justify-end lg:flex-row lg:items-end xl:justify-between">
         <p className="hidden px-3 lg:block">
           {`Menunjukkan Entri ${
-            totalData == 0 ? 0 : currentPage * 10 - 9
+            totalData == 0 ? 0 : currentPage * dataLimit - (dataLimit - 1)
           } sampai ${
-            totalData - currentPage * 10 > 0 ? currentPage * 10 : totalData
+            totalData - currentPage * dataLimit > 0
+              ? currentPage * dataLimit
+              : totalData
           } dari ${totalData}`}
         </p>
         <ul className="flex w-auto items-center justify-center gap-2">
@@ -98,9 +102,11 @@ function Paginate({
         </ul>
         <p className="visible px-3 text-12 text-kText lg:invisible lg:text-16">
           {`Menunjukkan Entri ${
-            totalData == 0 ? 0 : currentPage * 10 - 9
+            totalData == 0 ? 0 : currentPage * dataLimit - (dataLimit - 1)
           } sampai ${
-            totalData - currentPage * 10 > 0 ? currentPage * 10 : totalData
+            totalData - currentPage * dataLimit > 0
+              ? currentPage * dataLimit
+              : totalData
           } dari ${totalData}`}
         </p>
       </div>
