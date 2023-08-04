@@ -87,6 +87,7 @@ function Pendapatan() {
   };
 
   const getPendapatan = async () => {
+    setOnSelected([]);
     setIsTableLoad(true);
     if (token) {
       try {
@@ -168,7 +169,7 @@ function Pendapatan() {
         "pendapatan",
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          kategori_pendapatan_id: kategori!.value,
+          kategori_pendapatan_id: kategori?.value,
           jumlah: jumlah,
           pengirim: pengirim,
           deskripsi: deskripsi,
@@ -194,7 +195,7 @@ function Pendapatan() {
         {
           id: idEdit,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          kategori_pendapatan_id: kategori!.value,
+          kategori_pendapatan_id: kategori?.value,
           jumlah: jumlah,
           pengirim: pengirim,
           deskripsi: deskripsi,
@@ -225,7 +226,6 @@ function Pendapatan() {
       toastSuccess(response.data.meta.message);
       setShowHapusPendapatan(false);
       setTotalData(totalData + 1);
-      setOnSelected([]);
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
     } finally {
