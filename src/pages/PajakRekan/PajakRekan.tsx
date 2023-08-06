@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
 import Table from "../../components/Table";
@@ -11,7 +10,6 @@ import LoadingPage from "../../components/LoadingPage";
 
 function PajakRekan() {
   const [isLoading, setIsLoading] = useState(true);
-  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const [showModal1, setShowModal1] = useState(false);
   const [showModal2, setShowModal2] = useState(false);
@@ -164,11 +162,7 @@ function PajakRekan() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={3}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
       <Modal visible={showModal1} onClose={() => setShowModal1(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">

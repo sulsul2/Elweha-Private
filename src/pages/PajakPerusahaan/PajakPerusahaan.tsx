@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
-import Navbar from "../../components/Navbar";
 import CardPajakPerusahaan from "./CardPajakPerusahaan";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import { BiSolidPencil } from "react-icons/bi";
@@ -35,7 +34,6 @@ function KoreksiCard({ value }: { value: number }) {
 
 function PajakPerusahaan() {
   const [isLoading, setIsLoading] = useState(true);
-  const [navLoad, setNavLoad] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [month, setMonth] = useState("Januari 2023");
   const koreksiType = [
@@ -51,11 +49,8 @@ function PajakPerusahaan() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={5}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
+
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">

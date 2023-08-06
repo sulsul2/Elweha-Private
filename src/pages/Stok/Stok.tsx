@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Footer from "../../components/Footer";
-import Navbar from "../../components/Navbar";
 import Paginate from "../../components/Paginate";
 import Table from "../../components/Table";
 import TextField from "../../components/TextField";
@@ -10,7 +9,6 @@ import LoadingPage from "../../components/LoadingPage";
 
 function Stok() {
   const [isLoading, setIsLoading] = useState(true);
-  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const data1 = [
     {
@@ -83,11 +81,7 @@ function Stok() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={4}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
       <div className="w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Stok</h1>
         <div className="flex w-full items-center justify-between xl:justify-start">

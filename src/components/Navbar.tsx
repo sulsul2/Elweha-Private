@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
 import { getWithAuth } from "../api/api";
 import { toastError } from "./Toast";
+import { NavLink, useLocation } from "react-router-dom";
 
-function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
+function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
+  const location = useLocation();
+  const [active, setActive] = useState(0);
 
   const documentRef = useRef<Document>(document);
   const onClickAccount = (event: Event) => {
@@ -49,9 +52,37 @@ function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
   };
 
   useEffect(() => {
-    onLoading(isLoading);
     getUser();
   }, [isLoading]);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/dashboard":
+        setActive(0);
+        break;
+      case "/pendapatan":
+        setActive(1);
+        break;
+      case "/pengeluaran":
+        setActive(2);
+        break;
+      case "/pajak-rekan":
+        setActive(3);
+        break;
+      case "/stok":
+        setActive(4);
+        break;
+      case "/pajak-perusahaan":
+        setActive(5);
+        break;
+      case "/gaji":
+        setActive(6);
+        break;
+      default:
+        setActive(0);
+        break;
+    }
+  }, [location.pathname]);
 
   return (
     <>
@@ -91,13 +122,13 @@ function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
             } duration-300 ease-in-out`}
           ></span>
         </button>
-        <a href="#">
+        <NavLink to="/">
           <img
             src="assets/logo.svg"
             alt="Elweha"
             className="hidden h-[66px] p-2 xl:block"
           />
-        </a>
+        </NavLink>
         <h1 className="mx-auto text-24 font-bold text-kText xl:hidden">
           {active == 0
             ? "Dashboard"
@@ -118,70 +149,70 @@ function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
             navOpen ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
           } absolute left-0 top-0 h-screen w-[90%] bg-white shadow-lg duration-300 ease-in-out md:w-[70%] xl:static xl:block xl:h-auto xl:w-auto xl:bg-transparent xl:py-0 xl:shadow-none`}
         >
-          <a href="/">
+          <NavLink to="/">
             <img
               src="assets/logo.svg"
               alt="Elweha"
               className="mx-auto mb-7 mt-2 h-[60px] xl:hidden"
             />
-          </a>
+          </NavLink>
           <div className="flex flex-col gap-[8px] px-7 xl:mt-0 xl:flex-row xl:items-center xl:gap-[16px] xl:px-0">
-            <a
-              href="/"
+            <NavLink
+              to="/"
               className={`${
                 active == 0 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Dashboard
-            </a>
-            <a
-              href="/pendapatan"
+            </NavLink>
+            <NavLink
+              to="/pendapatan"
               className={`${
                 active == 1 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Pendapatan
-            </a>
-            <a
-              href="/pengeluaran"
+            </NavLink>
+            <NavLink
+              to="/pengeluaran"
               className={`${
                 active == 2 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Pengeluaran
-            </a>
-            <a
-              href="/pajak-rekan"
+            </NavLink>
+            <NavLink
+              to="/pajak-rekan"
               className={`${
                 active == 3 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white `}
             >
               Pajak Rekan
-            </a>
-            <a
-              href="/stok"
+            </NavLink>
+            <NavLink
+              to="/stok"
               className={`${
                 active == 4 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Stok
-            </a>
-            <a
-              href="/pajak-perusahaan"
+            </NavLink>
+            <NavLink
+              to="/pajak-perusahaan"
               className={`${
                 active == 5 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Pajak Perusahaan
-            </a>
-            <a
-              href="/gaji"
+            </NavLink>
+            <NavLink
+              to="/gaji"
               className={`${
                 active == 6 ? "text-kOrange-400" : "text-kText"
               } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
             >
               Gaji
-            </a>
+            </NavLink>
             <div className="hidden h-12 w-[1px] bg-kGrey-100 xl:block"></div>
             <div className="account-detail group absolute bottom-3 p-3 xl:relative xl:bottom-0">
               {user ? (
@@ -206,18 +237,18 @@ function Navbar({ active, onLoading }: { active?: number; onLoading: any }) {
                   </div>
                   {isAccount && (
                     <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
-                      <a
-                        href="#"
+                      <NavLink
+                        to="#"
                         className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
                       >
                         Daftar Akun
-                      </a>
-                      <a
-                        href="#"
+                      </NavLink>
+                      <NavLink
+                        to="#"
                         className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
                       >
                         Keluar
-                      </a>
+                      </NavLink>
                     </div>
                   )}
                 </>

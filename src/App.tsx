@@ -15,6 +15,7 @@ import PajakPerusahaan from "./pages/PajakPerusahaan/PajakPerusahaan";
 import Gaji from "./pages/Gaji/Gaji";
 import NotFound from "./components/NotFound";
 import Login from "./pages/Login/Login";
+import Navbar from "./components/Navbar";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -26,6 +27,7 @@ const ProtectedRoute = () => {
   }
   return (
     <>
+      <Navbar />
       <Outlet />
     </>
   );

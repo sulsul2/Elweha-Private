@@ -237,11 +237,7 @@ function Pengeluaran() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={2}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
 
       {/* Add Kategori */}
       <Modal

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
-import Navbar from "../../components/Navbar";
 import Table from "../../components/Table";
 import LoadingPage from "../../components/LoadingPage";
 import { toastError } from "../../components/Toast";
@@ -9,7 +8,6 @@ import { getWithAuth } from "../../api/api";
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const data = [
     {
@@ -58,11 +56,8 @@ function Dashboard() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={0}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
+      {/* <Navbar onLoading={(navLoad: boolean) => setNavLoad(navLoad)} /> */}
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
         <div className="xl:flex xl:justify-between xl:pr-16">
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>

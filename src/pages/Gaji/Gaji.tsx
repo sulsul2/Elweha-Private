@@ -12,7 +12,6 @@ import LoadingPage from "../../components/LoadingPage";
 
 function Gaji() {
   const [isLoading, setIsLoading] = useState(true);
-  const [navLoad, setNavLoad] = useState(true);
   const [month, setMonth] = useState("Januari 2023");
   const [showModal, setShowModal] = useState(false);
   const data = [
@@ -59,11 +58,7 @@ function Gaji() {
 
   return (
     <>
-      <LoadingPage isLoad={navLoad || isLoading} />
-      <Navbar
-        active={6}
-        onLoading={(navLoad: boolean) => setNavLoad(navLoad)}
-      />
+      <LoadingPage isLoad={isLoading} />
       <Modal visible={showModal} onClose={() => setShowModal(false)}>
         <div className="flex w-full flex-col gap-4">
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
