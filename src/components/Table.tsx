@@ -90,7 +90,7 @@ function Table({
           <tbody>
             {isLoading ? (
               <Load />
-            ) : (
+            ) : data.length == 0 ? null : (
               Object.values(data).map((obj: any, idx: number) => {
                 num++;
                 var isChecked = selected?.includes(obj.id);

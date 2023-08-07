@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
-import Navbar from "../../components/Navbar";
 import TextField from "../../components/TextField";
 import Table from "../../components/Table";
 import Paginate from "../../components/Paginate";
@@ -18,7 +17,6 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 
 function Pendapatan() {
   // Loading
-  const [navLoad, setNavLoad] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoad, setIsTableLoad] = useState(false);
   const [isAddKategori, setIsAddKategori] = useState(false);
@@ -49,7 +47,7 @@ function Pendapatan() {
   const [search, setSearch] = useState("");
 
   // Data
-  const [data, setData] = useState([{}]);
+  const [data, setData] = useState([]);
   const [totalPendapatan, setTotalPendapatan] = useState(0);
 
   // Table
@@ -573,12 +571,16 @@ function Pendapatan() {
                 )}
               </div>
             </div>
-            <Button
-              onClick={() => setShowHapusPendapatan(true)}
-              text={"Hapus"}
-              type={"button"}
-              style={"delete"}
-            />
+            <div
+              className={`${onSelected.length > 0 ? "visible" : "invisible"}`}
+            >
+              <Button
+                onClick={() => setShowHapusPendapatan(true)}
+                text={"Hapus"}
+                type={"button"}
+                style={"delete"}
+              />
+            </div>
           </div>
           <Table
             data={data}

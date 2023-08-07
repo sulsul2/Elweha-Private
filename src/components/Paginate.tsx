@@ -67,8 +67,8 @@ function Paginate({
           Data Tidak Ditemukan
         </div>
       )}
-      <div className="mt-8 flex w-full grow flex-col items-center justify-end lg:flex-row lg:items-end xl:justify-between">
-        <p className="hidden px-3 lg:block">
+      <div className="mt-8 flex w-full grow flex-col items-center justify-end xl:flex-row xl:items-end xl:justify-between">
+        <p className="hidden px-3 xl:block">
           {`Menunjukkan Entri ${
             totalData == 0 ? 0 : currentPage * dataLimit - (dataLimit - 1)
           } sampai ${
@@ -100,7 +100,7 @@ function Paginate({
             <img src="assets/more.svg" />
           </li>
         </ul>
-        <p className="visible px-3 text-12 text-kText lg:invisible lg:text-16">
+        <p className="visible px-3 text-12 text-kText xl:invisible xl:text-16">
           {`Menunjukkan Entri ${
             totalData == 0 ? 0 : currentPage * dataLimit - (dataLimit - 1)
           } sampai ${
