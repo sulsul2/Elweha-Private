@@ -7,18 +7,22 @@ import TextField from "../../components/TextField";
 import Modal from "../../components/Modal";
 import DateFieldNormal from "../../components/DateFieldNormal";
 import LoadingPage from "../../components/LoadingPage";
-import { dataMonth } from "../../data/month";
 import { toastError, toastSuccess } from "../../components/Toast";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
+import moment from "moment";
 
 function PajakRekan() {
   // Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoad, setIsTableLoad] = useState(false);
+  const [isTableLoadAkta, setIsTableLoadAkta] = useState(false);
   const [isAddRekan, setIsAddRekan] = useState(false);
   const [isEditRekan, setIsEditRekan] = useState(false);
   const [isHapusRekan, setIsHapusRekan] = useState(false);
+  const [isAddAkta, setIsAddAkta] = useState(false);
+  const [isEditAkta, setIsEditAkta] = useState(false);
+  const [isHapusAkta, setIsHapusAkta] = useState(false);
 
   // PopUp
   const [showTambahRekan, setShowTambahRekan] = useState(false);
@@ -32,15 +36,18 @@ function PajakRekan() {
   >([]);
 
   //Field
-  const [period, setPeriod] = useState<{ value: string; label: string }>();
   const [rekan, setRekan] = useState<{ value: string; label: string }>();
   const [namaRekan, setNamaRekan] = useState("");
   const [biayaJasa, setBiayaJasa] = useState("");
   const [searchRekan, setSearchRekan] = useState("");
+  const [tanggal, setTanggal] = useState<Date | null>();
+  const [noAwal, setNoAwal] = useState("");
+  const [noAkhir, setNoAkhir] = useState("");
 
   // Data
   const [dataRekan, setDataRekan] = useState([]);
   const [totalTransfer, setTotalTransfer] = useState(0);
+  const [dataAkta, setDataAkta] = useState([]);
 
   // Table
   const [pageRekan, setPageRekan] = useState(1);
@@ -48,88 +55,11 @@ function PajakRekan() {
   const [totalDataRekan, setTotalDataRekan] = useState(0);
   const [idEditRekan, setIdEditRekan] = useState(-1);
   const [onSelectedRekan, setOnSelectedRekan] = useState<Array<number>>([]);
-  const data1 = [
-    {
-      id: 1,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 2,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 3,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 4,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 5,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 6,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 7,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 8,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 9,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-    {
-      id: 10,
-      tanggal: "22 Jan 2023",
-      noAwal: 1,
-      noAkhir: 10,
-      jumlahAkta: 10,
-      update: "Vixell pada 16 Jul 2023 12.54",
-    },
-  ];
+  const [pageAkta, setPageAkta] = useState(1);
+  const [totalPageAkta, setTotalPageAkta] = useState(1);
+  const [totalDataAkta, setTotalDataAkta] = useState(0);
+  const [idEditAkta, setIdEditAkta] = useState(-1);
+  const [onSelectedAkta, setOnSelectedAkta] = useState<Array<number>>([]);
   const kolomRekan = [
     "No",
     "Nama Rekan",
@@ -142,7 +72,7 @@ function PajakRekan() {
     "Pajak Akumulasi",
     "Transfer",
   ];
-  const kolom1 = [
+  const kolomAkta = [
     "No",
     "Tanggal",
     "No.Awal",
@@ -200,10 +130,45 @@ function PajakRekan() {
         setTotalPageRekan(pajak_rekan.data.data.table.last_page);
         setTotalDataRekan(pajak_rekan.data.data.table.total);
       } catch (error) {
-        console.log(error);
         toastError("Get Data Table Failed");
       } finally {
         setIsTableLoad(false);
+      }
+    }
+  };
+
+  const getAkta = async () => {
+    setOnSelectedAkta([]);
+    setIsTableLoadAkta(true);
+    if (token) {
+      try {
+        const akta = await getWithAuth(
+          token,
+          `pajak-rekan-akta?limit=10&page=${pageAkta}&pajak_rekan_id=${
+            rekan ? rekan?.value : ""
+          }`
+        );
+        setDataAkta(
+          akta.data.data.table.data.map((data: any) => {
+            return {
+              id: data.id,
+              tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
+              noAwal: data.no_awal,
+              noAkhir: data.no_awal,
+              jumlahAkta: data.jumlah_akta,
+              update: `${data.user.nama} pada ${moment(data.updated_at).format(
+                "DD MMMM YYYY HH:MM"
+              )}`,
+            };
+          })
+        );
+        setTotalPageAkta(akta.data.data.table.last_page);
+        setTotalDataAkta(akta.data.data.table.total);
+      } catch (error) {
+        console.log(error);
+        toastError("Get Data Table Failed");
+      } finally {
+        setIsTableLoadAkta(false);
       }
     }
   };
@@ -214,7 +179,11 @@ function PajakRekan() {
 
   useEffect(() => {
     getPajakRekan();
-  }, [pageRekan, totalDataRekan, period, searchRekan]);
+  }, [pageRekan, totalDataRekan, searchRekan, totalDataAkta]);
+
+  useEffect(() => {
+    getAkta();
+  }, [pageAkta, totalDataAkta, rekan]);
 
   const tambahRekan = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -279,6 +248,30 @@ function PajakRekan() {
       toastError((error as any).response.data.meta.message as string);
     } finally {
       setIsHapusRekan(false);
+    }
+  };
+
+  const tambahAkta = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsAddAkta(true);
+    try {
+      const response = await postWithAuth(
+        "pajak-rekan-akta",
+        {
+          pajak_rekan_id: rekan?.value,
+          tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
+          no_awal: noAwal,
+          no_akhir: noAkhir,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowTambahAkta(false);
+      setTotalDataAkta(totalDataRekan + 1);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    } finally {
+      setIsAddAkta(false);
     }
   };
 
@@ -416,47 +409,60 @@ function PajakRekan() {
         </form>
       </Modal>
 
+      {/* Add Akta */}
       <Modal visible={showTambahAkta} onClose={() => setShowTambahAkta(false)}>
-        <div className="flex w-full flex-col gap-4">
+        <form
+          onSubmit={(e) => tambahAkta(e)}
+          className="flex w-full flex-col gap-4"
+        >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
             Tambah Akta
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full">
               <p className="mb-2 text-16 font-semibold">Tanggal</p>
-              <DateFieldNormal text={"Masukkan Tanggel"} onChange={undefined} />
+              <DateFieldNormal
+                required
+                text={"Masukkan Tanggal"}
+                onChange={(val: Date) => setTanggal(val)}
+              />
             </div>
           </div>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">No Awal Angka</p>
               <TextField
+                required
                 type={"standart"}
-                label={""}
-                placeholder={"Integer"}
-                helpertext={""}
+                placeholder={"No Akta Awal"}
+                onChange={(e) => setNoAwal(e.target.value)}
               />
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">No Akhir Angka</p>
               <TextField
+                required
                 type={"standart"}
-                label={""}
-                placeholder={"Integer"}
-                helpertext={""}
+                placeholder={"No Akta Akhir"}
+                onChange={(e) => setNoAkhir(e.target.value)}
               />
             </div>
           </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
+          <div className="mt-5 flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowTambahAkta(false)}
               text={"Batalkan"}
               type={"button"}
               style={"third"}
             />
-            <Button text={"Tambah Data"} type={"button"} style={"primary"} />
+            <Button
+              text={"Tambah Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isAddAkta}
+            />
           </div>
-        </div>
+        </form>
       </Modal>
 
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-9 pt-[104px] xl:px-24">
@@ -469,33 +475,18 @@ function PajakRekan() {
             <FormatRupiah value={totalTransfer} />
           </p>
         </div>
-        <div className="mb-5 flex flex-col justify-between gap-11 xl:flex-row">
-          <div className="flex w-full items-center justify-between xl:justify-start">
-            <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
-              Periode
-            </p>
-            <div className="w-[160px] md:w-[200px]">
-              <Dropdown
-                placeholder={"Select Period"}
-                type={"month"}
-                options={dataMonth(new Date("01/01/2000"), new Date())}
-                onChange={(e) => setPeriod(e!)}
-              />
-            </div>
-          </div>
-          <div className="hidden w-full justify-center gap-4 xl:flex xl:justify-end">
-            <Button
-              onClick={() => setShowTambahRekan(true)}
-              text={"Tambah Rekan +"}
-              type={"button"}
-              style={"primary"}
-            />
-          </div>
+        <div className="mb-5 hidden xl:block xl:text-end">
+          <Button
+            onClick={() => setShowTambahRekan(true)}
+            text={"Tambah Rekan +"}
+            type={"button"}
+            style={"primary"}
+          />
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Pajak Rekan
         </p>
-        <div className="mb-5 flex w-full gap-4 xl:hidden xl:justify-end">
+        <div className="mb-5 block xl:hidden xl:justify-end">
           <Button
             onClick={() => setShowTambahRekan(true)}
             text={"Tambah Rekan +"}
@@ -589,8 +580,30 @@ function PajakRekan() {
             </div>
             <Button text={"Hapus"} type={"button"} style={"delete"} />
           </div>
-          <Table data={data1} column={kolom1} />
-          <Paginate totalPages={10} />
+          <Table
+            data={dataAkta}
+            column={kolomAkta}
+            isLoading={isTableLoadAkta}
+            page={pageAkta}
+            dataLimit={10}
+            onEdit={(val) => {
+              setIdEditAkta((dataAkta[val] as any).id);
+              // setShowEditAkta(true);
+              setTanggal(
+                moment(Date.parse((dataAkta[val] as any).tanggal)).toDate()
+              );
+              setNoAwal((dataAkta[val] as any).no_awal);
+              setNoAkhir((dataAkta[val] as any).no_akhir);
+            }}
+            onSelected={(val) => setOnSelectedAkta(val)}
+            selected={onSelectedAkta}
+          />
+          <Paginate
+            totalPages={totalPageAkta}
+            current={(page) => setPageAkta(page)}
+            totalData={totalDataAkta}
+            dataLimit={10}
+          />
         </div>
       </div>
     </>
