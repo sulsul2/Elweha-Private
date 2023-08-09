@@ -11,6 +11,7 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import moment from "moment";
+import { dataMonth } from "../../data/month";
 
 function PajakRekan() {
   // Loading
@@ -29,6 +30,8 @@ function PajakRekan() {
   const [showEditRekan, setShowEditRekan] = useState(false);
   const [showHapusRekan, setShowHapusRekan] = useState(false);
   const [showTambahAkta, setShowTambahAkta] = useState(false);
+  const [showEditAkta, setShowEditAkta] = useState(false);
+  const [showHapusAkta, setShowHapusAkta] = useState(false);
 
   // Dropdown
   const [rekanData, setRekanData] = useState<
@@ -36,6 +39,7 @@ function PajakRekan() {
   >([]);
 
   //Field
+  const [period, setPeriod] = useState<{ value: string; label: string }>();
   const [rekan, setRekan] = useState<{ value: string; label: string }>();
   const [namaRekan, setNamaRekan] = useState("");
   const [biayaJasa, setBiayaJasa] = useState("");
@@ -106,8 +110,8 @@ function PajakRekan() {
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
               id: data.id,
-              nama: data.nama,
-              biaya_jasa: data.biaya_jasa,
+              nama: data.rekan.nama,
+              biaya_jasa: data.rekan.biaya_jasa,
               jumlah_akta: data.jumlah_akta,
               jasa_bruto: data.jasa_bruto,
               dpp: data.dpp,
@@ -121,8 +125,8 @@ function PajakRekan() {
         setRekanData(
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
-              value: data.id,
-              label: data.nama,
+              value: data.rekan.id,
+              label: data.rekan.nama,
             };
           })
         );
@@ -144,7 +148,7 @@ function PajakRekan() {
       try {
         const akta = await getWithAuth(
           token,
-          `pajak-rekan-akta?limit=10&page=${pageAkta}&pajak_rekan_id=${
+          `pajak-rekan-akta?limit=10&page=${pageAkta}&rekan_id=${
             rekan ? rekan?.value : ""
           }`
         );
@@ -154,7 +158,7 @@ function PajakRekan() {
               id: data.id,
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
               noAwal: data.no_awal,
-              noAkhir: data.no_awal,
+              noAkhir: data.no_akhir,
               jumlahAkta: data.jumlah_akta,
               update: `${data.user.nama} pada ${moment(data.updated_at).format(
                 "DD MMMM YYYY HH:MM"
@@ -190,7 +194,7 @@ function PajakRekan() {
     setIsAddRekan(true);
     try {
       const response = await postWithAuth(
-        "pajak-rekan",
+        "rekan",
         {
           nama_rekan: namaRekan,
           biaya_jasa: biayaJasa,
@@ -212,7 +216,7 @@ function PajakRekan() {
     setIsEditRekan(true);
     try {
       const response = await postWithAuth(
-        "update-pajak-rekan",
+        "update-rekan",
         {
           id: idEditRekan,
           nama_rekan: namaRekan,
@@ -235,7 +239,7 @@ function PajakRekan() {
     setIsHapusRekan(true);
     try {
       const response = await postWithAuth(
-        "delete-pajak-rekan",
+        "delete-rekan",
         {
           selectedId: onSelectedRekan,
         },
@@ -258,7 +262,7 @@ function PajakRekan() {
       const response = await postWithAuth(
         "pajak-rekan-akta",
         {
-          pajak_rekan_id: rekan?.value,
+          rekan_id: rekan?.value,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           no_awal: noAwal,
           no_akhir: noAkhir,
@@ -272,6 +276,52 @@ function PajakRekan() {
       toastError((error as any).response.data.data.error as string);
     } finally {
       setIsAddAkta(false);
+    }
+  };
+
+  const editAkta = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsEditAkta(true);
+    try {
+      const response = await postWithAuth(
+        "update-pajak-rekan-akta",
+        {
+          id: idEditAkta,
+          rekan_id: rekan?.value,
+          tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
+          no_awal: noAwal,
+          no_akhir: noAkhir,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowEditAkta(false);
+      setTotalDataAkta(totalDataRekan + 1);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    } finally {
+      setIsEditAkta(false);
+    }
+  };
+
+  const hapusAkta = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsHapusAkta(true);
+    try {
+      const response = await postWithAuth(
+        "delete-pajak-rekan-akta",
+        {
+          selectedId: onSelectedAkta,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowHapusAkta(false);
+      setTotalDataAkta(totalDataRekan + 1);
+    } catch (error) {
+      toastError((error as any).response.data.meta.message as string);
+    } finally {
+      setIsHapusAkta(false);
     }
   };
 
@@ -465,6 +515,94 @@ function PajakRekan() {
         </form>
       </Modal>
 
+      {/* Edit Akta */}
+      <Modal visible={showEditAkta} onClose={() => setShowEditAkta(false)}>
+        <form
+          onSubmit={(e) => editAkta(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Edit Akta
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal
+                required
+                text={"Masukkan Tanggal"}
+                onChange={(val: Date) => setTanggal(val)}
+                value={tanggal}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">No Awal Angka</p>
+              <TextField
+                required
+                type={"standart"}
+                placeholder={"No Akta Awal"}
+                onChange={(e) => setNoAwal(e.target.value)}
+                value={noAwal}
+              />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">No Akhir Angka</p>
+              <TextField
+                required
+                type={"standart"}
+                placeholder={"No Akta Akhir"}
+                onChange={(e) => setNoAkhir(e.target.value)}
+                value={noAkhir}
+              />
+            </div>
+          </div>
+          <div className="mt-5 flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowEditAkta(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              text={"Tambah Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isEditAkta}
+            />
+          </div>
+        </form>
+      </Modal>
+
+      {/* Hapus Akta */}
+      <Modal visible={showHapusAkta} onClose={() => setShowHapusAkta(false)}>
+        <form
+          onSubmit={(e) => hapusAkta(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Hapus Akta
+          </h1>
+          <p className="mb-5 w-full text-center text-12 xl:text-left xl:text-16">
+            Apakah Anda yakin menghapus data?
+          </p>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowHapusAkta(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              isLoading={isHapusAkta}
+              text={"Hapus Data"}
+              type={"submit"}
+              style={"primary"}
+            />
+          </div>
+        </form>
+      </Modal>
+
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-9 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pajak Rekan</h1>
         <div className="mb-5 flex w-full justify-between xl:justify-start">
@@ -475,7 +613,20 @@ function PajakRekan() {
             <FormatRupiah value={totalTransfer} />
           </p>
         </div>
-        <div className="mb-5 hidden xl:block xl:text-end">
+        <div className="flex w-full items-center justify-between xl:justify-start">
+          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
+            Periode
+          </p>
+          <div className="w-[160px] md:w-[200px]">
+            <Dropdown
+              placeholder={"Select Period"}
+              type={"month"}
+              options={dataMonth(new Date("01/01/2000"), new Date())}
+              onChange={(e) => setPeriod(e!)}
+            />
+          </div>
+        </div>
+        <div className="hidden w-full justify-center gap-4 xl:flex xl:justify-end">
           <Button
             onClick={() => setShowTambahRekan(true)}
             text={"Tambah Rekan +"}
@@ -486,7 +637,7 @@ function PajakRekan() {
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Pajak Rekan
         </p>
-        <div className="mb-5 block xl:hidden xl:justify-end">
+        <div className="mb-5 flex w-full gap-4 xl:hidden xl:justify-end">
           <Button
             onClick={() => setShowTambahRekan(true)}
             text={"Tambah Rekan +"}
@@ -578,7 +729,18 @@ function PajakRekan() {
                 options={rekanData}
               />
             </div>
-            <Button text={"Hapus"} type={"button"} style={"delete"} />
+            <div
+              className={`${
+                onSelectedAkta.length > 0 ? "visible" : "invisible"
+              }`}
+            >
+              <Button
+                onClick={() => setShowHapusAkta(true)}
+                text={"Hapus"}
+                type={"button"}
+                style={"delete"}
+              />
+            </div>
           </div>
           <Table
             data={dataAkta}
@@ -588,12 +750,12 @@ function PajakRekan() {
             dataLimit={10}
             onEdit={(val) => {
               setIdEditAkta((dataAkta[val] as any).id);
-              // setShowEditAkta(true);
+              setShowEditAkta(true);
               setTanggal(
                 moment(Date.parse((dataAkta[val] as any).tanggal)).toDate()
               );
-              setNoAwal((dataAkta[val] as any).no_awal);
-              setNoAkhir((dataAkta[val] as any).no_akhir);
+              setNoAwal((dataAkta[val] as any).noAwal);
+              setNoAkhir((dataAkta[val] as any).noAkhir);
             }}
             onSelected={(val) => setOnSelectedAkta(val)}
             selected={onSelectedAkta}
