@@ -13,7 +13,7 @@ function CardPajakPerusahaan({
       <div className="mt-4 flex w-full flex-col items-start justify-between md:flex-row">
         <div className=" shrink-0">
           {" "}
-          <Checkbox type="check" id="" label={label} />
+          <Checkbox type="check" id="" label={label} checked = {value == 0 ? false : true} />
         </div>
         <span className=" break-words text-end lg:w-full xl:w-full">
           <FormatRupiah value={value} />
