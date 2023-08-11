@@ -16,6 +16,9 @@ import moment from "moment";
 
 function PajakPerusahaan() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadPendapatan, setIsLoadPendapatan] = useState(true);
+  const [isLoadKoreksi, setIsLoadKoreksi] = useState(true);
+  const [isLoadPengeluaran, setIsLoadPengeluaran] = useState(true);
 
   const [showTambahKoreksi, setShowTambahKoreksi] = useState(false);
   const [showUpdateKoreksi, setShowUpdateKoreksi] = useState(false);
@@ -48,6 +51,17 @@ function PajakPerusahaan() {
   const [isHapusKoreksi, setIsHapusKoreksi] = useState(false);
 
   const [period, setPeriod] = useState<{ value: string; label: string }>();
+
+  const Load = () => {
+    return (
+      <>
+        <div className="flex h-6 w-full justify-between mb-4">
+          <div className="w-2/5 animate-pulse bg-kGrey-100"></div>
+          <div className="w-1/4 animate-pulse bg-kGrey-100"></div>
+        </div>
+      </>
+    );
+  };
 
   const KoreksiCard = ({ row }: { row: any }) => {
     return (
@@ -101,7 +115,7 @@ function PajakPerusahaan() {
 
     setKategoriPendapatan(updatedKategoriPendapatan);
   };
-  
+
   const pengeluaranPerKategori = () => {
     const updatedKategoriPengeluaran = kategoriPengeluaran.map((row: any) => {
       const accumulatedValue = dataPengeluaran.reduce(
@@ -116,6 +130,7 @@ function PajakPerusahaan() {
   };
 
   const getKoreksi = async (sifat: string) => {
+    setIsLoadKoreksi(true);
     if (token) {
       try {
         const koreksi = await getWithAuth(
@@ -132,12 +147,13 @@ function PajakPerusahaan() {
       } catch (error) {
         toastError("Get Some Data Failed");
       } finally {
-        setIsLoading(false);
+        setIsLoadKoreksi(false);
       }
     }
   };
 
   const getTotalPendapatan = async () => {
+    setIsLoadPendapatan(true);
     if (token) {
       try {
         const pendapatan = await getWithAuth(
@@ -169,11 +185,13 @@ function PajakPerusahaan() {
         toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
+        setIsLoadPendapatan(false);
       }
     }
   };
 
   const getTotalPengeluaran = async () => {
+    setIsLoadPengeluaran(true);
     if (token) {
       try {
         const pengeluaran = await getWithAuth(
@@ -205,10 +223,10 @@ function PajakPerusahaan() {
         toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
+        setIsLoadPengeluaran(false);
       }
     }
   };
-
 
   const tambahKoreksi = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -302,7 +320,7 @@ function PajakPerusahaan() {
   useEffect(() => {
     pendapatanPerKategori();
   }, [totalPendapatan]);
-  
+
   useEffect(() => {
     pengeluaranPerKategori();
   }, [totalPengeluaran]);
@@ -314,12 +332,6 @@ function PajakPerusahaan() {
   useEffect(() => {
     getKoreksi("NEGATIF");
   }, [totalKoreksiNegatif]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 0);
-  }, []);
 
   return (
     <>
@@ -500,9 +512,13 @@ function PajakPerusahaan() {
             </div>
 
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
-            {kategoriPendapatan.map((row: { value: number; label: string }) => (
-              <CardPajakPerusahaan label={row.label} value={row.value} />
-            ))}
+            {kategoriPendapatan.map((row: { value: number; label: string }) =>
+              isLoadPendapatan ? (
+                <Load />
+              ) : (
+                <CardPajakPerusahaan label={row.label} value={row.value} />
+              )
+            )}
           </div>
           <div className="rounded-[10px] bg-white p-[30px] drop-shadow-card">
             <div className=" md:flex md:justify-between ">
@@ -513,9 +529,13 @@ function PajakPerusahaan() {
               </span>
             </div>
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
-            {kategoriPengeluaran.map((row: { value: number; label: string }) => (
-              <CardPajakPerusahaan label={row.label} value={row.value} />
-            ))}
+            {kategoriPengeluaran.map((row: { value: number; label: string }) =>
+              isLoadPengeluaran ? (
+                <Load />
+              ) : (
+                <CardPajakPerusahaan label={row.label} value={row.value} />
+              )
+            )}
           </div>
         </div>
         <div className=" mt-3 w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:mx-auto xl:w-fit">
@@ -541,9 +561,9 @@ function PajakPerusahaan() {
                     }}
                   />
                 </div>
-                {koreksiPositifData.map((row: any) => (
-                  <KoreksiCard row={row} />
-                ))}
+                {koreksiPositifData.map((row: any) =>
+                  isLoadKoreksi ? <Load /> : <KoreksiCard row={row} />
+                )}
               </div>
               <div className="">
                 <div className="mt-6 flex items-center justify-between xl:mt-0">
@@ -558,9 +578,9 @@ function PajakPerusahaan() {
                     }}
                   />
                 </div>
-                {koreksiNegatifData.map((row: any) => (
-                  <KoreksiCard row={row} />
-                ))}
+                {koreksiNegatifData.map((row: any) =>
+                  isLoadKoreksi ? <Load /> : <KoreksiCard row={row} />
+                )}
               </div>
             </div>
             <div className=" mt-6">
