@@ -21,7 +21,7 @@ function Table({
   selected?: Array<number>;
 }) {
   const Load = () => {
-    const dummy = [1, 2, 3, 4, 5, 6, 7];
+    const dummy = [1, 2, 3, 4, 5];
     return dummy.map((idx: number) => (
       <tr key={idx}>
         <td className="h-auto w-auto border-collapse border-b-2 border-kGrey-100 px-2 py-3 text-center xl:px-4">

@@ -11,7 +11,7 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import moment from "moment";
-import { dataMonth } from "../../data/month";
+import { dataYear } from "../../data/year";
 
 function PajakRekan() {
   // Loading
@@ -39,7 +39,9 @@ function PajakRekan() {
   >([]);
 
   //Field
-  const [period, setPeriod] = useState<{ value: string; label: string }>();
+  const [year, setYear] = useState<{ value: string; label: string }>(
+    dataYear(new Date(), new Date())[0]
+  );
   const [rekan, setRekan] = useState<{ value: string; label: string }>();
   const [namaRekan, setNamaRekan] = useState("");
   const [biayaJasa, setBiayaJasa] = useState("");
@@ -63,6 +65,7 @@ function PajakRekan() {
   const [totalPageAkta, setTotalPageAkta] = useState(1);
   const [totalDataAkta, setTotalDataAkta] = useState(0);
   const [idEditAkta, setIdEditAkta] = useState(-1);
+  const [triggerAkta, setTriggerAkta] = useState(0);
   const [onSelectedAkta, setOnSelectedAkta] = useState<Array<number>>([]);
   const kolomRekan = [
     "No",
@@ -104,20 +107,22 @@ function PajakRekan() {
       try {
         const pajak_rekan = await getWithAuth(
           token,
-          `pajak-rekan?limit=10&page=${pageRekan}&search=${searchRekan}`
+          `pajak-rekan-by-tahun?limit=10&page=${pageRekan}&search=${searchRekan}&year=${
+            year ? year.value : ""
+          }`
         );
         setDataRekan(
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
-              id: data.id,
-              nama: data.rekan.nama,
-              biaya_jasa: data.rekan.biaya_jasa,
+              id: data.rekan_id,
+              nama: data.nama,
+              biaya_jasa: data.biaya_jasa,
               jumlah_akta: data.jumlah_akta,
               jasa_bruto: data.jasa_bruto,
               dpp: data.dpp,
               dpp_akumulasi: data.dpp_akumulasi,
-              pph_potong: data.pph_dipotong,
-              pajak_akumulasi: data.pajak_akumulasi,
+              pph_potong: data.pph,
+              pajak_akumulasi: data.pph_akumulasi,
               transfer: data.transfer,
             };
           })
@@ -125,8 +130,8 @@ function PajakRekan() {
         setRekanData(
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
-              value: data.rekan.id,
-              label: data.rekan.nama,
+              value: data.rekan_id,
+              label: data.nama,
             };
           })
         );
@@ -183,11 +188,11 @@ function PajakRekan() {
 
   useEffect(() => {
     getPajakRekan();
-  }, [pageRekan, totalDataRekan, searchRekan, totalDataAkta]);
+  }, [pageRekan, totalDataRekan, searchRekan, triggerAkta, year]);
 
   useEffect(() => {
     getAkta();
-  }, [pageAkta, totalDataAkta, rekan]);
+  }, [pageAkta, triggerAkta, rekan]);
 
   const tambahRekan = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -271,7 +276,7 @@ function PajakRekan() {
       );
       toastSuccess(response.data.meta.message);
       setShowTambahAkta(false);
-      setTotalDataAkta(totalDataRekan + 1);
+      setTriggerAkta(triggerAkta + 1);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {
@@ -296,7 +301,7 @@ function PajakRekan() {
       );
       toastSuccess(response.data.meta.message);
       setShowEditAkta(false);
-      setTotalDataAkta(totalDataRekan + 1);
+      setTriggerAkta(triggerAkta + 1);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {
@@ -311,13 +316,14 @@ function PajakRekan() {
       const response = await postWithAuth(
         "delete-pajak-rekan-akta",
         {
+          rekan_id: rekan?.value,
           selectedId: onSelectedAkta,
         },
         token ?? ""
       );
       toastSuccess(response.data.meta.message);
       setShowHapusAkta(false);
-      setTotalDataAkta(totalDataRekan + 1);
+      setTriggerAkta(triggerAkta + 1);
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
     } finally {
@@ -619,14 +625,16 @@ function PajakRekan() {
           </p>
           <div className="w-[160px] md:w-[200px]">
             <Dropdown
+              isClearable={false}
               placeholder={"Select Period"}
-              type={"month"}
-              options={dataMonth(new Date("01/01/2000"), new Date())}
-              onChange={(e) => setPeriod(e!)}
+              type={"year"}
+              value={year}
+              options={dataYear(new Date("01/01/2000"), new Date())}
+              onChange={(e) => setYear(e!)}
             />
           </div>
         </div>
-        <div className="hidden w-full justify-center gap-4 xl:flex xl:justify-end">
+        <div className="mb-5 hidden w-full justify-center gap-4 xl:flex xl:justify-end">
           <Button
             onClick={() => setShowTambahRekan(true)}
             text={"Tambah Rekan +"}

@@ -18,6 +18,7 @@ interface DropdownProps {
   value?: { value: string; label: string };
   options: any;
   required?: boolean;
+  isClearable?: boolean;
 }
 
 const Dropdown = ({
@@ -27,6 +28,7 @@ const Dropdown = ({
   options,
   value,
   required,
+  isClearable = true,
 }: DropdownProps) => {
   return (
     <Select
@@ -41,7 +43,7 @@ const Dropdown = ({
         value == null ? undefined : { value: value!.value, label: value!.label }
       }
       isSearchable={true}
-      isClearable={true}
+      isClearable={isClearable}
       theme={(theme) => ({
         ...theme,
         borderRadius: 0,
