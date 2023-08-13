@@ -12,8 +12,8 @@ import { dataMonth } from "../../data/month";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { toastError, toastSuccess } from "../../components/Toast";
 import moment from "moment";
-import Checkbox from "../../components/Checkbox";
 import { FormatRupiah } from "@arismun/format-rupiah";
+import Filter from "../../components/Filter";
 
 function Pendapatan() {
   // Loading
@@ -29,7 +29,6 @@ function Pendapatan() {
   const [showTambahPendapatan, setShowTambahPendapatan] = useState(false);
   const [showEditPendapatan, setShowEditPendapatan] = useState(false);
   const [showHapusPendapatan, setShowHapusPendapatan] = useState(false);
-  const [showFilter, setShowFilter] = useState(false);
 
   // Dropdown
   const [kategoriData, setKategoriData] = useState<
@@ -517,59 +516,11 @@ function Pendapatan() {
                 placeholder={"Cari"}
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <div className="relative">
-                <Button
-                  onClick={() => setShowFilter(!showFilter)}
-                  text={"Filter"}
-                  type={"button"}
-                  style={"seccondary"}
-                />
-                {showFilter && (
-                  <ul className="absolute z-10 max-h-[600%] w-[250%] overflow-auto rounded-lg bg-white bg-opacity-50 px-4 shadow-card backdrop-blur-md">
-                    {kategoriData.map(
-                      (
-                        kategori: { value: string; label: string },
-                        idx: number
-                      ) => {
-                        var isChecked = kategoriId.includes(
-                          Number.parseInt(kategori.value)
-                        );
-                        const handleCheck = () =>
-                          isChecked
-                            ? setKategoriId(
-                                kategoriId.filter(
-                                  (item) =>
-                                    item !== Number.parseInt(kategori.value)
-                                )
-                              )
-                            : setKategoriId([
-                                ...kategoriId,
-                                Number.parseInt(kategori.value),
-                              ]);
-                        return (
-                          <li
-                            key={idx}
-                            onClick={handleCheck}
-                            className="my-4 flex cursor-pointer items-center gap-2 hover:text-kOrange-300"
-                          >
-                            <div>
-                              <Checkbox
-                                onChange={handleCheck}
-                                checked={isChecked}
-                                type={"check"}
-                                id={kategori.label}
-                              />
-                            </div>
-                            <p className="overflow-hidden text-ellipsis text-12 lg:text-14">
-                              {kategori.label}
-                            </p>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                )}
-              </div>
+              <Filter
+                onSelected={(val) => setKategoriId(val)}
+                selected={kategoriId}
+                data={kategoriData}
+              />
             </div>
             <div
               className={`${onSelected.length > 0 ? "visible" : "invisible"}`}
