@@ -16,6 +16,7 @@ import Gaji from "./pages/Gaji/Gaji";
 import NotFound from "./components/NotFound";
 import Login from "./pages/Login/Login";
 import Navbar from "./components/Navbar";
+import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -50,6 +51,7 @@ function Root() {
         <Route path="/stok" element={<Stok />} />
         <Route path="/pajak-perusahaan" element={<PajakPerusahaan />} />
         <Route path="/gaji" element={<Gaji />} />
+        <Route path="/daftar-akun" element={<DaftarAkun />} />
       </Route>
     </Routes>
   );

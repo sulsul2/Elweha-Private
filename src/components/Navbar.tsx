@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
-import { getWithAuth } from "../api/api";
+import { getWithAuth, postWithAuth } from "../api/api";
 import { toastError } from "./Toast";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
   const location = useLocation();
   const [active, setActive] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const documentRef = useRef<Document>(document);
   const onClickAccount = (event: Event) => {
@@ -45,19 +46,17 @@ function Navbar() {
         setUser(data);
       } catch (error) {
         toastError("Get User Failed");
-      } finally {
-        setIsLoading(false);
       }
     }
   };
 
   useEffect(() => {
     getUser();
-  }, [isLoading]);
+  }, []);
 
   useEffect(() => {
     switch (location.pathname) {
-      case "/dashboard":
+      case "/":
         setActive(0);
         break;
       case "/pendapatan":
@@ -78,14 +77,32 @@ function Navbar() {
       case "/gaji":
         setActive(6);
         break;
+      case "/daftar-akun":
+        setActive(7);
+        break;
       default:
-        setActive(0);
+        setActive(-1);
         break;
     }
   }, [location.pathname]);
 
+  const navigator = useNavigate();
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      await postWithAuth("logout", null, token ?? "");
+      localStorage.clear();
+      navigator("/login");
+    } catch (error) {
+      toastError((error as any).response.data.meta.message as string);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
+      <LoadingPage isLoad={isLoading} />
       <div className="fixed z-50 flex h-[80px] w-full items-center justify-between bg-white bg-opacity-50 px-3 shadow-button backdrop-blur-sm xl:px-7">
         <button
           type="button"
@@ -142,7 +159,9 @@ function Navbar() {
             ? "Stok"
             : active == 5
             ? "Pajak Perusahaan"
-            : "Gaji"}
+            : active == 6
+            ? "Gaji"
+            : "Daftar Akun"}
         </h1>
         <div
           className={`${
@@ -238,17 +257,17 @@ function Navbar() {
                   {isAccount && (
                     <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
                       <NavLink
-                        to="#"
+                        to="/daftar-akun"
                         className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
                       >
                         Daftar Akun
                       </NavLink>
-                      <NavLink
-                        to="#"
-                        className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
+                      <div
+                        onClick={() => logout()}
+                        className="cursor-pointer p-3 text-16 font-bold text-kText hover:text-kOrange-300"
                       >
                         Keluar
-                      </NavLink>
+                      </div>
                     </div>
                   )}
                 </>

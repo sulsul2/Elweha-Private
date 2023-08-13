@@ -821,12 +821,18 @@ function Stok() {
                   data={jenisData}
                 />
               </div>
-              <Button
-                onClick={() => setShowHapusBarang(true)}
-                text={"Hapus"}
-                type={"button"}
-                style={"delete"}
-              />
+              <div
+                className={`${
+                  onSelectedBarang.length > 0 ? "visible" : "invisible"
+                }`}
+              >
+                <Button
+                  onClick={() => setShowHapusBarang(true)}
+                  text={"Hapus"}
+                  type={"button"}
+                  style={"delete"}
+                />
+              </div>
             </div>
             <Table
               data={dataBarang}
@@ -881,12 +887,18 @@ function Stok() {
                   data={jenisData}
                 />
               </div>
-              <Button
-                onClick={() => setShowHapusAmbil(true)}
-                text={"Hapus"}
-                type={"button"}
-                style={"delete"}
-              />
+              <div
+                className={`${
+                  onSelectedAmbil.length > 0 ? "visible" : "invisible"
+                }`}
+              >
+                <Button
+                  onClick={() => setShowHapusAmbil(true)}
+                  text={"Hapus"}
+                  type={"button"}
+                  style={"delete"}
+                />
+              </div>
             </div>
             <Table
               data={dataAmbil}
