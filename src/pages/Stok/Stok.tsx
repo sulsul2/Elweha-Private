@@ -908,8 +908,8 @@ function Stok() {
                   moment(Date.parse((dataAmbil[val] as any).tanggal)).toDate()
                 );
               }}
-              onSelected={(val) => setOnSelectedBarang(val)}
-              selected={onSelectedBarang}
+              onSelected={(val) => setOnSelectedAmbil(val)}
+              selected={onSelectedAmbil}
             />
             <Paginate
               totalPages={totalPageAmbil}
