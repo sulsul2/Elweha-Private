@@ -233,7 +233,7 @@ function Navbar() {
                     onClick={() => setAccount(!isAccount)}
                   >
                     <img
-                      src={user.profile_photo_url}
+                      src={`https://ui-avatars.com/api/?name=${user.nama}&color=FD6701&background=FFD7BC`}
                       className="account-detail hamburger h-12 w-12 shrink-0 rounded-full bg-kGrey-100"
                       alt="Profile"
                     />
