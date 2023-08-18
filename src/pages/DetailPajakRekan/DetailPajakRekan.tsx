@@ -115,7 +115,7 @@ function DetailPajakRekan() {
           isWithSum
         />
       </div>
-      <div className="mt-5 hidden w-full justify-center gap-4 xl:flex xl:justify-end">
+      <div className="mt-5 flex w-full justify-end gap-4">
         <Link to={"/pajak-rekan"}>
           <Button text={"Kembali"} type={"button"} style={"third"} />
         </Link>
