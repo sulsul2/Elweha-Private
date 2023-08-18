@@ -17,6 +17,7 @@ import NotFound from "./components/NotFound";
 import Login from "./pages/Login/Login";
 import Navbar from "./components/Navbar";
 import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
+import DetailPajakRekan from "./pages/DetailPajakRekan/DetailPajakRekan";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -52,6 +53,7 @@ function Root() {
         <Route path="/pajak-perusahaan" element={<PajakPerusahaan />} />
         <Route path="/gaji" element={<Gaji />} />
         <Route path="/daftar-akun" element={<DaftarAkun />} />
+        <Route path="/detail-rekan/:id" element={<DetailPajakRekan />} />
       </Route>
     </Routes>
   );

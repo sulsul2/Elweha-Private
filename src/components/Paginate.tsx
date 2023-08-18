@@ -62,11 +62,6 @@ function Paginate({
   };
   return (
     <>
-      {totalData == 0 && (
-        <div className="mt-12 text-center text-12 xl:text-14">
-          Data Tidak Ditemukan
-        </div>
-      )}
       <div className="mt-8 flex w-full grow flex-col items-center justify-end xl:flex-row xl:items-end xl:justify-between">
         <p className="hidden px-3 xl:block">
           {`Menunjukkan Entri ${
@@ -81,7 +76,7 @@ function Paginate({
           <li
             className={
               currentPage > 1
-                ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-kOrange-400 text-white hover:bg-kOrange-300"
+                ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-kOrange-400 text-white hover:bg-kOrange-300 active:bg-kOrange-500"
                 : "hidden"
             }
             onClick={() => handlePageChange(currentPage - 1)}
@@ -92,7 +87,7 @@ function Paginate({
           <li
             className={
               currentPage < totalPages
-                ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-kOrange-400 text-white hover:bg-kOrange-300"
+                ? "html flex h-6 w-6 cursor-pointer items-center justify-center bg-kOrange-400 text-white hover:bg-kOrange-300 active:bg-kOrange-500"
                 : "hidden"
             }
             onClick={() => handlePageChange(currentPage + 1)}

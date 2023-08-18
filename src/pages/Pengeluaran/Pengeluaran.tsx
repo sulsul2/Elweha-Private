@@ -71,6 +71,7 @@ function Pengeluaran() {
             return { value: data.id, label: data.nama };
           })
         );
+        setKategoriId(kategori.data.data.map((data: any) => data.id));
         const jenis = await getWithAuth(token, "jenis-pengeluaran");
         setJenisData(
           jenis.data.data.map((data: any) => {
@@ -153,6 +154,7 @@ function Pengeluaran() {
           label: response.data.data.nama,
         },
       ]);
+      setKategoriId([...kategoriId, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {

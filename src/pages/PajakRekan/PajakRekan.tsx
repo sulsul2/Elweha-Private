@@ -693,6 +693,7 @@ function PajakRekan() {
             }}
             onSelected={(val) => setOnSelectedRekan(val)}
             selected={onSelectedRekan}
+            detailUrl="/detail-rekan"
           />
           <Paginate
             totalPages={totalPageRekan}

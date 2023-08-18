@@ -104,6 +104,8 @@ function Stok() {
             return { value: data.id, label: data.nama };
           })
         );
+        setJenisIdBarang(jenis.data.data.map((data: any) => data.id));
+        setJenisIdAmbil(jenis.data.data.map((data: any) => data.id));
       } catch (error) {
         toastError("Get Some Data Failed");
       } finally {
@@ -244,6 +246,8 @@ function Stok() {
           label: response.data.data.nama,
         },
       ]);
+      setJenisIdBarang([...jenisIdBarang, response.data.data.id]);
+      setJenisIdAmbil([...jenisIdAmbil, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {

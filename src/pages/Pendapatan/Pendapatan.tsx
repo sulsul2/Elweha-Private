@@ -75,6 +75,7 @@ function Pendapatan() {
             return { value: data.id, label: data.nama };
           })
         );
+        setKategoriId(kategori.data.data.map((data: any) => data.id));
       } catch (error) {
         toastError("Get Some Data Failed");
       } finally {
@@ -151,6 +152,7 @@ function Pendapatan() {
           label: response.data.data.nama,
         },
       ]);
+      setKategoriId([...kategoriId, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {

@@ -4,6 +4,7 @@ import { getWithAuth, postWithAuth } from "../api/api";
 import { toastError } from "./Toast";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
+import Logo from "/assets/logo.svg";
 
 function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
@@ -55,34 +56,25 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    switch (location.pathname) {
-      case "/":
-        setActive(0);
-        break;
-      case "/pendapatan":
-        setActive(1);
-        break;
-      case "/pengeluaran":
-        setActive(2);
-        break;
-      case "/pajak-rekan":
-        setActive(3);
-        break;
-      case "/stok":
-        setActive(4);
-        break;
-      case "/pajak-perusahaan":
-        setActive(5);
-        break;
-      case "/gaji":
-        setActive(6);
-        break;
-      case "/daftar-akun":
-        setActive(7);
-        break;
-      default:
-        setActive(-1);
-        break;
+    const detailUrl = location.pathname.includes("/detail-rekan/");
+    if (location.pathname == "/") {
+      setActive(0);
+    } else if (location.pathname == "/pendapatan") {
+      setActive(1);
+    } else if (location.pathname == "/pengeluaran") {
+      setActive(2);
+    } else if (location.pathname == "/pajak-rekan" || detailUrl) {
+      setActive(3);
+    } else if (location.pathname == "/stok") {
+      setActive(4);
+    } else if (location.pathname == "/pajak-perusahaan") {
+      setActive(5);
+    } else if (location.pathname == "/gaji") {
+      setActive(6);
+    } else if (location.pathname == "/daftar-akun") {
+      setActive(7);
+    } else {
+      setActive(-1);
     }
   }, [location.pathname]);
 
@@ -141,7 +133,7 @@ function Navbar() {
         </button>
         <NavLink to="/">
           <img
-            src="assets/logo.svg"
+            src={Logo}
             alt="Elweha"
             className="hidden h-[66px] p-2 xl:block"
           />
@@ -170,7 +162,7 @@ function Navbar() {
         >
           <NavLink to="/">
             <img
-              src="assets/logo.svg"
+              src={Logo}
               alt="Elweha"
               className="mx-auto mb-7 mt-2 h-[60px] xl:hidden"
             />
