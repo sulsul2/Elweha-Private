@@ -242,7 +242,7 @@ function Navbar() {
                         {user.nama}
                       </p>
                       <p className="hamburger account-detail text-14 text-kText group-hover:text-kOrange-400">
-                        {user.role}
+                        {user.role == "BOD" ? "Board Of Director" : "Officer"}
                       </p>
                     </div>
                   </div>
