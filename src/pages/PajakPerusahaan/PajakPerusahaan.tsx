@@ -49,13 +49,33 @@ function PajakPerusahaan() {
   const [isAddKoreksi, setIsAddKoreksi] = useState(false);
   const [isUpdateKoreksi, setIsUpdateKoreksi] = useState(false);
   const [isHapusKoreksi, setIsHapusKoreksi] = useState(false);
+  const [pph, setPph] = useState(0);
 
   const [period, setPeriod] = useState<{ value: string; label: string }>();
+
+  const countPph = () => {
+    const laba =
+      1000 *
+      Math.floor(
+        (totalPendapatan -
+          totalKoreksiNegatif +
+          (totalKoreksiPositif - totalPengeluaran)) /
+          1000
+      );
+
+    if (laba < 4800000000) {
+      setPph(laba * 0.11);
+    } else if (laba < 50000000000) {
+      setPph((laba - 4800000000) * 0.22);
+    } else {
+      setPph(laba * 0.22);
+    }
+  };
 
   const Load = () => {
     return (
       <>
-        <div className="flex h-6 w-full justify-between mb-4">
+        <div className="mb-3 flex h-5 w-full justify-between">
           <div className="w-2/5 animate-pulse bg-kGrey-100"></div>
           <div className="w-1/4 animate-pulse bg-kGrey-100"></div>
         </div>
@@ -316,6 +336,10 @@ function PajakPerusahaan() {
     getTotalPendapatan();
     getTotalPengeluaran();
   }, [period]);
+
+  useEffect(() => {
+    countPph();
+  }, [totalPendapatan, totalPengeluaran]);
 
   useEffect(() => {
     pendapatanPerKategori();
@@ -610,6 +634,13 @@ function PajakPerusahaan() {
                     )
                   }
                 />
+                ,-
+              </span>
+            </div>
+            <div className=" mt-6">
+              <p className="text-20 font-bold">PPH</p>
+              <span className="text-20">
+                <FormatRupiah value={pph} />
                 ,-
               </span>
             </div>

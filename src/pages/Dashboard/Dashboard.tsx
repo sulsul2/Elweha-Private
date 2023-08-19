@@ -202,7 +202,7 @@ function Dashboard() {
         </div>
         <div className="mt-10 flex w-full flex-wrap justify-center gap-5">
           {/* PENDAPATAN */}
-          <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
+          <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
               <h1 className="text-20 font-bold xl:text-24">Pendapatan</h1>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kGreen xl:text-28 ">
@@ -228,7 +228,7 @@ function Dashboard() {
           </div>
 
           {/* PENGELUARAN */}
-          <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
+          <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
               <h1 className="text-20 font-bold xl:text-24">Pengeluaran</h1>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kRed xl:text-28 ">
@@ -258,7 +258,7 @@ function Dashboard() {
           </div>
 
           {/* PAJAK REKAN */}
-          <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
+          <div className="h-[450px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
             <h1 className="text-20 font-bold xl:text-24">Pajak Rekan</h1>
             <hr className="my-3 bg-black" />
             <div className="my-3 flex items-center justify-between">
@@ -284,7 +284,7 @@ function Dashboard() {
 
           {/* STOK BARANG */}
           <div className="w-full xl:w-[49%]">
-            <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:p-[50px]">
+            <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:p-[50px] overflow-auto">
               <h1 className="text-20 font-bold xl:text-24">Stok Barang</h1>
               <hr className="my-3 bg-black" />
               <h1 className="my-3 text-14 font-semibold xl:text-20">
