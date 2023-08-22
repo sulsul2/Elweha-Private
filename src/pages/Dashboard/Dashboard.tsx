@@ -12,6 +12,10 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Data
+  const [dataBarang, setDataBarang] = useState([]);
+  const [dataAmbil, setDataAmbil] = useState([]);
+
   const [totalPendapatan, setTotalPendapatan] = useState(0);
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
 
@@ -23,6 +27,8 @@ function Dashboard() {
     Array<{ value: number; label: string }>
   >([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
+
+  const [hampirHabis, setHampirHabis] = useState([]);
 
   const [period, setPeriod] = useState<{ value: string; label: string }>();
   const data = [
@@ -159,6 +165,34 @@ function Dashboard() {
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const getStok = async () => {
+    if (token) {
+      try {
+        const barang = await getWithAuth(
+          token,
+          `barang?&month=${
+            period ? period?.value.split("-")[0] : ""
+          }&year=${
+            period ? period?.value.split("-")[1] : ""
+          }`
+        );
+        setHampirHabis(
+          barang.data.data.data.filter((data: any) => data.jumlah <= 5).map((data: any) => {
+            return {
+              id: data.id,
+              nama_barang: data.nama_barang,
+              jenis: data.jenis.nama,
+              jumlah: data.jumlah,
+              satuan: data.satuan,
+            };
+          })
+        );
+      } catch (error) {
+        toastError("Get Data Barang Table Failed");
+      } 
     }
   };
 
