@@ -7,9 +7,13 @@ import TextField from "../../components/TextField";
 import Modal from "../../components/Modal";
 import LoadingPage from "../../components/LoadingPage";
 import { toastError, toastSuccess } from "../../components/Toast";
-import { getWithAuth, postWithAuth } from "../../api/api";
+import { getWithAuth, postWithAuth, postWithAuthJson } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import { dataMonth } from "../../data/month";
+import { readEmt } from "../../data/excelToJson";
+import Filter from "../../components/Filter";
+import UploadFile from "../../components/UploadFile";
+import * as XLSX from "xlsx";
 
 function Gaji() {
   //Loading
@@ -18,28 +22,34 @@ function Gaji() {
   const [isAddGaji, setIsAddGaji] = useState(false);
   const [isEditGaji, setIsEditGaji] = useState(false);
   const [isHapusGaji, setIsHapusGaji] = useState(false);
+  const [isUploadEMT, setIsUploadEMT] = useState(false);
 
   // PopUp
   const [showTambahGaji, setShowTambahGaji] = useState(false);
   const [showEditGaji, setShowEditGaji] = useState(false);
   const [showHapusGaji, setShowHapusGaji] = useState(false);
-  const [showFilter, setShowFilter] = useState(false);
+  const [showEMT, setShowEMT] = useState(false);
 
   // Dropdown
-  const [gajiData, setGajiData] = useState<
-    Array<{ value: string; label: string }>
-  >([]);
+  const [jenisGajiData] = useState<Array<{ value: string; label: string }>>([
+    { value: "0", label: "Tetap" },
+    { value: "1", label: "Variabel" },
+  ]);
 
   //Field
-  const [period, setPeriod] = useState<{ value: string; label: string }>();
-  const [gaji, setGaji] = useState<{ value: string; label: string }>();
-  const [namaKaraywan, setNamaKaraywan] = useState("");
-  const [jenisGaji, setJenisGaji] = useState("");
-  const [jumlahGaji, setJumlahGaji] = useState("");
+  const [period, setPeriod] = useState<{ value: string; label: string }>(
+    dataMonth(new Date(), new Date())[0]
+  );
+  const [namaKaryawan, setNamaKaryawan] = useState("");
+  const [jenisGaji, setJenisGaji] = useState<{
+    value: string;
+    label: string;
+  }>();
+  const [besarGaji, setBesarGaji] = useState("");
   const [searchGaji, setSearchGaji] = useState("");
-  const [tanggal, setTanggal] = useState<Date | null>();
-  const [noAwal, setNoAwal] = useState("");
-  const [noAkhir, setNoAkhir] = useState("");
+
+  // Excel
+  const [emt, setEmt] = useState<File | null>(null);
 
   // Data
   const [dataGaji, setDataGaji] = useState([]);
@@ -50,51 +60,21 @@ function Gaji() {
   const [totalPageGaji, setTotalPageGaji] = useState(1);
   const [totalDataGaji, setTotalDataGaji] = useState(0);
   const [idEditGaji, setIdEditGaji] = useState(-1);
+  const [gajiFilter, setGajiFilter] = useState<Array<number>>([0, 1]);
   const [onSelectedGaji, setOnSelectedGaji] = useState<Array<number>>([]);
-
-  const [month, setMonth] = useState("Januari 2023");
-  const [showModal, setShowModal] = useState(false);
-  const data = [
-    {
-      id: 1,
-      nama: "Vixell",
-      kehadiran: "50/55",
-      jenis: "Tetap",
-      jumlahGaji: "Rp. 5.000.000,-",
-      jumlahBonus: "Rp. 200.000,-",
-      pphDipotong: "Rp. 200.000,-",
-      pajakAkumulasi: "Rp. 200.000,-",
-      transfer: "Rp. 200.000,-",
-    },
-    {
-      id: 2,
-      nama: "Vixell",
-      kehadiran: "50/55",
-      jenis: "Tetap",
-      jumlahGaji: "Rp. 5.000.000,-",
-      jumlahBonus: "Rp. 200.000,-",
-      pphDipotong: "Rp. 200.000,-",
-      pajakAkumulasi: "Rp. 200.000,-",
-      transfer: "Rp. 200.000,-",
-    },
-  ];
   const kolom = [
     "No",
     "Nama Karyawan",
-    "Kehadiran",
     "Jenis Gaji",
-    "Jumlah Gaji",
-    "Jumlah Bonus",
+    "Besar Gaji",
+    "Kehadiran",
+    "Terlambat",
+    "Bonus Kehadiran",
+    "Variabel Bonus",
+    "Variabel Skil",
     "PPH Dipotong",
-    "Pajak Akumulasi",
-    "Transfer",
+    "Total Gaji",
   ];
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 0);
-  }, []);
 
   const token = localStorage.getItem("access_token");
   const getData = async () => {
@@ -108,41 +88,103 @@ function Gaji() {
     }
   };
 
+  const perhitungan = (gaji: any) => {
+    function hitungPajak(totalGaji: number) {
+      var satuJuta = 1000000;
+      if (totalGaji <= 60 * satuJuta) {
+        return totalGaji * 0.05;
+      } else if (totalGaji > 60 * satuJuta && totalGaji <= 250 * satuJuta) {
+        return 60 * satuJuta * 0.05 + (totalGaji - 60 * satuJuta) * 0.15;
+      } else if (totalGaji > 250 * satuJuta && totalGaji <= 500 * satuJuta) {
+        return (
+          60 * satuJuta * 0.05 +
+          190 * satuJuta * 0.15 +
+          (totalGaji - 250 * satuJuta) * 0.25
+        );
+      } else if (totalGaji > 500 * satuJuta && totalGaji <= 5000 * satuJuta) {
+        return (
+          60 * satuJuta * 0.05 +
+          190 * satuJuta * 0.15 +
+          250 * satuJuta * 0.25 +
+          (totalGaji - 500 * satuJuta) * 0.3
+        );
+      } else {
+        return (
+          60 * satuJuta * 0.05 +
+          190 * satuJuta * 0.15 +
+          250 * satuJuta * 0.25 +
+          4500 * satuJuta * 0.3 +
+          (totalGaji - 5000 * satuJuta) * 0.35
+        );
+      }
+    }
+
+    let total = 0;
+    var hasil = gaji.data.data.data.map((data: any) => {
+      var bonus_kehadiran =
+        (data.keterlambatan == 0 ? 200000 : 0) +
+        (data.kehadiran_actual >= data.kehadiran_standart - 1 ? 100000 : 0);
+
+      var variabel = data.variabel.reduce(
+        (sum: number, { total }: any) => sum + total,
+        0
+      );
+      var skil = data.skil.reduce(
+        (sum: number, { besar_bonus }: any) => sum + besar_bonus,
+        0
+      );
+
+      var totalGaji = 0;
+      if (data.jenis_gaji == "Tetap") {
+        totalGaji =
+          (data.kehadiran_actual / (data.kehadiran_standart - 1)) *
+          data.besar_gaji;
+      } else {
+        totalGaji = data.kehadiran_actual * data.besar_gaji + skil + variabel;
+      }
+
+      var pph = hitungPajak(totalGaji);
+
+      total += totalGaji - pph;
+
+      return {
+        id: data.id,
+        nama_karyawan: data.nama_karyawan,
+        jenis_gaji: data.jenis_gaji,
+        besar_gaji: data.besar_gaji,
+        kehadiran: `${data.kehadiran_actual}/${data.kehadiran_standart}`,
+        terlambat: data.keterlambatan,
+        bonus_kehadiran: bonus_kehadiran,
+        variabel_bonus: variabel,
+        skil_bonus: skil,
+        pph_dipotong: pph,
+        total_gaji: totalGaji - pph,
+      };
+    });
+    setTotalGaji(total);
+    return hasil;
+  };
+
   const getGaji = async () => {
     setOnSelectedGaji([]);
     setIsTableLoad(true);
+    var filter = "";
+    gajiFilter.forEach((id, idx) => {
+      filter += `&jenis[${idx}]=${jenisGajiData[id].label}`;
+    });
     if (token) {
       try {
         const gaji = await getWithAuth(
           token,
-          `gaji?limit=10&page=${pageGaji}&search=${searchGaji}`
+          `gaji?limit=10&page=${pageGaji}&month=${
+            period ? period?.value.split("-")[0] : ""
+          }&year=${
+            period ? period?.value.split("-")[1] : ""
+          }&search=${searchGaji}${filter}`
         );
-        setDataGaji(
-          gaji.data.data.table.data.map((data: any) => {
-            return {
-              id: data.id,
-              nama_karyawan: data.gaji.nama_karyawan,
-              kehadiran: data.gaji.kehadiran,
-              jenis_gaji: data.jenis_gaji,
-              jumlah_gaji: data.jumlah_gaji,
-              jumlah_bonus: data.jumlah_bonus,
-              pph_dipotong: data.pph_dipotong,
-              pajak_akumulasi: data.pajak_akumulasi,
-              transfer: data.transfer,
-            };
-          })
-        );
-        setGajiData(
-          gaji.data.data.table.data.map((data: any) => {
-            return {
-              value: data.gaji.id,
-              label: data.gaji.nama,
-            };
-          })
-        );
-        setTotalGaji(gaji.data.data.total_gaji);
-        setTotalPageGaji(gaji.data.data.table.last_page);
-        setTotalDataGaji(gaji.data.data.table.total);
+        setDataGaji(perhitungan(gaji));
+        setTotalPageGaji(gaji.data.data.last_page);
+        setTotalDataGaji(gaji.data.data.total);
       } catch (error) {
         toastError("Get Data Table Failed");
       } finally {
@@ -157,7 +199,7 @@ function Gaji() {
 
   useEffect(() => {
     getGaji();
-  }, [pageGaji, totalDataGaji, searchGaji]);
+  }, [pageGaji, totalDataGaji, searchGaji, gajiFilter, period]);
 
   const tambahGaji = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -166,9 +208,9 @@ function Gaji() {
       const response = await postWithAuth(
         "gaji",
         {
-          nama_karyawan: namaKaraywan,
-          jenis_gaji: jenisGaji,
-          jumlah_gaji: jumlahGaji,
+          nama_karyawan: namaKaryawan,
+          jenis_gaji: jenisGaji?.label,
+          besar_gaji: besarGaji,
         },
         token ?? ""
       );
@@ -176,6 +218,7 @@ function Gaji() {
       setShowTambahGaji(false);
       setTotalDataGaji(totalDataGaji + 1);
     } catch (error) {
+      console.log(error);
       toastError((error as any).response.data.data.error as string);
     } finally {
       setIsAddGaji(false);
@@ -190,9 +233,11 @@ function Gaji() {
         "update-gaji",
         {
           id: idEditGaji,
-          nama_karyawan: namaKaraywan,
-          jenis_gaji: jenisGaji,
-          jumlah_gaji: jumlahGaji,
+          nama_karyawan: namaKaryawan,
+          jenis_gaji: jenisGaji?.label,
+          besar_gaji: besarGaji,
+          tahun: period?.value.split("-")[1],
+          bulan: period?.value.split("-")[0],
         },
         token ?? ""
       );
@@ -200,6 +245,7 @@ function Gaji() {
       setShowEditGaji(false);
       setTotalDataGaji(totalDataGaji + 1);
     } catch (error) {
+      console.log(error);
       toastError((error as any).response.data.data.error as string);
     } finally {
       setIsEditGaji(false);
@@ -227,13 +273,83 @@ function Gaji() {
     }
   };
 
+  const uploadEmt = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsUploadEMT(true);
+    try {
+      let selectedFile = emt;
+      const fileType = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+      ];
+      if (selectedFile) {
+        if (selectedFile && fileType.includes(selectedFile.type)) {
+          let reader = new FileReader();
+          reader.readAsArrayBuffer(selectedFile);
+          reader.onload = async (e) => {
+            var excelFile = e.target!.result;
+            const workbook = XLSX.read(excelFile, { type: "buffer" });
+            const worksheetName = workbook.SheetNames[1];
+            const worksheet = workbook.Sheets[worksheetName];
+            const data = XLSX.utils.sheet_to_json(worksheet);
+            await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
+          };
+          toastSuccess("Upload successfully");
+          setShowEMT(false);
+          setTotalDataGaji(totalDataGaji + 1);
+        } else {
+          toastError("Please select only excel file types");
+          setEmt(null);
+        }
+      } else {
+        toastError("Please select your file");
+      }
+    } catch (error) {
+      toastError("Upload file failed");
+    } finally {
+      setIsUploadEMT(false);
+    }
+  };
+
   return (
     <>
       <LoadingPage isLoad={isLoading} />
 
+      {/* Upload Absen EMT */}
+      <Modal visible={showEMT} onClose={() => setShowEMT(false)}>
+        <form
+          onSubmit={(e) => uploadEmt(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Upload File Absen EMT
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <UploadFile childToParent={(e) => setEmt(e)} />
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowEMT(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              text={"Input Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isUploadEMT}
+            />
+          </div>
+        </form>
+      </Modal>
+
       {/* Add Gaji */}
       <Modal visible={showTambahGaji} onClose={() => setShowTambahGaji(false)}>
-        <div className="flex w-full flex-col gap-4">
+        <form
+          onSubmit={(e) => tambahGaji(e)}
+          className="flex w-full flex-col gap-4"
+        >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
             Tambah Karyawan
           </h1>
@@ -243,33 +359,30 @@ function Gaji() {
               <TextField
                 required
                 type={"standart"}
-                label={""}
                 placeholder={"Masukkan Nama Karyawan"}
-                helpertext={""}
-                onChange={(e) => setNamaKaraywan(e.target.value)}
+                onChange={(e) => setNamaKaryawan(e.target.value)}
               />
             </div>
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Jenis Gaji</p>
               <Dropdown
+                required
                 placeholder={"Jenis"}
                 type={"Jenis"}
-                options={undefined}
+                options={jenisGajiData}
+                onChange={(e) => setJenisGaji(e!)}
               />
             </div>
           </div>
           <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
             <div className="w-full xl:w-1/2"></div>
             <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Jumlah Gaji</p>
+              <p className="mb-2 text-16 font-semibold">Besar Gaji</p>
               <TextField
                 required
-                style={""}
                 type={"standart"}
-                label={""}
                 placeholder={"Rp"}
-                helpertext={""}
-                onChange={(e) => setJumlahGaji(e.target.value)}
+                onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
           </div>
@@ -287,12 +400,15 @@ function Gaji() {
               isLoading={isAddGaji}
             />
           </div>
-        </div>
+        </form>
       </Modal>
 
       {/* Edit Gaji */}
       <Modal visible={showEditGaji} onClose={() => setShowEditGaji(false)}>
-        <div className="flex w-full flex-col gap-4">
+        <form
+          onSubmit={(e) => editGaji(e)}
+          className="flex w-full flex-col gap-4"
+        >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
             Edit Karyawan
           </h1>
@@ -302,10 +418,9 @@ function Gaji() {
               <TextField
                 required
                 type={"standart"}
-                label={""}
                 placeholder={"Masukkan Nama Karyawan"}
-                helpertext={""}
-                onChange={(e) => setNamaKaraywan(e.target.value)}
+                value={namaKaryawan}
+                onChange={(e) => setNamaKaryawan(e.target.value)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -313,23 +428,22 @@ function Gaji() {
               <Dropdown
                 placeholder={"Jenis"}
                 type={"Jenis"}
-                options={undefined}
-                value={{ value: "Tetap", label: "Tetap" }}
+                options={jenisGajiData}
+                value={jenisGaji}
+                onChange={(e) => setJenisGaji(e!)}
               />
             </div>
           </div>
           <div className="flex flex-col justify-between xl:flex-row xl:gap-4">
             <div className="w-full xl:w-1/2"></div>
             <div className="w-full xl:w-1/2">
-              <p className="mb-2 text-16 font-semibold">Jumlah Gaji</p>
+              <p className="mb-2 text-16 font-semibold">Besar Gaji</p>
               <TextField
                 required
-                style={""}
                 type={"standart"}
-                label={""}
                 placeholder={"Rp"}
-                helpertext={""}
-                onChange={(e) => setJumlahGaji(e.target.value)}
+                value={besarGaji}
+                onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
           </div>
@@ -347,7 +461,7 @@ function Gaji() {
               isLoading={isEditGaji}
             />
           </div>
-        </div>
+        </form>
       </Modal>
 
       {/* Hapus Karyawan */}
@@ -389,28 +503,42 @@ function Gaji() {
             <FormatRupiah value={totalGaji} />
           </p>
         </div>
-        <div className="mb-5 flex flex-col justify-between gap-11 xl:flex-row">
-          <div className="flex w-full items-center justify-between xl:justify-start">
-            <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
-              Periode
-            </p>
-            <div className="w-[160px] md:w-[200px]">
-              <Dropdown
-                placeholder={"Select Period"}
-                type={"month"}
-                options={dataMonth(new Date("01/01/2000"), new Date())}
-                onChange={(e) => setPeriod(e!)}
-              />
-            </div>
-          </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowTambahGaji(true)}
-              text={"Tambah Data +"}
-              type={"button"}
-              style={"primary"}
+        <div className="flex w-full items-center justify-between xl:justify-start">
+          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
+            Periode
+          </p>
+          <div className="w-[160px] md:w-[200px]">
+            <Dropdown
+              placeholder={"Select Period"}
+              type={"month"}
+              options={dataMonth(new Date("01/01/2000"), new Date())}
+              onChange={(e) => setPeriod(e!)}
+              value={period}
+              isClearable={false}
             />
           </div>
+        </div>
+        <div className="my-5 flex w-full flex-col items-center gap-4 md:flex-row md:justify-between">
+          <div className="flex w-full justify-center gap-4 md:w-auto md:justify-start">
+            <Button
+              onClick={() => setShowEMT(true)}
+              text={"Upload Absensi (EMT)"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              onClick={() => setShowTambahGaji(true)}
+              text={"Upload Absensi (Non-EMT)"}
+              type={"button"}
+              style={"third"}
+            />
+          </div>
+          <Button
+            onClick={() => setShowTambahGaji(true)}
+            text={"Tambah Data +"}
+            type={"button"}
+            style={"primary"}
+          />
         </div>
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Gaji
@@ -426,25 +554,24 @@ function Gaji() {
                 placeholder={"Cari"}
                 onChange={(e) => setSearchGaji(e.target.value)}
               />
-              <Button
-                text={"Filter"}
-                type={"button"}
-                style={"seccondary"}
-                onClick={() => setShowFilter(!showFilter)}
+              <Filter
+                onSelected={(e) => setGajiFilter(e)}
+                selected={gajiFilter}
+                data={jenisGajiData}
               />
-              {showFilter}
             </div>
             <div
               className={`${
                 onSelectedGaji.length > 0 ? "visible" : "invisible"
               }`}
-            ></div>
-            <Button
-              onClick={() => setShowHapusGaji(true)}
-              text={"Hapus"}
-              type={"button"}
-              style={"delete"}
-            />
+            >
+              <Button
+                onClick={() => setShowHapusGaji(true)}
+                text={"Hapus"}
+                type={"button"}
+                style={"delete"}
+              />
+            </div>
           </div>
           <Table
             data={dataGaji}
@@ -455,9 +582,13 @@ function Gaji() {
             onEdit={(val) => {
               setIdEditGaji((dataGaji[val] as any).id);
               setShowEditGaji(true);
-              setNamaKaraywan((dataGaji[val] as any).nama_karyawan);
-              setJenisGaji((dataGaji[val] as any).jenis_gaji);
-              setJumlahGaji((dataGaji[val] as any).jumlah_gaji);
+              setNamaKaryawan((dataGaji[val] as any).nama_karyawan);
+              setJenisGaji(
+                jenisGajiData.filter(
+                  (item) => item.label == (dataGaji[val] as any).jenis_gaji
+                )[0]
+              );
+              setBesarGaji((dataGaji[val] as any).besar_gaji);
             }}
             onSelected={(val) => setOnSelectedGaji(val)}
             selected={onSelectedGaji}

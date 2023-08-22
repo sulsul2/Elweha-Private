@@ -33,10 +33,7 @@ export const dataMonth = (start: Date, end: Date) => {
     }
   }
   data.push({
-    value: {
-      month: monthIdxStart,
-      year: yearStart,
-    },
+    value: `${monthIdxStart + 1}-${yearStart}`,
     label: `${month[monthIdxStart]} ${yearStart}`,
   });
   return data;

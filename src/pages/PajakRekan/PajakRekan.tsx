@@ -226,6 +226,7 @@ function PajakRekan() {
           id: idEditRekan,
           nama_rekan: namaRekan,
           biaya_jasa: biayaJasa,
+          tahun: year.value,
         },
         token ?? ""
       );
@@ -661,7 +662,7 @@ function PajakRekan() {
             <div className="flex items-center gap-2">
               <TextField
                 type={"search"}
-                placeholder={"Cari"}
+                placeholder={"Cari by Nama"}
                 onChange={(e) => setSearchRekan(e.target.value)}
               />
               {/* <Button text={"Filter"} type={"button"} style={"seccondary"} /> */}
