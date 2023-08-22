@@ -8,6 +8,7 @@ import { getWithAuth } from "../../api/api";
 import { dataMonth } from "../../data/month";
 import moment from "moment";
 import { FormatRupiah } from "@arismun/format-rupiah";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,9 +29,11 @@ function Dashboard() {
   >([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
 
-  const [hampirHabis, setHampirHabis] = useState([]);
+  const [hampirHabis, setHampirHabis] = useState<any | null>(null);
 
   const [period, setPeriod] = useState<{ value: string; label: string }>();
+
+  const navigate = useNavigate();
   const data = [
     {
       id: 1,
@@ -92,7 +95,6 @@ function Dashboard() {
       );
       return { ...row, value: accumulatedValue };
     });
-    console.log(updatedKategoriPengeluaran);
     setKategoriPengeluaran(updatedKategoriPengeluaran);
   };
 
@@ -173,14 +175,14 @@ function Dashboard() {
       try {
         const barang = await getWithAuth(
           token,
-          `barang?&month=${
-            period ? period?.value.split("-")[0] : ""
-          }&year=${
+          `barang?&month=${period ? period?.value.split("-")[0] : ""}&year=${
             period ? period?.value.split("-")[1] : ""
           }`
         );
-        setHampirHabis(
-          barang.data.data.data.filter((data: any) => data.jumlah <= 5).map((data: any) => {
+        console.log(barang.data.data.data);
+        console.log(barang.data.data.data
+          .filter((data: any) => data.jumlah <= 20)
+          .map((data: any) => {
             return {
               id: data.id,
               nama_barang: data.nama_barang,
@@ -188,11 +190,24 @@ function Dashboard() {
               jumlah: data.jumlah,
               satuan: data.satuan,
             };
-          })
+          }))
+        setHampirHabis(
+          barang.data.data.data
+          .filter((datum: any) => datum.jumlah <= 20)
+            .map((row: any) => {
+              return {
+                id: row.id,
+                nama_barang: row.nama_barang,
+                jenis: row.jenis.nama,
+                jumlah: row.jumlah,
+                satuan: row.satuan,
+              };
+            })
         );
+        console.log(hampirHabis);
       } catch (error) {
         toastError("Get Data Barang Table Failed");
-      } 
+      }
     }
   };
 
@@ -210,9 +225,7 @@ function Dashboard() {
   }, [totalPengeluaran]);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 0);
+    getStok();
   }, []);
 
   return (
@@ -236,7 +249,7 @@ function Dashboard() {
         </div>
         <div className="mt-10 flex w-full flex-wrap justify-center gap-5">
           {/* PENDAPATAN */}
-          <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
+          <div className="h-[300px] w-full overflow-auto rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
               <h1 className="text-20 font-bold xl:text-24">Pendapatan</h1>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kGreen xl:text-28 ">
@@ -257,12 +270,13 @@ function Dashboard() {
                 text={"Tambah Pendapatan +"}
                 type={"button"}
                 style={"primary"}
+                onClick={() => navigate("/pendapatan")}
               />
             </div>
           </div>
 
           {/* PENGELUARAN */}
-          <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
+          <div className="h-[300px] w-full overflow-auto rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
               <h1 className="text-20 font-bold xl:text-24">Pengeluaran</h1>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kRed xl:text-28 ">
@@ -287,12 +301,13 @@ function Dashboard() {
                 text={"Tambah Pengeluaran +"}
                 type={"button"}
                 style={"primary"}
+                onClick={() => navigate("/pengeluaran")}
               />
             </div>
           </div>
 
           {/* PAJAK REKAN */}
-          <div className="h-[450px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px] overflow-auto">
+          <div className="h-[450px] w-full overflow-auto rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
             <h1 className="text-20 font-bold xl:text-24">Pajak Rekan</h1>
             <hr className="my-3 bg-black" />
             <div className="my-3 flex items-center justify-between">
@@ -318,30 +333,29 @@ function Dashboard() {
 
           {/* STOK BARANG */}
           <div className="w-full xl:w-[49%]">
-            <div className="h-[300px] w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:p-[50px] overflow-auto">
+            <div className="h-[300px] w-full overflow-auto rounded-[10px] bg-white p-[30px] drop-shadow-card xl:p-[50px]">
               <h1 className="text-20 font-bold xl:text-24">Stok Barang</h1>
               <hr className="my-3 bg-black" />
               <h1 className="my-3 text-14 font-semibold xl:text-20">
                 Stok Hampir Habis
               </h1>
 
-              <div className="my-3 flex items-center justify-between">
-                <h1 className="text-14 font-medium xl:text-20">Meterai 1000</h1>
-                <h1 className="whitespace-nowrap text-14 font-normal text-kText xl:text-20">
-                  1 pcs
-                </h1>
-              </div>
-              <div className="my-3 flex items-center justify-between">
-                <h1 className="text-14 font-medium xl:text-20">Galon</h1>
-                <h1 className="whitespace-nowrap text-14 font-normal text-kText xl:text-20">
-                  1 Galon
-                </h1>
-              </div>
+              {hampirHabis && hampirHabis.map((row: any) => (
+                <div className="my-3 flex items-center justify-between">
+                  <h1 className="text-14 font-medium xl:text-20">
+                    {row.nama_barang}
+                  </h1>
+                  <h1 className="whitespace-nowrap text-14 font-normal text-kText xl:text-20">
+                    {row.jumlah} {row.satuan}
+                  </h1>
+                </div>
+              ))}
               <div className="mt-5 flex w-full justify-center xl:justify-end">
                 <Button
                   text={"Ambil Barang +"}
                   type={"button"}
                   style={"primary"}
+                  onClick={() => navigate("/stok")}
                 />
               </div>
             </div>
