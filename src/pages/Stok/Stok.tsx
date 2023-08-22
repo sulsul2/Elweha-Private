@@ -334,7 +334,7 @@ function Stok() {
         {
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahBarang,
+          jumlah: jumlahAmbil,
           nama_pengambil: namaPengambil,
         },
         token ?? ""
