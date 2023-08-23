@@ -62,7 +62,7 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } px-3 py-2 pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 lg:pr-12`}
+              } px-2 py-2  caret-kOrange-400 placeholder:text-[#6B6B6B] sm:placeholder:text-18 hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 `}
               value={inputValue}
               onChange={handleChange}
             />
