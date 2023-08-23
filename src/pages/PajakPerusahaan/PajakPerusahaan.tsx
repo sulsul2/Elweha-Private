@@ -33,9 +33,13 @@ function PajakPerusahaan() {
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [totalDummyPendapatan, setTotalDummyPendapatan] = useState(0);
   const [totalDummyPengeluaran, setTotalDummyPengeluaran] = useState(0);
-  
-  const [onSelectedPendapatan, setOnSelectedPendapatan] = useState<Array<string>>([]);
-  const [onSelectedPengeluaran, setOnSelectedPengeluaran] = useState<Array<string>>([]);
+
+  const [onSelectedPendapatan, setOnSelectedPendapatan] = useState<
+    Array<string>
+  >([]);
+  const [onSelectedPengeluaran, setOnSelectedPengeluaran] = useState<
+    Array<string>
+  >([]);
 
   const [kategoriPendapatan, setKategoriPendapatan] = useState<
     Array<{ value: number; label: string }>
@@ -95,7 +99,6 @@ function PajakPerusahaan() {
         <div className=" flex w-3/5 justify-end gap-3">
           <span className=" w-3/5 break-words text-end lg:w-full xl:w-full">
             <FormatRupiah value={row.jumlah} />
-            ,-
           </span>
           <button
             onClick={() => {
@@ -143,40 +146,40 @@ function PajakPerusahaan() {
     //   console.log(row.value > 0);
     //   if (row.value > 0){
     //     setOnSelectedPendapatan([...onSelectedPendapatan, row.label as string])
-    //   } 
+    //   }
     //   else {
     //     setOnSelectedPendapatan([...onSelectedPendapatan])
     //   }
     // })
     // console.log(onSelectedPendapatan);
-    setOnSelectedPendapatan(prevSelected => {
+    setOnSelectedPendapatan((prevSelected) => {
       const updatedSelected = updatedKategoriPendapatan
-        .filter(row => row.value > 0)
-        .map(row => row.label);
+        .filter((row) => row.value > 0)
+        .map((row) => row.label);
       return updatedSelected;
     });
   };
-  
+
   const pengeluaranPerKategori = () => {
     const updatedKategoriPengeluaran = kategoriPengeluaran.map((row: any) => {
       const accumulatedValue = dataPengeluaran.reduce(
         (total, row2: any) =>
-        row2.kategori === row.label ? total + row2.jumlah : total,
+          row2.kategori === row.label ? total + row2.jumlah : total,
         0
-        );
-        return { ...row, value: accumulatedValue };
-      });
-      // console.log(updatedKategoriPengeluaran);
-      setKategoriPengeluaran(updatedKategoriPengeluaran);
+      );
+      return { ...row, value: accumulatedValue };
+    });
+    // console.log(updatedKategoriPengeluaran);
+    setKategoriPengeluaran(updatedKategoriPengeluaran);
 
-      setOnSelectedPengeluaran(prevSelected => {
-        const updatedSelected = updatedKategoriPengeluaran
-          .filter(row => row.value > 0)
-          .map(row => row.label);
-        return updatedSelected;
-      });
-    };
-    
+    setOnSelectedPengeluaran((prevSelected) => {
+      const updatedSelected = updatedKategoriPengeluaran
+        .filter((row) => row.value > 0)
+        .map((row) => row.label);
+      return updatedSelected;
+    });
+  };
+
   const getKoreksi = async (sifat: string) => {
     setIsLoadKoreksi(true);
     if (token) {
@@ -225,7 +228,7 @@ function PajakPerusahaan() {
         const kategori = await getWithAuth(token, "kategori-pendapatan");
         setKategoriPendapatan(
           kategori.data.data.map((data: any) => {
-            return { value:0 , label: data.nama };
+            return { value: 0, label: data.nama };
           })
         );
         setTotalPendapatan(pendapatan.data.data.total_pendapatan);
@@ -362,28 +365,36 @@ function PajakPerusahaan() {
     }
   };
 
-  const handleCheck = (label: string, isChecked:boolean, value:number, tipe: string) => {
-    var temppendapatan = totalDummyPendapatan
-    var temppengeluaran = totalDummyPengeluaran
-    if(tipe=="pendapatan"){
+  const handleCheck = (
+    label: string,
+    isChecked: boolean,
+    value: number,
+    tipe: string
+  ) => {
+    var temppendapatan = totalDummyPendapatan;
+    var temppengeluaran = totalDummyPengeluaran;
+    if (tipe == "pendapatan") {
       if (!isChecked) {
         setOnSelectedPendapatan([...onSelectedPendapatan, label]);
-        setTotalDummyPendapatan(temppendapatan + value)
+        setTotalDummyPendapatan(temppendapatan + value);
       } else {
-        setOnSelectedPendapatan(onSelectedPendapatan.filter((item) => item !== label));
-        setTotalDummyPendapatan(temppendapatan - value)
+        setOnSelectedPendapatan(
+          onSelectedPendapatan.filter((item) => item !== label)
+        );
+        setTotalDummyPendapatan(temppendapatan - value);
       }
       // console.log(onSelectedPendapatan)
     } else {
       if (!isChecked) {
         setOnSelectedPengeluaran([...onSelectedPengeluaran, label]);
-        setTotalDummyPengeluaran(temppengeluaran + value)
+        setTotalDummyPengeluaran(temppengeluaran + value);
       } else {
-        setOnSelectedPengeluaran(onSelectedPengeluaran.filter((item) => item !== label));
-        setTotalDummyPengeluaran(temppengeluaran - value)
+        setOnSelectedPengeluaran(
+          onSelectedPengeluaran.filter((item) => item !== label)
+        );
+        setTotalDummyPengeluaran(temppengeluaran - value);
       }
       // console.log(onSelectedPendapatan)
-
     }
   };
 
@@ -586,36 +597,57 @@ function PajakPerusahaan() {
               <p className="text-20 font-bold">Total Pendapatan</p>
               <span className="text-20">
                 <FormatRupiah value={totalDummyPendapatan} />
-                ,-
               </span>
             </div>
 
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
             {kategoriPendapatan.map((row: { value: number; label: string }) => {
-              var isChecked = onSelectedPendapatan.includes(row.label)
+              var isChecked = onSelectedPendapatan.includes(row.label);
               if (isLoadPendapatan) {
                 return <Load />;
               }
-              return <CardPajakPerusahaan label={row.label} value={row.value} isChecked={isChecked} onClick={() => handleCheck(row.label, isChecked, row.value, "pendapatan")} />
-            }
-            )}
+              return (
+                <CardPajakPerusahaan
+                  label={row.label}
+                  value={row.value}
+                  isChecked={isChecked}
+                  onClick={() =>
+                    handleCheck(row.label, isChecked, row.value, "pendapatan")
+                  }
+                />
+              );
+            })}
           </div>
           <div className="rounded-[10px] bg-white p-[30px] drop-shadow-card">
             <div className=" md:flex md:justify-between ">
               <p className="text-20 font-bold">Total Pengeluaran</p>
               <span className="text-20">
                 <FormatRupiah value={totalDummyPengeluaran} />
-                ,-
               </span>
             </div>
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
-            {kategoriPengeluaran.map((row: { value: number; label: string }) => {
-              var isChecked = onSelectedPengeluaran.includes(row.label)
-              if (isLoadPengeluaran) {
-                return <Load />;
+            {kategoriPengeluaran.map(
+              (row: { value: number; label: string }) => {
+                var isChecked = onSelectedPengeluaran.includes(row.label);
+                if (isLoadPengeluaran) {
+                  return <Load />;
+                }
+                return (
+                  <CardPajakPerusahaan
+                    label={row.label}
+                    value={row.value}
+                    isChecked={isChecked}
+                    onClick={() =>
+                      handleCheck(
+                        row.label,
+                        isChecked,
+                        row.value,
+                        "pengeluaran"
+                      )
+                    }
+                  />
+                );
               }
-              return <CardPajakPerusahaan label={row.label} value={row.value} isChecked={isChecked} onClick={() => handleCheck(row.label, isChecked, row.value, "pengeluaran")} />
-            }
             )}
           </div>
         </div>
@@ -623,8 +655,9 @@ function PajakPerusahaan() {
           <div className=" xl:flex xl:items-center xl:gap-9">
             <p className=" text-20 font-bold">Laba Sebelum Pajak</p>
             <span className="text-20">
-              <FormatRupiah value={totalDummyPendapatan - totalDummyPengeluaran} />
-              ,-
+              <FormatRupiah
+                value={totalDummyPendapatan - totalDummyPengeluaran}
+              />
             </span>
           </div>
           <div className=" mt-[25px]">
@@ -674,7 +707,6 @@ function PajakPerusahaan() {
                     (totalKoreksiPositif - totalDummyPengeluaran)
                   }
                 />
-                ,-
               </span>
             </div>
             <div className=" mt-6">
@@ -691,14 +723,12 @@ function PajakPerusahaan() {
                     )
                   }
                 />
-                ,-
               </span>
             </div>
             <div className=" mt-6">
               <p className="text-20 font-bold">PPH</p>
               <span className="text-20">
                 <FormatRupiah value={pph} />
-                ,-
               </span>
             </div>
           </div>

@@ -14,6 +14,7 @@ import moment from "moment";
 import { dataMonth } from "../../data/month";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
+import { formatRp, formatRpReverse } from "../../data/formatRp";
 
 function Pengeluaran() {
   // Loading
@@ -110,7 +111,7 @@ function Pengeluaran() {
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
               kategori: data.kategori.nama,
               jenis: data.jenis.nama,
-              jumlah: data.jumlah,
+              jumlah: formatRp(data.jumlah),
               deskripsi: data.deskripsi,
             };
           })
@@ -561,7 +562,7 @@ function Pengeluaran() {
                   (item) => item.label == (data[val] as any).jenis
                 )[0]
               );
-              setJumlah((data[val] as any).jumlah);
+              setJumlah(formatRpReverse((data[val] as any).jumlah));
               setDeskripsi((data[val] as any).deskripsi);
             }}
             onSelected={(val) => setOnSelected(val)}

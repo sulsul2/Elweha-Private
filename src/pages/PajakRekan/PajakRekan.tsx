@@ -12,6 +12,7 @@ import { getWithAuth, postWithAuth } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import moment from "moment";
 import { dataYear } from "../../data/year";
+import { formatRp, formatRpReverse } from "../../data/formatRp";
 
 function PajakRekan() {
   // Loading
@@ -116,14 +117,14 @@ function PajakRekan() {
             return {
               id: data.rekan_id,
               nama: data.nama,
-              biaya_jasa: data.biaya_jasa,
+              biaya_jasa: formatRp(data.biaya_jasa),
               jumlah_akta: data.jumlah_akta,
-              jasa_bruto: data.jasa_bruto,
-              dpp: data.dpp,
-              dpp_akumulasi: data.dpp_akumulasi,
-              pph_potong: data.pph,
-              pajak_akumulasi: data.pph_akumulasi,
-              transfer: data.transfer,
+              jasa_bruto: formatRp(data.jasa_bruto),
+              dpp: formatRp(data.dpp),
+              dpp_akumulasi: formatRp(data.dpp_akumulasi),
+              pph_potong: formatRp(data.pph),
+              pajak_akumulasi: formatRp(data.pph_akumulasi),
+              transfer: formatRp(data.transfer),
             };
           })
         );
@@ -690,7 +691,7 @@ function PajakRekan() {
               setIdEditRekan((dataRekan[val] as any).id);
               setShowEditRekan(true);
               setNamaRekan((dataRekan[val] as any).nama);
-              setBiayaJasa((dataRekan[val] as any).biaya_jasa);
+              setBiayaJasa(formatRpReverse((dataRekan[val] as any).biaya_jasa));
             }}
             onSelected={(val) => setOnSelectedRekan(val)}
             selected={onSelectedRekan}

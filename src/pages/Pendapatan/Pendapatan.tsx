@@ -14,6 +14,7 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import moment from "moment";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
+import { formatRp, formatRpReverse } from "../../data/formatRp";
 
 function Pendapatan() {
   // Loading
@@ -107,7 +108,7 @@ function Pendapatan() {
               id: data.id,
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
               kategori: data.kategori.nama,
-              jumlah: data.jumlah,
+              jumlah: formatRp(data.jumlah),
               pengirim: data.pengirim,
               deskripsi: data.deskripsi,
             };
@@ -553,7 +554,7 @@ function Pendapatan() {
                 moment(Date.parse((data[val] as any).tanggal)).toDate()
               );
               setPengirim((data[val] as any).pengirim);
-              setJumlah((data[val] as any).jumlah);
+              setJumlah(formatRpReverse((data[val] as any).jumlah));
               setDeskripsi((data[val] as any).deskripsi);
             }}
             onSelected={(val) => setOnSelected(val)}

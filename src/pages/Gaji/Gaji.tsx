@@ -10,10 +10,11 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import { getWithAuth, postWithAuth, postWithAuthJson } from "../../api/api";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import { dataMonth } from "../../data/month";
-import { readEmt } from "../../data/excelToJson";
+import { readEmt, readNonEmt } from "../../data/excelToJson";
 import Filter from "../../components/Filter";
 import UploadFile from "../../components/UploadFile";
 import * as XLSX from "xlsx";
+import { formatRp, formatRpReverse } from "../../data/formatRp";
 
 function Gaji() {
   //Loading
@@ -23,12 +24,14 @@ function Gaji() {
   const [isEditGaji, setIsEditGaji] = useState(false);
   const [isHapusGaji, setIsHapusGaji] = useState(false);
   const [isUploadEMT, setIsUploadEMT] = useState(false);
+  const [isUploadNonEMT, setIsUploadNonEMT] = useState(false);
 
   // PopUp
   const [showTambahGaji, setShowTambahGaji] = useState(false);
   const [showEditGaji, setShowEditGaji] = useState(false);
   const [showHapusGaji, setShowHapusGaji] = useState(false);
   const [showEMT, setShowEMT] = useState(false);
+  const [showNonEMT, setShowNonEMT] = useState(false);
 
   // Dropdown
   const [jenisGajiData] = useState<Array<{ value: string; label: string }>>([
@@ -50,6 +53,7 @@ function Gaji() {
 
   // Excel
   const [emt, setEmt] = useState<File | null>(null);
+  const [nonEmt, setNonEmt] = useState<File | null>(null);
 
   // Data
   const [dataGaji, setDataGaji] = useState([]);
@@ -122,8 +126,10 @@ function Gaji() {
     let total = 0;
     var hasil = gaji.data.data.data.map((data: any) => {
       var bonus_kehadiran =
-        (data.keterlambatan == 0 ? 200000 : 0) +
-        (data.kehadiran_actual >= data.kehadiran_standart - 1 ? 100000 : 0);
+        data.kehadiran_standart == 0
+          ? 0
+          : (data.keterlambatan == 0 ? 200000 : 0) +
+            (data.kehadiran_actual >= data.kehadiran_standart - 1 ? 100000 : 0);
 
       var variabel = data.variabel.reduce(
         (sum: number, { total }: any) => sum + total,
@@ -138,9 +144,16 @@ function Gaji() {
       if (data.jenis_gaji == "Tetap") {
         totalGaji =
           (data.kehadiran_actual / (data.kehadiran_standart - 1)) *
-          data.besar_gaji;
+            data.besar_gaji +
+          bonus_kehadiran +
+          variabel +
+          skil;
       } else {
-        totalGaji = data.kehadiran_actual * data.besar_gaji + skil + variabel;
+        totalGaji =
+          data.kehadiran_actual * data.besar_gaji +
+          skil +
+          variabel +
+          bonus_kehadiran;
       }
 
       var pph = hitungPajak(totalGaji);
@@ -151,14 +164,14 @@ function Gaji() {
         id: data.id,
         nama_karyawan: data.nama_karyawan,
         jenis_gaji: data.jenis_gaji,
-        besar_gaji: data.besar_gaji,
+        besar_gaji: formatRp(data.besar_gaji),
         kehadiran: `${data.kehadiran_actual}/${data.kehadiran_standart}`,
         terlambat: data.keterlambatan,
-        bonus_kehadiran: bonus_kehadiran,
-        variabel_bonus: variabel,
-        skil_bonus: skil,
-        pph_dipotong: pph,
-        total_gaji: totalGaji - pph,
+        bonus_kehadiran: formatRp(bonus_kehadiran),
+        variabel_bonus: formatRp(variabel),
+        skil_bonus: formatRp(skil),
+        pph_dipotong: formatRp(pph),
+        total_gaji: formatRp(totalGaji - pph),
       };
     });
     setTotalGaji(total);
@@ -311,6 +324,44 @@ function Gaji() {
     }
   };
 
+  const uploadNonEmt = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsUploadNonEMT(true);
+    try {
+      let selectedFile = nonEmt;
+      const fileType = [
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+      ];
+      if (selectedFile) {
+        if (selectedFile && fileType.includes(selectedFile.type)) {
+          let reader = new FileReader();
+          reader.readAsArrayBuffer(selectedFile);
+          reader.onload = async (e) => {
+            var excelFile = e.target!.result;
+            const workbook = XLSX.read(excelFile, { type: "buffer" });
+            const worksheetName = workbook.SheetNames[2];
+            const worksheet = workbook.Sheets[worksheetName];
+            const data = XLSX.utils.sheet_to_json(worksheet);
+            await postWithAuthJson("kehadiran", readNonEmt(data), token ?? "");
+          };
+          toastSuccess("Upload successfully");
+          setShowNonEMT(false);
+          setTotalDataGaji(totalDataGaji + 1);
+        } else {
+          toastError("Please select only excel file types");
+          setNonEmt(null);
+        }
+      } else {
+        toastError("Please select your file");
+      }
+    } catch (error) {
+      toastError("Upload file failed");
+    } finally {
+      setIsUploadNonEMT(false);
+    }
+  };
+
   return (
     <>
       <LoadingPage isLoad={isLoading} />
@@ -339,6 +390,35 @@ function Gaji() {
               type={"submit"}
               style={"primary"}
               isLoading={isUploadEMT}
+            />
+          </div>
+        </form>
+      </Modal>
+
+      {/* Upload Absen NON EMT */}
+      <Modal visible={showNonEMT} onClose={() => setShowNonEMT(false)}>
+        <form
+          onSubmit={(e) => uploadNonEmt(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Upload File Absen Non-EMT
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <UploadFile childToParent={(e) => setNonEmt(e)} />
+          </div>
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowNonEMT(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              text={"Input Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isUploadNonEMT}
             />
           </div>
         </form>
@@ -527,7 +607,7 @@ function Gaji() {
               style={"third"}
             />
             <Button
-              onClick={() => setShowTambahGaji(true)}
+              onClick={() => setShowNonEMT(true)}
               text={"Upload Absensi (Non-EMT)"}
               type={"button"}
               style={"third"}
@@ -588,7 +668,7 @@ function Gaji() {
                   (item) => item.label == (dataGaji[val] as any).jenis_gaji
                 )[0]
               );
-              setBesarGaji((dataGaji[val] as any).besar_gaji);
+              setBesarGaji(formatRpReverse((dataGaji[val] as any).besar_gaji));
             }}
             onSelected={(val) => setOnSelectedGaji(val)}
             selected={onSelectedGaji}
