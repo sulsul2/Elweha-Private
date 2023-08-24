@@ -175,7 +175,6 @@ function PajakRekan() {
         setTotalPageAkta(akta.data.data.table.last_page);
         setTotalDataAkta(akta.data.data.table.total);
       } catch (error) {
-        console.log(error);
         toastError("Get Data Table Failed");
       } finally {
         setIsTableLoadAkta(false);

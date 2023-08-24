@@ -18,6 +18,7 @@ import Login from "./pages/Login/Login";
 import Navbar from "./components/Navbar";
 import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 import DetailPajakRekan from "./pages/DetailPajakRekan/DetailPajakRekan";
+import DetailGaji from "./pages/DetailGaji/DetailGaji";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -54,6 +55,7 @@ function Root() {
         <Route path="/gaji" element={<Gaji />} />
         <Route path="/daftar-akun" element={<DaftarAkun />} />
         <Route path="/detail-rekan/:id" element={<DetailPajakRekan />} />
+        <Route path="/detail-gaji/:id" element={<DetailGaji />} />
       </Route>
     </Routes>
   );

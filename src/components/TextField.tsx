@@ -21,14 +21,14 @@ function TextField({
   value?: string | number | readonly string[] | undefined;
   required?: boolean;
 }) {
-  const [inputValue, setInputValue] = useState(value || "");
+  // const [inputValue, setInputValue] = useState(value || "");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    if (onChange) {
-      onChange(event);
-    }
-  };
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setInputValue(event.target.value);
+  //   if (onChange) {
+  //     onChange(event);
+  //   }
+  // };
 
   const [currType, setCurrType] = useState("password");
   const [icon, setIcon] = useState(<AiFillEyeInvisible></AiFillEyeInvisible>);
@@ -41,9 +41,9 @@ function TextField({
       setCurrType("password");
     }
   };
-  const handleClear = () => {
-    setInputValue("");
-  };
+  // const handleClear = () => {
+  //   setInputValue("");
+  // };
 
   return (
     <>
@@ -62,9 +62,9 @@ function TextField({
               placeholder={placeholder}
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
-              } px-2 py-2  caret-kOrange-400 placeholder:text-[#6B6B6B] sm:placeholder:text-18 hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 `}
-              value={inputValue}
-              onChange={handleChange}
+              } sm:placeholder:text-18 px-2  py-2 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 `}
+              value={value}
+              onChange={onChange}
             />
           </div>
           {helpertext != "" && (
@@ -89,8 +89,8 @@ function TextField({
               className={`w-full rounded-lg border-2  ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
               } px-3 py-2  pr-7 caret-kOrange-400 placeholder:text-[#6B6B6B] hover:border-kOrange-200 focus:outline-kOrange-400 disabled:border-[#6B6B6B] disabled:opacity-30 sm:pr-10 md:pr-10 lg:pr-14`}
-              value={inputValue}
-              onChange={handleChange}
+              value={value}
+              onChange={onChange}
             />
             <span
               className="absolute right-[3%] flex cursor-pointer items-center justify-around text-lg lg:text-2xl xl:right-[2%]"
@@ -126,17 +126,9 @@ function TextField({
               className={`w-full rounded-lg border-2 ${
                 helpertext != "" ? "border-kRed" : "border-[#A8A8A8]"
               } p-3 px-10 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30`}
-              value={inputValue}
-              onChange={handleChange}
+              value={value}
+              onChange={onChange}
             />
-            {inputValue && (
-              <button
-                className="absolute right-[5%] top-[27%] font-semibold focus:text-[#186ADE] md:right-[3%] lg:right-[2%]"
-                onClick={handleClear}
-              >
-                ✖
-              </button>
-            )}
           </div>
           {helpertext != "" && (
             <span className="text-14 text-kRed">{helpertext}</span>
@@ -165,8 +157,8 @@ function TextField({
               className={`w-full rounded-lg border-2 ${
                 helpertext != "" ? "text-kRed" : "border-[#A8A8A8]"
               } p-3 px-7 caret-[#186ADE] placeholder:text-[#6B6B6B] hover:border-[#6B6B6B] focus:outline-[#186ADE] disabled:border-[#6B6B6B] disabled:opacity-30 lg:px-12`}
-              value={inputValue}
-              onChange={handleChange}
+              value={value}
+              onChange={onChange}
             />
             <span
               className="absolute right-[2%] top-[30%] cursor-pointer text-lg lg:top-[27%] lg:text-2xl"
@@ -190,8 +182,8 @@ function TextField({
               type="text"
               placeholder={placeholder}
               className="pointer-events-auto w-full border-none px-3 py-2 caret-kOrange-400 outline-none placeholder:text-[#6B6B6B] disabled:opacity-30"
-              value={inputValue}
-              onChange={handleChange}
+              value={value}
+              onChange={onChange}
             />
             <img src="assets/search.svg" alt="" />
           </div>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Checkbox from "./Checkbox";
 import { BiSolidPencil } from "react-icons/bi";
+import { formatRp, formatRpReverse } from "../data/formatRp";
 
 function Table({
   data,
@@ -216,38 +217,59 @@ function Table({
                   )}
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce(
-                    (total: any, { jasa_bruto }: any) => total + jasa_bruto,
-                    0
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { jasa_bruto }: any) =>
+                        total + Number.parseFloat(formatRpReverse(jasa_bruto)),
+                      0
+                    )
                   )}
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce((total: any, { dpp }: any) => total + dpp, 0)}
-                </th>
-                <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce(
-                    (total: any, { dpp_akumulasi }: any) =>
-                      total + dpp_akumulasi,
-                    0
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { dpp }: any) =>
+                        total + Number.parseFloat(formatRpReverse(dpp)),
+                      0
+                    )
                   )}
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce(
-                    (total: any, { pph_potong }: any) => total + pph_potong,
-                    0
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { dpp_akumulasi }: any) =>
+                        total +
+                        Number.parseFloat(formatRpReverse(dpp_akumulasi)),
+                      0
+                    )
                   )}
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce(
-                    (total: any, { pajak_akumulasi }: any) =>
-                      total + pajak_akumulasi,
-                    0
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { pph_potong }: any) =>
+                        total + Number.parseFloat(formatRpReverse(pph_potong)),
+                      0
+                    )
                   )}
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {data.reduce(
-                    (total: any, { transfer }: any) => total + transfer,
-                    0
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { pajak_akumulasi }: any) =>
+                        total +
+                        Number.parseFloat(formatRpReverse(pajak_akumulasi)),
+                      0
+                    )
+                  )}
+                </th>
+                <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
+                  {formatRp(
+                    data.reduce(
+                      (total: any, { transfer }: any) =>
+                        total + Number.parseFloat(formatRpReverse(transfer)),
+                      0
+                    )
                   )}
                 </th>
               </tr>

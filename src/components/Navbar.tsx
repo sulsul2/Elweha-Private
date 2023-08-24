@@ -56,20 +56,21 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    const detailUrl = location.pathname.includes("/detail-rekan/");
+    const detailRekanUrl = location.pathname.includes("/detail-rekan/");
+    const detailGajiUrl = location.pathname.includes("/detail-gaji/");
     if (location.pathname == "/") {
       setActive(0);
     } else if (location.pathname == "/pendapatan") {
       setActive(1);
     } else if (location.pathname == "/pengeluaran") {
       setActive(2);
-    } else if (location.pathname == "/pajak-rekan" || detailUrl) {
+    } else if (location.pathname == "/pajak-rekan" || detailRekanUrl) {
       setActive(3);
     } else if (location.pathname == "/stok") {
       setActive(4);
     } else if (location.pathname == "/pajak-perusahaan") {
       setActive(5);
-    } else if (location.pathname == "/gaji") {
+    } else if (location.pathname == "/gaji" || detailGajiUrl) {
       setActive(6);
     } else if (location.pathname == "/daftar-akun") {
       setActive(7);

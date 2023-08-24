@@ -5,8 +5,8 @@ import { dataYear } from "../../data/year";
 import { getWithAuth } from "../../api/api";
 import { toastError } from "../../components/Toast";
 import { convertMonth } from "../../data/convertMonth";
-import { Link, useParams } from "react-router-dom";
-import Button from "../../components/Button";
+import { useParams } from "react-router-dom";
+import { formatRp } from "../../data/formatRp";
 
 function DetailPajakRekan() {
   const { id } = useParams();
@@ -33,8 +33,6 @@ function DetailPajakRekan() {
     "Transfer",
   ];
 
-  console.log(id);
-
   const token = localStorage.getItem("access_token");
   const getData = async () => {
     setIsTableLoad(true);
@@ -52,12 +50,12 @@ function DetailPajakRekan() {
               id: data.rekan_id,
               bulan: convertMonth(data.bulan),
               jumlah_akta: data.jumlah_akta,
-              jasa_bruto: data.jasa_bruto,
-              dpp: data.dpp,
-              dpp_akumulasi: data.dpp_akumulasi,
-              pph_potong: data.pph,
-              pajak_akumulasi: data.pph_akumulasi,
-              transfer: data.transfer,
+              jasa_bruto: formatRp(data.jasa_bruto),
+              dpp: formatRp(data.dpp),
+              dpp_akumulasi: formatRp(data.dpp_akumulasi),
+              pph_potong: formatRp(data.pph),
+              pajak_akumulasi: formatRp(data.pph_akumulasi),
+              transfer: formatRp(data.transfer),
             };
           })
         );
@@ -114,11 +112,6 @@ function DetailPajakRekan() {
           isEdit={false}
           isWithSum
         />
-      </div>
-      <div className="mt-5 flex w-full justify-end gap-4">
-        <Link to={"/pajak-rekan"}>
-          <Button text={"Kembali"} type={"button"} style={"third"} />
-        </Link>
       </div>
     </div>
   );
