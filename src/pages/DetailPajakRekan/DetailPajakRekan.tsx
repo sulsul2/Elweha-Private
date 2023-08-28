@@ -21,6 +21,7 @@ function DetailPajakRekan() {
 
   // Data
   const [data, setData] = useState([]);
+  const [nama, setNama] = useState("");
 
   // Table
   const kolom = [
@@ -62,6 +63,8 @@ function DetailPajakRekan() {
             };
           })
         );
+        const rekan = await getWithAuth(token, `rekan?id=${id}`);
+        setNama(rekan.data.data[0].nama);
       } catch (error) {
         toastError("Get Data Table Failed");
       } finally {
@@ -76,8 +79,8 @@ function DetailPajakRekan() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-9 pt-[104px] xl:px-24">
-      <h1 className="mb-12 hidden text-40 font-bold xl:block">
-        Detail Pajak Rekan
+      <h1 className="mb-12 text-40 font-bold xl:block">
+        Detail Pajak Rekan {nama}
       </h1>
 
       <div className="mb-5 flex w-full items-center justify-between xl:justify-start">

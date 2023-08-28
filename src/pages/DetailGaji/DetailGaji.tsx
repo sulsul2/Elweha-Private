@@ -110,6 +110,7 @@ function DetailGaji() {
   const [dataGaji, setDataGaji] = useState<any>();
   const [dataBonusVariabel, setDataBonusVariabel] = useState([]);
   const [dataBonusSkil, setDataBonusSkil] = useState([]);
+  const [nama, setNama] = useState("");
 
   const { user } = useContext(UserContext);
   const token = user?.token;
@@ -137,6 +138,8 @@ function DetailGaji() {
         );
         setDataGaji(perhitungan(gaji).hasil[0]);
         setTrigger(false);
+        const gajiId = await getWithAuth(token, `gaji-all?id=${id}`);
+        setNama(gajiId.data.data[0].nama_karyawan);
       } catch (error) {
         toastError("Get Data Table Failed");
       }
@@ -310,7 +313,7 @@ function DetailGaji() {
       </Modal>
 
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
-        <h1 className="mb-12 hidden text-40 font-bold xl:block">Detail Gaji</h1>
+        <h1 className="mb-12 text-40 font-bold xl:block">Detail Gaji {nama}</h1>
         <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold md:text-24 xl:w-[250px] ">
             Total Gaji
