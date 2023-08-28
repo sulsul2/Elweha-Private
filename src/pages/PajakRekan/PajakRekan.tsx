@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
 import Button from "../../components/Button";
 import Table from "../../components/Table";
@@ -13,6 +13,7 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 import moment from "moment";
 import { dataYear } from "../../data/year";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
+import { UserContext } from "../../Context/UserContext";
 
 function PajakRekan() {
   // Loading
@@ -89,7 +90,9 @@ function PajakRekan() {
     "Terakhir Diupdate",
   ];
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+
   const getData = async () => {
     if (token) {
       try {
@@ -110,7 +113,7 @@ function PajakRekan() {
           token,
           `pajak-rekan-by-tahun?limit=10&page=${pageRekan}&search=${searchRekan}&year=${
             year ? year.value : ""
-          }`
+          }${user.role == "OFFICER" && "&user_id=" + user.id}`
         );
         setDataRekan(
           pajak_rekan.data.data.table.data.map((data: any) => {
@@ -156,7 +159,7 @@ function PajakRekan() {
           token,
           `pajak-rekan-akta?limit=10&page=${pageAkta}&rekan_id=${
             rekan ? rekan?.value : ""
-          }`
+          }${user.role == "OFFICER" && "&user_id=" + user.id}`
         );
         setDataAkta(
           akta.data.data.table.data.map((data: any) => {

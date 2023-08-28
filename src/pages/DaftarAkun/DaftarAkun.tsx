@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import Paginate from "../../components/Paginate";
@@ -8,6 +8,8 @@ import Dropdown from "../../components/Dropdown";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { toastError, toastSuccess } from "../../components/Toast";
 import Checkbox from "../../components/Checkbox";
+import { UserContext } from "../../Context/UserContext";
+import NotFound from "../../components/NotFound";
 
 function DaftarAkun() {
   // Loading
@@ -52,7 +54,12 @@ function DaftarAkun() {
   ]);
   const [onSelected, setOnSelected] = useState<Array<number>>([]);
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+  if (user?.role != "BOD") {
+    return <NotFound />;
+  }
+
   const getDaftarAkun = async () => {
     setOnSelected([]);
     setIsTableLoad(true);

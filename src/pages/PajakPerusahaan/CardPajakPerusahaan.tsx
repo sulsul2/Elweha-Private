@@ -6,15 +6,18 @@ function CardPajakPerusahaan({
   value,
   isChecked,
   onClick,
+  key,
 }: {
   label: string;
   value: number;
   isChecked: boolean;
   onClick: React.MouseEventHandler<HTMLDivElement> | undefined;
+  key: React.Key;
 }) {
   return (
     <>
       <div
+        key={key}
         onClick={onClick}
         className="mt-4 flex w-full flex-col items-start justify-between md:flex-row"
       >

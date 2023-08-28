@@ -1,15 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useEventListener } from "usehooks-ts";
-import { getWithAuth, postWithAuth } from "../api/api";
+import { postWithAuth } from "../api/api";
 import { toastError } from "./Toast";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import Logo from "/assets/logo.svg";
+import { UserContext } from "../Context/UserContext";
 
 function Navbar() {
+  const { user } = useContext(UserContext);
+
   const [navOpen, setNavOpen] = useState(false);
   const [isAccount, setAccount] = useState(false);
-  const [user, setUser] = useState<any | null>(null);
+  // const [user, setUser] = useState<User>(user);
   const location = useLocation();
   const [active, setActive] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,23 +40,6 @@ function Navbar() {
     }
   };
   useEventListener("click", onClickHamburger, documentRef);
-
-  const token = localStorage.getItem("access_token");
-  const getUser = async () => {
-    if (token) {
-      try {
-        const response = await getWithAuth(token, "user");
-        const data = response.data?.data;
-        setUser(data);
-      } catch (error) {
-        toastError("Get User Failed");
-      }
-    }
-  };
-
-  useEffect(() => {
-    getUser();
-  }, []);
 
   useEffect(() => {
     const detailRekanUrl = location.pathname.includes("/detail-rekan/");
@@ -83,7 +69,7 @@ function Navbar() {
   const logout = async () => {
     setIsLoading(true);
     try {
-      await postWithAuth("logout", null, token ?? "");
+      await postWithAuth("logout", null, user?.token ?? "");
       localStorage.clear();
       navigator("/login");
     } catch (error) {
@@ -92,6 +78,10 @@ function Navbar() {
       setIsLoading(false);
     }
   };
+
+  if (user?.role != "BOD" && [5, 6, 7].includes(active)) {
+    return null;
+  }
 
   return (
     <>
@@ -209,22 +199,26 @@ function Navbar() {
             >
               Stok
             </NavLink>
-            <NavLink
-              to="/pajak-perusahaan"
-              className={`${
-                active == 5 ? "text-kOrange-400" : "text-kText"
-              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
-            >
-              Pajak Perusahaan
-            </NavLink>
-            <NavLink
-              to="/gaji"
-              className={`${
-                active == 6 ? "text-kOrange-400" : "text-kText"
-              } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
-            >
-              Gaji
-            </NavLink>
+            {user?.role == "BOD" && (
+              <NavLink
+                to="/pajak-perusahaan"
+                className={`${
+                  active == 5 ? "text-kOrange-400" : "text-kText"
+                } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+              >
+                Pajak Perusahaan
+              </NavLink>
+            )}
+            {user?.role == "BOD" && (
+              <NavLink
+                to="/gaji"
+                className={`${
+                  active == 6 ? "text-kOrange-400" : "text-kText"
+                } rounded-[10px] p-3 text-16 font-bold hover:bg-kOrange-400 hover:text-white`}
+              >
+                Gaji
+              </NavLink>
+            )}
             <div className="hidden h-12 w-[1px] bg-kGrey-100 xl:block"></div>
             <div className="account-detail group absolute bottom-3 p-3 xl:relative xl:bottom-0">
               {user ? (
@@ -249,12 +243,14 @@ function Navbar() {
                   </div>
                   {isAccount && (
                     <div className="absolute flex w-full -translate-y-44 flex-col bg-white p-3 shadow-lg xl:translate-y-4">
-                      <NavLink
-                        to="/daftar-akun"
-                        className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
-                      >
-                        Daftar Akun
-                      </NavLink>
+                      {user?.role == "BOD" && (
+                        <NavLink
+                          to="/daftar-akun"
+                          className="p-3 text-16 font-bold text-kText hover:text-kOrange-300"
+                        >
+                          Daftar Akun
+                        </NavLink>
+                      )}
                       <div
                         onClick={() => logout()}
                         className="cursor-pointer p-3 text-16 font-bold text-kText hover:text-kOrange-300"

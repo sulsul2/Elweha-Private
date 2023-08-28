@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Table from "../../components/Table";
@@ -12,6 +12,7 @@ import Modal from "../../components/Modal";
 import DateFieldNormal from "../../components/DateFieldNormal";
 import TextField from "../../components/TextField";
 import TextArea from "../../components/TextArea";
+import { UserContext } from "../../Context/UserContext";
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +30,14 @@ function Dashboard() {
   const [jumlah, setJumlah] = useState("");
   const [pengirim, setPengirim] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [kategori, setKategori] = useState<{ value: string; label: string }>();
+  const [kategoriPendapatanVal, setKategoriPendapatanVal] = useState<{
+    value: string;
+    label: string;
+  }>();
+  const [kategoriPengeluaranVal, setKategoriPengeluaranVal] = useState<{
+    value: string;
+    label: string;
+  }>();
 
   const [totalPengeluaran, setTotalPengeluaran] = useState(0);
   const [isAddPengeluaran, setIsAddPengeluaran] = useState(false);
@@ -60,9 +68,15 @@ function Dashboard() {
   const [kategoriPendapatan, setKategoriPendapatan] = useState<
     Array<{ value: number; label: string }>
   >([]);
+  const [kategoriPendapatanData, setKategoriPendapatanData] = useState<
+    Array<{ value: string; label: string }>
+  >([]);
   const [dataPendapatan, setDataPendapatan] = useState([]);
   const [kategoriPengeluaran, setKategoriPengeluaran] = useState<
     Array<{ value: number; label: string }>
+  >([]);
+  const [kategoriPengeluaranData, setKategoriPengeluaranData] = useState<
+    Array<{ value: string; label: string }>
   >([]);
   const [dataPengeluaran, setDataPengeluaran] = useState([]);
 
@@ -73,6 +87,9 @@ function Dashboard() {
   const [dataAkta, setDataAkta] = useState([]);
   const [idEditAkta, setIdEditAkta] = useState(-1);
   const [triggerAkta, setTriggerAkta] = useState(0);
+  const [triggerBarang, setTriggerBarang] = useState(0);
+  const [triggerPendapatan, setTriggerPendapatan] = useState(0);
+  const [triggerPengeluaran, setTriggerPengeluaran] = useState(0);
   const [onSelectedAkta, setOnSelectedAkta] = useState<Array<number>>([]);
 
   const [hampirHabis, setHampirHabis] = useState<any | null>(null);
@@ -81,7 +98,8 @@ function Dashboard() {
 
   const kolomAkta = ["No", "Tanggal", "No.Awal", "No.Akhir", "Jumlah Akta"];
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
 
   const pendapatanPerKategori = () => {
     const updatedKategoriPendapatan = kategoriPendapatan.map((row: any) => {
@@ -152,6 +170,11 @@ function Dashboard() {
             return { value: 0, label: data.nama };
           })
         );
+        setKategoriPendapatanData(
+          kategori.data.data.map((data: any) => {
+            return { value: data.id, label: data.nama };
+          })
+        );
         setTotalPendapatan(pendapatan.data.data.total_pendapatan);
       } catch (error) {
         toastError("Get Some Data Failed");
@@ -169,7 +192,7 @@ function Dashboard() {
         "pendapatan",
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          kategori_pendapatan_id: kategori?.value,
+          kategori_pendapatan_id: kategoriPendapatanVal?.value,
           jumlah: jumlah,
           pengirim: pengirim,
           deskripsi: deskripsi,
@@ -178,9 +201,9 @@ function Dashboard() {
       );
       toastSuccess(response.data.meta.message);
       setShowTambahPendapatan(false);
+      setTriggerPendapatan(triggerPendapatan + 1);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
-      console.log(error);
     } finally {
       setIsAddPendapatan(false);
     }
@@ -213,6 +236,11 @@ function Dashboard() {
             return { value: 0, label: data.nama };
           })
         );
+        setKategoriPengeluaranData(
+          kategori.data.data.map((data: any) => {
+            return { value: data.id, label: data.nama };
+          })
+        );
         setTotalPengeluaran(pengeluaran.data.data.total_pengeluaran);
       } catch (error) {
         toastError("Get Some Data Failed");
@@ -230,7 +258,7 @@ function Dashboard() {
         "pengeluaran",
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          kategori_pengeluaran_id: kategori?.value,
+          kategori_pengeluaran_id: kategoriPengeluaranVal?.value,
           jenis_pengeluaran_id: jenis?.value,
           jumlah: jumlah,
           deskripsi: deskripsi,
@@ -239,6 +267,7 @@ function Dashboard() {
       );
       toastSuccess(response.data.meta.message);
       setShowTambahPengeluaran(false);
+      setTriggerPengeluaran(triggerPengeluaran + 1);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {
@@ -276,15 +305,13 @@ function Dashboard() {
   };
 
   const getAktaTersisa = async () => {
-    if(token){
+    if (token) {
       try {
-        const tersisa = await getWithAuth(token,"akta-tersisa");
+        const tersisa = await getWithAuth(token, "akta-tersisa");
         setAktaTersisa(tersisa.data.data);
-      } catch (error) {
-        
-      }
+      } catch (error) {}
     }
-  }
+  };
 
   const tambahAkta = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -348,7 +375,6 @@ function Dashboard() {
           })
         );
       } catch (error) {
-        console.log(error);
         toastError("Get Rekan Data Failed");
       }
     }
@@ -416,6 +442,7 @@ function Dashboard() {
       );
       toastSuccess(response.data.meta.message);
       setShowTambahAmbil(false);
+      setTriggerBarang(triggerBarang + 1);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
     } finally {
@@ -425,8 +452,11 @@ function Dashboard() {
 
   useEffect(() => {
     getTotalPendapatan();
+  }, [period, triggerPendapatan]);
+
+  useEffect(() => {
     getTotalPengeluaran();
-  }, [period]);
+  }, [period, triggerPengeluaran]);
 
   useEffect(() => {
     pendapatanPerKategori();
@@ -451,14 +481,14 @@ function Dashboard() {
   useEffect(() => {
     getJenisData();
   }, []);
-  
+
   useEffect(() => {
     getAktaTersisa();
-  }, []);
+  }, [triggerAkta]);
 
   useEffect(() => {
     getBarang();
-  }, [period]);
+  }, [period, triggerBarang]);
 
   return (
     <>
@@ -491,8 +521,8 @@ function Dashboard() {
                 required
                 placeholder={"Kategori"}
                 type={"Kategori"}
-                options={kategoriPendapatan}
-                onChange={(e) => setKategori(e!)}
+                options={kategoriPendapatanData}
+                onChange={(e) => setKategoriPendapatanVal(e!)}
               />
             </div>
           </div>
@@ -568,8 +598,8 @@ function Dashboard() {
                 required
                 placeholder={"Kategori"}
                 type={"Kategori"}
-                options={kategoriPengeluaran}
-                onChange={(e) => setKategori(e!)}
+                options={kategoriPengeluaranData}
+                onChange={(e) => setKategoriPengeluaranVal(e!)}
               />
             </div>
           </div>
@@ -759,8 +789,8 @@ function Dashboard() {
               <p className="mb-2 text-16 font-semibold">Nama Barang</p>
               <Dropdown
                 required
-                placeholder={"Kategori"}
-                type={"Kategori"}
+                placeholder={"Nama Barang"}
+                type={"Nama Barang"}
                 options={barangDataDropdown}
                 onChange={(e) => setBarangAmbil(e!)}
               />
@@ -829,10 +859,13 @@ function Dashboard() {
               </h1>
             </div>
             <hr className="my-3 bg-black" />
-            <div className="h-[120px] w-full overflow-auto">
+            <div className="h-[120px] w-full overflow-auto pr-2">
               {kategoriPendapatan.map(
-                (row: { value: number; label: string }) => (
-                  <div className="my-3 flex items-center justify-between">
+                (row: { value: number; label: string }, index: number) => (
+                  <div
+                    key={index}
+                    className="my-3 flex items-center justify-between"
+                  >
                     <h1 className="text-14 font-medium xl:text-20">
                       {row.label}
                     </h1>
@@ -862,10 +895,13 @@ function Dashboard() {
               </h1>
             </div>
             <hr className="my-3 bg-black" />
-            <div className="h-[120px] w-full overflow-auto">
+            <div className="h-[120px] w-full overflow-auto pr-2">
               {kategoriPengeluaran.map(
-                (row: { value: number; label: string }) => (
-                  <div className="my-3 flex items-center justify-between">
+                (row: { value: number; label: string }, index: number) => (
+                  <div
+                    key={index}
+                    className="my-3 flex items-center justify-between"
+                  >
                     <h1 className="text-14 font-medium xl:text-20">
                       {row.label}
                     </h1>
@@ -945,10 +981,13 @@ function Dashboard() {
               <h1 className="my-3 text-14 font-semibold xl:text-20">
                 Stok Hampir Habis
               </h1>
-              <div className="h-[120px] w-full overflow-auto">
+              <div className="h-[120px] w-full overflow-auto pr-2">
                 {hampirHabis &&
-                  hampirHabis.map((row: any) => (
-                    <div className="my-3 flex items-center justify-between">
+                  hampirHabis.map((row: any, index: number) => (
+                    <div
+                      key={index}
+                      className="my-3 flex items-center justify-between"
+                    >
                       <h1 className="text-14 font-medium xl:text-20">
                         {row.nama_barang}
                       </h1>

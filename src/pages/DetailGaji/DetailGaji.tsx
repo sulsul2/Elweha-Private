@@ -1,5 +1,5 @@
 import Dropdown from "../../components/Dropdown";
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, useContext, useEffect, useState } from "react";
 import { dataMonth } from "../../data/month";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
@@ -10,6 +10,8 @@ import { perhitungan } from "../../data/perhitunganGaji";
 import { toastError, toastSuccess } from "../../components/Toast";
 import Modal from "../../components/Modal";
 import { formatRp } from "../../data/formatRp";
+import { UserContext } from "../../Context/UserContext";
+import NotFound from "../../components/NotFound";
 
 interface BonusVariabel {
   nama: string;
@@ -109,7 +111,12 @@ function DetailGaji() {
   const [dataBonusVariabel, setDataBonusVariabel] = useState([]);
   const [dataBonusSkil, setDataBonusSkil] = useState([]);
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+  if (user?.role != "BOD") {
+    return <NotFound />;
+  }
+
   const getGaji = async () => {
     if (token) {
       try {

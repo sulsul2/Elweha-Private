@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
 import CardPajakPerusahaan from "./CardPajakPerusahaan";
 import { FormatRupiah } from "@arismun/format-rupiah";
@@ -13,6 +13,8 @@ import LoadingPage from "../../components/LoadingPage";
 import { getWithAuth, postWithAuth } from "../../api/api";
 import { toastError, toastSuccess } from "../../components/Toast";
 import moment from "moment";
+import { UserContext } from "../../Context/UserContext";
+import NotFound from "../../components/NotFound";
 
 function PajakPerusahaan() {
   const [isLoading, setIsLoading] = useState(true);
@@ -81,10 +83,10 @@ function PajakPerusahaan() {
     }
   };
 
-  const Load = () => {
+  const Load = ({ key }: { key: React.Key }) => {
     return (
       <>
-        <div className="mb-3 flex h-5 w-full justify-between">
+        <div key={key} className="mb-3 flex h-5 w-full justify-between">
           <div className="w-2/5 animate-pulse bg-kGrey-100"></div>
           <div className="w-1/4 animate-pulse bg-kGrey-100"></div>
         </div>
@@ -92,44 +94,50 @@ function PajakPerusahaan() {
     );
   };
 
-  const KoreksiCard = ({ row }: { row: any }) => {
+  const KoreksiCard = ({ row, key }: { row: any; key: React.Key }) => {
     return (
-      <div className="mb-4 flex justify-between xl:gap-5">
-        <p className=" w-2/5 xl:w-full">{row.jenis_koreksi}</p>
-        <div className=" flex w-3/5 justify-end gap-3">
-          <span className=" w-3/5 break-words text-end lg:w-full xl:w-full">
-            <FormatRupiah value={row.jumlah} />
-          </span>
-          <button
-            onClick={() => {
-              setShowUpdateKoreksi(true);
-              setJenis(row.jenis_koreksi);
-              setJumlah(row.jumlah);
-              setSifat(row.sifat_koreksi);
-              setSelectedId(row.id);
-            }}
-          >
-            <BiSolidPencil />
-          </button>
-          <IconContext.Provider
-            value={{ color: "red", className: "global-class-name" }}
-          >
+      <>
+        <div key={key} className="mb-4 flex justify-between xl:gap-5">
+          <p className=" w-2/5 xl:w-full">{row.jenis_koreksi}</p>
+          <div className=" flex w-3/5 justify-end gap-3">
+            <span className=" w-3/5 break-words text-end lg:w-full xl:w-full">
+              <FormatRupiah value={row.jumlah} />
+            </span>
             <button
               onClick={() => {
-                setShowHapusKoreksi(true);
-                setSelectedId(row.id);
+                setShowUpdateKoreksi(true);
+                setJenis(row.jenis_koreksi);
+                setJumlah(row.jumlah);
                 setSifat(row.sifat_koreksi);
+                setSelectedId(row.id);
               }}
             >
-              <HiTrash />
+              <BiSolidPencil />
             </button>
-          </IconContext.Provider>
+            <IconContext.Provider
+              value={{ color: "red", className: "global-class-name" }}
+            >
+              <button
+                onClick={() => {
+                  setShowHapusKoreksi(true);
+                  setSelectedId(row.id);
+                  setSifat(row.sifat_koreksi);
+                }}
+              >
+                <HiTrash />
+              </button>
+            </IconContext.Provider>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+  if (user?.role != "BOD") {
+    return <NotFound />;
+  }
 
   const pendapatanPerKategori = () => {
     const updatedKategoriPendapatan = kategoriPendapatan.map((row: any) => {
@@ -152,12 +160,11 @@ function PajakPerusahaan() {
     //   }
     // })
     // console.log(onSelectedPendapatan);
-    setOnSelectedPendapatan((prevSelected) => {
-      const updatedSelected = updatedKategoriPendapatan
+    setOnSelectedPendapatan(
+      updatedKategoriPendapatan
         .filter((row) => row.value > 0)
-        .map((row) => row.label);
-      return updatedSelected;
-    });
+        .map((row) => row.label)
+    );
   };
 
   const pengeluaranPerKategori = () => {
@@ -172,12 +179,11 @@ function PajakPerusahaan() {
     // console.log(updatedKategoriPengeluaran);
     setKategoriPengeluaran(updatedKategoriPengeluaran);
 
-    setOnSelectedPengeluaran((prevSelected) => {
-      const updatedSelected = updatedKategoriPengeluaran
+    setOnSelectedPengeluaran(
+      updatedKategoriPengeluaran
         .filter((row) => row.value > 0)
-        .map((row) => row.label);
-      return updatedSelected;
-    });
+        .map((row) => row.label)
+    );
   };
 
   const getKoreksi = async (sifat: string) => {
@@ -601,24 +607,27 @@ function PajakPerusahaan() {
             </div>
 
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
-            {kategoriPendapatan.map((row: { value: number; label: string }) => {
-              var isChecked = onSelectedPendapatan.includes(row.label);
-              if (isLoadPendapatan) {
-                return <Load />;
+            {kategoriPendapatan.map(
+              (row: { value: number; label: string }, idx: number) => {
+                var isChecked = onSelectedPendapatan.includes(row.label);
+                if (isLoadPendapatan) {
+                  return <Load key={idx} />;
+                }
+                return (
+                  <CardPajakPerusahaan
+                    label={row.label}
+                    value={row.value}
+                    isChecked={isChecked}
+                    onClick={() =>
+                      handleCheck(row.label, isChecked, row.value, "pendapatan")
+                    }
+                    key={idx}
+                  />
+                );
               }
-              return (
-                <CardPajakPerusahaan
-                  label={row.label}
-                  value={row.value}
-                  isChecked={isChecked}
-                  onClick={() =>
-                    handleCheck(row.label, isChecked, row.value, "pendapatan")
-                  }
-                />
-              );
-            })}
+            )}
           </div>
-          <div className="rounded-[10px] bg-white p-[30px] drop-shadow-card">
+          <div className="mt-3 rounded-[10px] bg-white p-[30px] drop-shadow-card xl:mt-0">
             <div className=" md:flex md:justify-between ">
               <p className="text-20 font-bold">Total Pengeluaran</p>
               <span className="text-20">
@@ -627,13 +636,14 @@ function PajakPerusahaan() {
             </div>
             <hr className=" mb-4 mt-1 h-[2px] bg-kGrey-100" />
             {kategoriPengeluaran.map(
-              (row: { value: number; label: string }) => {
+              (row: { value: number; label: string }, idx: number) => {
                 var isChecked = onSelectedPengeluaran.includes(row.label);
                 if (isLoadPengeluaran) {
-                  return <Load />;
+                  return <Load key={idx} />;
                 }
                 return (
                   <CardPajakPerusahaan
+                    key={idx}
                     label={row.label}
                     value={row.value}
                     isChecked={isChecked}
@@ -675,9 +685,12 @@ function PajakPerusahaan() {
                     }}
                   />
                 </div>
-                {koreksiPositifData.map((row: any) =>
-                  isLoadKoreksi ? <Load /> : <KoreksiCard row={row} />
-                )}
+                {koreksiPositifData.map((row: any, idx: number) => {
+                  if (isLoadKoreksi) {
+                    return <Load key={idx} />;
+                  }
+                  return <KoreksiCard key={row.id} row={row} />;
+                })}
               </div>
               <div className="">
                 <div className="mt-6 flex items-center justify-between xl:mt-0">
@@ -692,9 +705,12 @@ function PajakPerusahaan() {
                     }}
                   />
                 </div>
-                {koreksiNegatifData.map((row: any) =>
-                  isLoadKoreksi ? <Load /> : <KoreksiCard row={row} />
-                )}
+                {koreksiNegatifData.map((row: any, idx: number) => {
+                  if (isLoadKoreksi) {
+                    return <Load key={idx} />;
+                  }
+                  return <KoreksiCard key={row.id} row={row} />;
+                })}
               </div>
             </div>
             <div className=" mt-6">

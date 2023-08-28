@@ -19,6 +19,7 @@ import Navbar from "./components/Navbar";
 import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 import DetailPajakRekan from "./pages/DetailPajakRekan/DetailPajakRekan";
 import DetailGaji from "./pages/DetailGaji/DetailGaji";
+import UserProvider from "./Context/UserContext";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -28,11 +29,12 @@ const ProtectedRoute = () => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }
+
   return (
-    <>
+    <UserProvider>
       <Navbar />
       <Outlet />
-    </>
+    </UserProvider>
   );
 };
 

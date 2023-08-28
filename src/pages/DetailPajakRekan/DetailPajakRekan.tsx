@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Dropdown from "../../components/Dropdown";
 import Table from "../../components/Table";
 import { dataYear } from "../../data/year";
@@ -7,6 +7,7 @@ import { toastError } from "../../components/Toast";
 import { convertMonth } from "../../data/convertMonth";
 import { useParams } from "react-router-dom";
 import { formatRp } from "../../data/formatRp";
+import { UserContext } from "../../Context/UserContext";
 
 function DetailPajakRekan() {
   const { id } = useParams();
@@ -33,7 +34,9 @@ function DetailPajakRekan() {
     "Transfer",
   ];
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+
   const getData = async () => {
     setIsTableLoad(true);
     if (token) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import TextField from "../../components/TextField";
@@ -15,6 +15,7 @@ import { dataMonth } from "../../data/month";
 import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
+import { UserContext } from "../../Context/UserContext";
 
 function Pengeluaran() {
   // Loading
@@ -62,7 +63,9 @@ function Pengeluaran() {
   const [kategoriId, setKategoriId] = useState<Array<number>>([]);
   const [onSelected, setOnSelected] = useState<Array<number>>([]);
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+
   const getData = async () => {
     if (token) {
       try {
@@ -102,7 +105,9 @@ function Pengeluaran() {
             period ? period?.value.split("-")[0] : ""
           }&year=${
             period ? period?.value.split("-")[1] : ""
-          }&search=${search}${filter}`
+          }&search=${search}${filter}${
+            user.role == "OFFICER" && "&user_id=" + user.id
+          }`
         );
         setData(
           pengeluaran.data.data.table.data.map((data: any) => {

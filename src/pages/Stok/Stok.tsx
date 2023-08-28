@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Footer from "../../components/Footer";
@@ -13,6 +13,7 @@ import DateFieldNormal from "../../components/DateFieldNormal";
 import moment from "moment";
 import { dataMonth } from "../../data/month";
 import Filter from "../../components/Filter";
+import { UserContext } from "../../Context/UserContext";
 
 function Stok() {
   // Loading
@@ -94,7 +95,9 @@ function Stok() {
     "Satuan",
   ];
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+
   const getData = async () => {
     if (token) {
       try {
@@ -129,7 +132,9 @@ function Stok() {
             period ? period?.value.split("-")[0] : ""
           }&year=${
             period ? period?.value.split("-")[1] : ""
-          }&search=${searchBarang}${filter}`
+          }&search=${searchBarang}${filter}${
+            user.role == "OFFICER" && "&user_id=" + user.id
+          }`
         );
         setDataBarang(
           barang.data.data.data.map((data: any) => {
@@ -175,7 +180,9 @@ function Stok() {
             period ? period?.value.split("-")[0] : ""
           }&year=${
             period ? period?.value.split("-")[1] : ""
-          }&search=${searchAmbil}${filter}`
+          }&search=${searchAmbil}${filter}${
+            user.role == "OFFICER" && "&user_id=" + user.id
+          }`
         );
         setDataAmbil(
           ambil.data.data.data.map((data: any) => {
@@ -635,8 +642,8 @@ function Stok() {
               <p className="mb-2 text-16 font-semibold">Nama Barang</p>
               <Dropdown
                 required
-                placeholder={"Kategori"}
-                type={"Kategori"}
+                placeholder={"Nama Barang"}
+                type={"Nama Barang"}
                 options={barangDataDropdown}
                 onChange={(e) => setBarangAmbil(e!)}
               />

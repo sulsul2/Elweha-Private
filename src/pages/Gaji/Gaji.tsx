@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Dropdown from "../../components/Dropdown";
 import Paginate from "../../components/Paginate";
@@ -16,6 +16,8 @@ import UploadFile from "../../components/UploadFile";
 import * as XLSX from "xlsx";
 import { formatRpReverse } from "../../data/formatRp";
 import { perhitungan } from "../../data/perhitunganGaji";
+import { UserContext } from "../../Context/UserContext";
+import NotFound from "../../components/NotFound";
 
 function Gaji() {
   //Loading
@@ -81,7 +83,12 @@ function Gaji() {
     "Total Gaji",
   ];
 
-  const token = localStorage.getItem("access_token");
+  const { user } = useContext(UserContext);
+  const token = user?.token;
+  if (user?.role != "BOD") {
+    return <NotFound />;
+  }
+
   const getData = async () => {
     if (token) {
       try {
@@ -102,7 +109,6 @@ function Gaji() {
     });
     if (token) {
       try {
-        console.log(searchGaji);
         const gaji = await getWithAuth(
           token,
           `gaji?limit=10&search=${searchGaji}&page=${pageGaji}&month=${
