@@ -22,7 +22,7 @@ export const postWithAuth = async (
     headers: {
       // Accept: "multipart/form-data",
       "Content-Type": "multipart/form-data",
-      Authorization: "Bearer " + token, //Add this line
+      Authorization: "Bearer " + token,
     },
   });
 };
@@ -36,7 +36,7 @@ export const postWithAuthJson = async (
     headers: {
       // Accept: "multipart/form-data",
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token, //Add this line
+      Authorization: "Bearer " + token,
     },
   });
 };
@@ -56,7 +56,7 @@ export const getWithAuth = async (
       Accept: "application/json",
       "Content-Type": "application/json",
       "ngrok-skip-browser-warning": "69420",
-      Authorization: "Bearer " + token, //Add this line
+      Authorization: "Bearer " + token,
     },
   });
 };
