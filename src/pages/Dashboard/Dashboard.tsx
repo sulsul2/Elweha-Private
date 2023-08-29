@@ -101,6 +101,10 @@ function Dashboard() {
   const { user } = useContext(UserContext);
   const token = user?.token;
 
+  if (!token) {
+    return <LoadingPage isLoad={true} />;
+  }
+
   const pendapatanPerKategori = () => {
     const updatedKategoriPendapatan = kategoriPendapatan.map((row: any) => {
       const accumulatedValue = dataPendapatan.reduce(

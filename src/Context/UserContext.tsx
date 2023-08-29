@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useEffect, useState } from "react";
 import { toastError } from "../components/Toast";
 import { getWithAuth } from "../api/api";
+import Cookies from "js-cookie";
 
 interface User {
   token: string | null;
@@ -26,7 +27,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     setUser(user);
   };
 
-  const token = localStorage.getItem("access_token");
+  const token = Cookies.get("access_token");
   const getUser = async () => {
     if (token) {
       try {

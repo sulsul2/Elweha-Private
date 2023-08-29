@@ -20,11 +20,12 @@ import DaftarAkun from "./pages/DaftarAkun/DaftarAkun";
 import DetailPajakRekan from "./pages/DetailPajakRekan/DetailPajakRekan";
 import DetailGaji from "./pages/DetailGaji/DetailGaji";
 import UserProvider from "./Context/UserContext";
+import Cookies from "js-cookie";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
 const ProtectedRoute = () => {
-  const token = localStorage.getItem("access_token");
+  const token = Cookies.get("access_token");
 
   if (!token) {
     return <Navigate to="/login" replace />;

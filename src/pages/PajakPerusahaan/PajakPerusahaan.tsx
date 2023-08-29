@@ -83,10 +83,10 @@ function PajakPerusahaan() {
     }
   };
 
-  const Load = ({ key }: { key: React.Key }) => {
+  const Load = () => {
     return (
       <>
-        <div key={key} className="mb-3 flex h-5 w-full justify-between">
+        <div className="mb-3 flex h-5 w-full justify-between">
           <div className="w-2/5 animate-pulse bg-kGrey-100"></div>
           <div className="w-1/4 animate-pulse bg-kGrey-100"></div>
         </div>
@@ -94,10 +94,10 @@ function PajakPerusahaan() {
     );
   };
 
-  const KoreksiCard = ({ row, key }: { row: any; key: React.Key }) => {
+  const KoreksiCard = ({ row }: { row: any }) => {
     return (
       <>
-        <div key={key} className="mb-4 flex justify-between xl:gap-5">
+        <div className="mb-4 flex justify-between xl:gap-5">
           <p className=" w-2/5 xl:w-full">{row.jenis_koreksi}</p>
           <div className=" flex w-3/5 justify-end gap-3">
             <span className=" w-3/5 break-words text-end lg:w-full xl:w-full">

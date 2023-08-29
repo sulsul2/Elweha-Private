@@ -12,9 +12,11 @@
   "dependencies": {
     "@arismun/format-rupiah": "^3.0.0",
     "axios": "^1.4.0",
+    "js-cookie": "^3.0.5",
     "match-sorter": "^6.3.1",
     "moment": "^2.29.4",
     "react": "^18.2.0",
+    "react-cookie": "^6.1.0",
     "react-datepicker": "^4.15.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
@@ -28,6 +30,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.3",
     "@types/react": "^18.0.37",
     "@types/react-datepicker": "^4.11.2",
     "@types/react-dom": "^18.0.11",

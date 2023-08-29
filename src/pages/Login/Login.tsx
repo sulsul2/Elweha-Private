@@ -4,6 +4,7 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import { post } from "../../api/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +23,7 @@ function Login() {
         password: password,
       });
       const access_token = response?.data.data.acess_token;
-      localStorage.setItem("access_token", access_token);
+      Cookies.set("access_token", access_token, { expires: 7 });
       navigate("/");
       toastSuccess(response?.data.meta.message);
     } catch (error) {

@@ -6,6 +6,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import Logo from "/assets/logo.svg";
 import { UserContext } from "../Context/UserContext";
+import Cookies from "js-cookie";
 
 function Navbar() {
   const { user } = useContext(UserContext);
@@ -70,7 +71,7 @@ function Navbar() {
     setIsLoading(true);
     try {
       await postWithAuth("logout", null, user?.token ?? "");
-      localStorage.clear();
+      Cookies.remove("access_token");
       navigator("/login");
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
