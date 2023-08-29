@@ -5,12 +5,23 @@ export default {
     extend: {
       fontFamily: { lato: ["Lato", "sans-serif", "system-ui"] },
       colors: {
-        orange: "#FD6701",
-        seccondaryOrange: "#FFD7BC",
-        green: "#00C653",
-        red: "#EE0000",
-        text: "#424242",
-        grey: { 100: "#B8B5B5", 200: "#A8A8A8", 300: "#6B6B6B" },
+        kOrange: {
+          100: "#FFD7BC",
+          200: "#F5BA93",
+          300: "#FF9954",
+          400: "#FD6701",
+          500: "#C85100",
+        },
+        kBlue: {
+          100: "#3D8DF5",
+          200: "#186ADE",
+          300: "#0D4EA6",
+          400: "#103A75",
+        },
+        kGreen: "#00C653",
+        kRed: "#EE0000",
+        kText: "#424242",
+        kGrey: { 100: "#B8B5B5", 200: "#A8A8A8", 300: "#6B6B6B" },
         background: "#FFFAF6",
         seccondaryWhite: "#F5F5F5",
       },
@@ -31,6 +42,10 @@ export default {
         60: "60px",
       },
       dropShadow: {
+        button: "0px 4px 4px rgba(50, 50, 71, 0.08)",
+        card: "0px 12px 12px rgba(50, 50, 71, 0.08)",
+      },
+      boxShadow: {
         button: "0px 4px 4px rgba(50, 50, 71, 0.08)",
         card: "0px 12px 12px rgba(50, 50, 71, 0.08)",
       },
