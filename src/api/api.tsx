@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const url = "http://elweha-backend.test/api/";
+const url = "https://c6f0-36-69-141-221.ngrok-free.app/api/";
 
 export const post = async (
   api: string,
@@ -55,6 +55,7 @@ export const getWithAuth = async (
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      "ngrok-skip-browser-warning": "69420",
       Authorization: "Bearer " + token, //Add this line
     },
   });
