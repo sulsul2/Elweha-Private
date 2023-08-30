@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const url = "http://elweha-backend.test/api/";
+const url = "https://e7b7-36-69-141-221.ngrok-free.app/api/";
 
 export const post = async (
   api: string,
