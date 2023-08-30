@@ -56,6 +56,7 @@ function PajakRekan() {
   const [dataRekan, setDataRekan] = useState([]);
   const [totalTransfer, setTotalTransfer] = useState(0);
   const [dataAkta, setDataAkta] = useState([]);
+  const [aktaTersisa, setAktaTersisa] = useState("");
 
   // Table
   const [pageRekan, setPageRekan] = useState(1);
@@ -157,9 +158,11 @@ function PajakRekan() {
       try {
         const akta = await getWithAuth(
           token,
-          `pajak-rekan-akta?limit=10&page=${pageAkta}&rekan_id=${
-            rekan ? rekan?.value : ""
-          }${user.role == "OFFICER" && "&user_id=" + user.id}`
+          `pajak-rekan-akta?limit=10&page=${pageAkta}&year=${
+            year ? year.value : ""
+          }&rekan_id=${rekan ? rekan?.value : ""}${
+            user.role == "OFFICER" && "&user_id=" + user.id
+          }`
         );
         setDataAkta(
           akta.data.data.table.data.map((data: any) => {
@@ -185,6 +188,20 @@ function PajakRekan() {
     }
   };
 
+  const getAktaTersisa = async () => {
+    if (token) {
+      try {
+        const tersisa = await getWithAuth(
+          token,
+          `akta-tersisa?year=${year ? year.value : ""}&rekan_id=${
+            rekan ? rekan?.value : ""
+          }`
+        );
+        setAktaTersisa(tersisa.data.data);
+      } catch (error) {}
+    }
+  };
+
   useEffect(() => {
     getData();
   }, []);
@@ -195,7 +212,11 @@ function PajakRekan() {
 
   useEffect(() => {
     getAkta();
-  }, [pageAkta, triggerAkta, rekan]);
+  }, [pageAkta, triggerAkta, rekan, year]);
+
+  useEffect(() => {
+    getAktaTersisa();
+  }, [triggerAkta, rekan, year]);
 
   const tambahRekan = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -488,6 +509,9 @@ function PajakRekan() {
               />
             </div>
           </div>
+          <h1 className="text-14 font-semibold xl:text-20">
+            No. Akta Tersisa : {aktaTersisa}
+          </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">No Awal Angka</p>
@@ -545,6 +569,9 @@ function PajakRekan() {
               />
             </div>
           </div>
+          <h1 className="text-14 font-semibold xl:text-20">
+            No. Akta Tersisa : {aktaTersisa}
+          </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">No Awal Angka</p>

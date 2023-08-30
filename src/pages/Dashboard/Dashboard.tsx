@@ -311,7 +311,12 @@ function Dashboard() {
   const getAktaTersisa = async () => {
     if (token) {
       try {
-        const tersisa = await getWithAuth(token, "akta-tersisa");
+        const tersisa = await getWithAuth(
+          token,
+          `akta-tersisa?year=${
+            period ? period?.value.split("-")[1] : ""
+          }&rekan_id=${rekan ? rekan?.value : ""}`
+        );
         setAktaTersisa(tersisa.data.data);
       } catch (error) {}
     }
@@ -488,7 +493,7 @@ function Dashboard() {
 
   useEffect(() => {
     getAktaTersisa();
-  }, [triggerAkta]);
+  }, [triggerAkta, rekan, period]);
 
   useEffect(() => {
     getBarang();
