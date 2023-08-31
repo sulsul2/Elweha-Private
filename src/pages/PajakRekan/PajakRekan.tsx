@@ -76,9 +76,7 @@ function PajakRekan() {
     "Biaya Jasa",
     "Jumlah Akta",
     "Jasa Bruto",
-    "DPP",
     "DPP Akumulasi",
-    "PPH Dipotong",
     "Pajak Akumulasi",
     "Transfer",
   ];
@@ -124,9 +122,7 @@ function PajakRekan() {
               biaya_jasa: formatRp(data.biaya_jasa),
               jumlah_akta: data.jumlah_akta,
               jasa_bruto: formatRp(data.jasa_bruto),
-              dpp: formatRp(data.dpp),
               dpp_akumulasi: formatRp(data.dpp_akumulasi),
-              pph_potong: formatRp(data.pph),
               pajak_akumulasi: formatRp(data.pph_akumulasi),
               transfer: formatRp(data.transfer),
             };

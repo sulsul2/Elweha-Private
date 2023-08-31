@@ -110,7 +110,6 @@ function DetailGaji() {
   const [dataGaji, setDataGaji] = useState<any>();
   const [dataBonusVariabel, setDataBonusVariabel] = useState([]);
   const [dataBonusSkil, setDataBonusSkil] = useState([]);
-  const [nama, setNama] = useState("");
 
   const { user } = useContext(UserContext);
   const token = user?.token;
@@ -123,9 +122,9 @@ function DetailGaji() {
       try {
         const gaji = await getWithAuth(
           token,
-          `gaji?limit=1&page=1&month=${
-            period ? period?.value.split("-")[0] : ""
-          }&year=${period ? period?.value.split("-")[1] : ""}&id=${id}`
+          `gaji?&month=${period ? period?.value.split("-")[0] : ""}&year=${
+            period ? period?.value.split("-")[1] : ""
+          }&id=${id}`
         );
         setDataBonusVariabel(
           gaji.data.data.data.length == 0 ? [] : gaji.data.data.data[0].variabel
@@ -138,8 +137,6 @@ function DetailGaji() {
         );
         setDataGaji(perhitungan(gaji).hasil[0]);
         setTrigger(false);
-        const gajiId = await getWithAuth(token, `gaji-all?id=${id}`);
-        setNama(gajiId.data.data[0].nama_karyawan);
       } catch (error) {
         toastError("Get Data Table Failed");
       }
@@ -152,7 +149,6 @@ function DetailGaji() {
 
   const tambahBonusVariabel = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(kehadiranId);
     setIsTambahBonusVariabel(true);
     try {
       const response = await postWithAuth(
@@ -179,7 +175,6 @@ function DetailGaji() {
 
   const tambahBonusSkil = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(kehadiranId);
     setIsTambahBonusSkil(true);
     try {
       const response = await postWithAuth(
@@ -313,7 +308,9 @@ function DetailGaji() {
       </Modal>
 
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
-        <h1 className="mb-12 text-40 font-bold xl:block">Detail Gaji {nama}</h1>
+        <h1 className="mb-12 text-40 font-bold xl:block">
+          Detail Gaji {dataGaji ? dataGaji.nama_karyawan : ""}
+        </h1>
         <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold md:text-24 xl:w-[250px] ">
             Total Gaji
@@ -398,50 +395,54 @@ function DetailGaji() {
                 />
               ))}
             </div>
-            <form
-              onSubmit={(e) => tambahBonusVariabel(e)}
-              className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
-            >
-              <div className="flex w-full items-center gap-3 rounded-[10px] border-2 border-black p-2 xl:w-[500px]">
-                <TextField
-                  type="standart"
-                  placeholder="Nama Bonus"
-                  onChange={(e) => setNamaBonusVariabel(e.target.value)}
-                  value={namaBonusVariabel}
-                  required
-                />
-                <TextField
-                  type="standart"
-                  placeholder="Besar Bonus"
-                  onChange={(e) => setBesarBonusVariabel(e.target.value)}
-                  value={besarBonusVariabel}
-                  required
-                />
-                <p className="text-16 font-semibold">X</p>
-                <TextField
-                  type="standart"
-                  placeholder="Jumlah"
-                  onChange={(e) => setJumlahBonusVariabel(e.target.value)}
-                  value={jumlahBonusVariabel}
-                  required
-                />
-                <p className="text-20 font-semibold">=</p>
-                <p className="text-20 font-semibold">
-                  {besarBonusVariabel && jumlahBonusVariabel
-                    ? Number.parseFloat(besarBonusVariabel) *
-                      Number.parseFloat(jumlahBonusVariabel)
-                    : 0}
-                </p>
-              </div>
-              <div className="mt-2 xl:ml-2 xl:mt-0">
-                <Button
-                  type="submit"
-                  text="Tambah Bonus +"
-                  style="primary"
-                  isLoading={isTambahBonusVariabel}
-                />
-              </div>
-            </form>
+            {dataGaji && dataGaji.jenis_gaji == "Variabel" ? (
+              <form
+                onSubmit={(e) => tambahBonusVariabel(e)}
+                className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
+              >
+                <div className="flex w-full items-center gap-3 rounded-[10px] border-2 border-black p-2 xl:w-[500px]">
+                  <TextField
+                    type="standart"
+                    placeholder="Nama Bonus"
+                    onChange={(e) => setNamaBonusVariabel(e.target.value)}
+                    value={namaBonusVariabel}
+                    required
+                  />
+                  <TextField
+                    type="standart"
+                    placeholder="Besar Bonus"
+                    onChange={(e) => setBesarBonusVariabel(e.target.value)}
+                    value={besarBonusVariabel}
+                    required
+                  />
+                  <p className="text-16 font-semibold">X</p>
+                  <TextField
+                    type="standart"
+                    placeholder="Jumlah"
+                    onChange={(e) => setJumlahBonusVariabel(e.target.value)}
+                    value={jumlahBonusVariabel}
+                    required
+                  />
+                  <p className="text-20 font-semibold">=</p>
+                  <p className="text-20 font-semibold">
+                    {besarBonusVariabel && jumlahBonusVariabel
+                      ? Number.parseFloat(besarBonusVariabel) *
+                        Number.parseFloat(jumlahBonusVariabel)
+                      : 0}
+                  </p>
+                </div>
+                <div className="mt-2 xl:ml-2 xl:mt-0">
+                  <Button
+                    type="submit"
+                    text="Tambah Bonus +"
+                    style="primary"
+                    isLoading={isTambahBonusVariabel}
+                  />
+                </div>
+              </form>
+            ) : (
+              <h1 className="text-center">Jenis Gaji Anda Tetap</h1>
+            )}
           </div>
 
           <div className="rounded-[10px] bg-white drop-shadow-card xl:h-[214px]">
@@ -499,35 +500,39 @@ function DetailGaji() {
                 />
               ))}
             </div>
-            <form
-              onSubmit={(e) => tambahBonusSkil(e)}
-              className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
-            >
-              <div className="flex w-full items-center gap-3 rounded-[10px] border-2 border-black p-2 xl:w-[500px]">
-                <TextField
-                  type="standart"
-                  placeholder="Nama Bonus"
-                  onChange={(e) => setNamaBonusSkil(e.target.value)}
-                  value={namaBonusSkil}
-                  required
-                />
-                <TextField
-                  type="standart"
-                  placeholder="Besar Bonus"
-                  onChange={(e) => setBesarBonusSkil(e.target.value)}
-                  value={besarBonusSkil}
-                  required
-                />
-              </div>
-              <div className="mt-2 xl:ml-2 xl:mt-0">
-                <Button
-                  type="submit"
-                  text="Tambah Bonus +"
-                  style="primary"
-                  isLoading={isTambahBonusSkil}
-                />
-              </div>
-            </form>
+            {dataGaji && dataGaji.jenis_gaji == "Variabel" ? (
+              <form
+                onSubmit={(e) => tambahBonusSkil(e)}
+                className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
+              >
+                <div className="flex w-full items-center gap-3 rounded-[10px] border-2 border-black p-2 xl:w-[500px]">
+                  <TextField
+                    type="standart"
+                    placeholder="Nama Bonus"
+                    onChange={(e) => setNamaBonusSkil(e.target.value)}
+                    value={namaBonusSkil}
+                    required
+                  />
+                  <TextField
+                    type="standart"
+                    placeholder="Besar Bonus"
+                    onChange={(e) => setBesarBonusSkil(e.target.value)}
+                    value={besarBonusSkil}
+                    required
+                  />
+                </div>
+                <div className="mt-2 xl:ml-2 xl:mt-0">
+                  <Button
+                    type="submit"
+                    text="Tambah Bonus +"
+                    style="primary"
+                    isLoading={isTambahBonusSkil}
+                  />
+                </div>
+              </form>
+            ) : (
+              <h1 className="text-center">Jenis Gaji Anda Tetap</h1>
+            )}
           </div>
         </div>
       </div>

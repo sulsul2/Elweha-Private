@@ -103,7 +103,7 @@ function Gaji() {
   const getGaji = async () => {
     setOnSelectedGaji([]);
     setIsTableLoad(true);
-    var filter = "";
+    var filter = "&jenis[2]=KOSONG";
     gajiFilter.forEach((id, idx) => {
       filter += `&jenis[${idx}]=${jenisGajiData[id].label}`;
     });
@@ -111,7 +111,7 @@ function Gaji() {
       try {
         const gaji = await getWithAuth(
           token,
-          `gaji?limit=10&search=${searchGaji}&page=${pageGaji}&month=${
+          `gaji?limit=15&search=${searchGaji}&page=${pageGaji}&month=${
             period ? period?.value.split("-")[0] : ""
           }&year=${period ? period?.value.split("-")[1] : ""}${filter}`
         );
@@ -225,11 +225,15 @@ function Gaji() {
             const worksheetName = workbook.SheetNames[1];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
-            await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
+            try {
+              await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
+              toastSuccess("Upload successfully");
+              setShowEMT(false);
+              setTotalDataGaji(totalDataGaji + 1);
+            } catch (error) {
+              toastError(error as string);
+            }
           };
-          toastSuccess("Upload successfully");
-          setShowEMT(false);
-          setTotalDataGaji(totalDataGaji + 1);
         } else {
           toastError("Please select only excel file types");
           setEmt(null);
@@ -263,11 +267,19 @@ function Gaji() {
             const worksheetName = workbook.SheetNames[2];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
-            await postWithAuthJson("kehadiran", readNonEmt(data), token ?? "");
+            try {
+              await postWithAuthJson(
+                "kehadiran",
+                readNonEmt(data),
+                token ?? ""
+              );
+              toastSuccess("Upload successfully");
+              setShowNonEMT(false);
+              setTotalDataGaji(totalDataGaji + 1);
+            } catch (error) {
+              toastError(error as string);
+            }
           };
-          toastSuccess("Upload successfully");
-          setShowNonEMT(false);
-          setTotalDataGaji(totalDataGaji + 1);
         } else {
           toastError("Please select only excel file types");
           setNonEmt(null);
@@ -578,7 +590,7 @@ function Gaji() {
             column={kolom}
             isLoading={isTableLoad}
             page={pageGaji}
-            dataLimit={10}
+            dataLimit={15}
             onEdit={(val) => {
               setIdEditGaji((dataGaji[val] as any).id);
               setShowEditGaji(true);
@@ -598,7 +610,7 @@ function Gaji() {
             totalPages={totalPageGaji}
             current={(page) => setPageGaji(page)}
             totalData={totalDataGaji}
-            dataLimit={10}
+            dataLimit={15}
           />
         </div>
       </div>

@@ -50,12 +50,7 @@ export const perhitungan = (gaji: any) => {
 
     var totalGaji = 0;
     if (data.jenis_gaji == "Tetap") {
-      totalGaji =
-        (data.kehadiran_actual / (data.kehadiran_standart - 1)) *
-          data.besar_gaji +
-        bonus_kehadiran +
-        variabel +
-        skil;
+      totalGaji = data.kehadiran_actual * data.besar_gaji + bonus_kehadiran;
     } else {
       totalGaji =
         data.kehadiran_actual * data.besar_gaji +
@@ -64,7 +59,8 @@ export const perhitungan = (gaji: any) => {
         bonus_kehadiran;
     }
 
-    var pph = hitungPajak(totalGaji);
+    // var pph = hitungPajak(totalGaji);
+    var pph = 0;
 
     total += totalGaji - pph;
 

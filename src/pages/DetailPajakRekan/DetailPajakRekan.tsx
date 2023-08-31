@@ -30,8 +30,8 @@ function DetailPajakRekan() {
     "Jasa Bruto",
     "DPP",
     "DPP Akumulasi",
-    "PPH Dipotong",
     "Pajak Akumulasi",
+    "PPH Dipotong",
     "Transfer",
   ];
 
@@ -48,6 +48,7 @@ function DetailPajakRekan() {
             year ? year.value : ""
           }`
         );
+        console.log(pajak_rekan.data.data.table.data);
         setData(
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
@@ -57,8 +58,8 @@ function DetailPajakRekan() {
               jasa_bruto: formatRp(data.jasa_bruto),
               dpp: formatRp(data.dpp),
               dpp_akumulasi: formatRp(data.dpp_akumulasi),
-              pph_potong: formatRp(data.pph),
               pajak_akumulasi: formatRp(data.pph_akumulasi),
+              pph_potong: formatRp(data.pph),
               transfer: formatRp(data.transfer),
             };
           })
