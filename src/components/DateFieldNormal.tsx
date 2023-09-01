@@ -47,6 +47,7 @@ function DateFieldNormal({
         scrollableYearDropdown
         popperPlacement="bottom"
         showPopperArrow={false}
+        maxDate={new Date()}
         selected={startDate == null && value != null ? value : startDate}
         onChange={(date) => {
           setStartDate(date);

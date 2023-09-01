@@ -16,6 +16,7 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
 
 function Pengeluaran() {
   // Loading
@@ -178,7 +179,7 @@ function Pengeluaran() {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pengeluaran_id: kategori?.value,
           jenis_pengeluaran_id: jenis?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           deskripsi: deskripsi,
         },
         token ?? ""
@@ -204,7 +205,7 @@ function Pengeluaran() {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pengeluaran_id: kategori?.value,
           jenis_pengeluaran_id: jenis?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           deskripsi: deskripsi,
         },
         token ?? ""
@@ -321,6 +322,7 @@ function Pengeluaran() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(jumlah)}
                 onChange={(e) => setJumlah(e.target.value)}
               />
             </div>
@@ -402,7 +404,7 @@ function Pengeluaran() {
                 type={"standart"}
                 placeholder={"Rp"}
                 onChange={(e) => setJumlah(e.target.value)}
-                value={jumlah}
+                value={sparator(jumlah)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -501,7 +503,11 @@ function Pengeluaran() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => setShowTambahPengeluaran(true)}
+              onClick={() => {
+                setShowTambahPengeluaran(true);
+                // Reset
+                setJumlah("");
+              }}
               text={"Tambah Data +"}
               type={"button"}
               style={"primary"}

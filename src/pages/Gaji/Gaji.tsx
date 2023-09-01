@@ -18,6 +18,8 @@ import { formatRpReverse } from "../../data/formatRp";
 import { perhitungan } from "../../data/perhitunganGaji";
 import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import { GajiPeriodContext } from "../../Context/GajiPeriodContext";
 
 function Gaji() {
   //Loading
@@ -43,8 +45,11 @@ function Gaji() {
   ]);
 
   //Field
+  const gajiPeriodContext = useContext(GajiPeriodContext);
   const [period, setPeriod] = useState<{ value: string; label: string }>(
-    dataMonth(new Date(), new Date())[0]
+    gajiPeriodContext
+      ? gajiPeriodContext.period
+      : dataMonth(new Date(), new Date())[0]
   );
   const [namaKaryawan, setNamaKaryawan] = useState("");
   const [jenisGaji, setJenisGaji] = useState<{
@@ -115,6 +120,7 @@ function Gaji() {
             period ? period?.value.split("-")[0] : ""
           }&year=${period ? period?.value.split("-")[1] : ""}${filter}`
         );
+        console.log(gaji);
         setDataGaji(perhitungan(gaji).hasil);
         setTotalGaji(perhitungan(gaji).total);
         setTotalPageGaji(gaji.data.data.last_page);
@@ -144,7 +150,7 @@ function Gaji() {
         {
           nama_karyawan: namaKaryawan,
           jenis_gaji: jenisGaji?.label,
-          besar_gaji: besarGaji,
+          besar_gaji: sparatorReverse(besarGaji),
         },
         token ?? ""
       );
@@ -168,7 +174,7 @@ function Gaji() {
           id: idEditGaji,
           nama_karyawan: namaKaryawan,
           jenis_gaji: jenisGaji?.label,
-          besar_gaji: besarGaji,
+          besar_gaji: sparatorReverse(besarGaji),
           tahun: period?.value.split("-")[1],
           bulan: period?.value.split("-")[0],
         },
@@ -394,6 +400,7 @@ function Gaji() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(besarGaji)}
                 onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
@@ -454,7 +461,7 @@ function Gaji() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
-                value={besarGaji}
+                value={sparator(besarGaji)}
                 onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
@@ -524,7 +531,10 @@ function Gaji() {
               placeholder={"Select Period"}
               type={"month"}
               options={dataMonth(new Date("01/01/2000"), new Date())}
-              onChange={(e) => setPeriod(e!)}
+              onChange={(e) => {
+                setPeriod(e!);
+                gajiPeriodContext?.updatePeriod(e!);
+              }}
               value={period}
               isClearable={false}
             />
@@ -546,7 +556,11 @@ function Gaji() {
             />
           </div>
           <Button
-            onClick={() => setShowTambahGaji(true)}
+            onClick={() => {
+              setShowTambahGaji(true);
+              // reset
+              setBesarGaji("");
+            }}
             text={"Tambah Data +"}
             type={"button"}
             style={"primary"}

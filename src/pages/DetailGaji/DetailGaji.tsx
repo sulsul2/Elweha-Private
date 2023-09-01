@@ -5,13 +5,14 @@ import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { getWithAuth, postWithAuth } from "../../api/api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { perhitungan } from "../../data/perhitunganGaji";
 import { toastError, toastSuccess } from "../../components/Toast";
 import Modal from "../../components/Modal";
 import { formatRp } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
+import { GajiPeriodContext } from "../../Context/GajiPeriodContext";
 
 interface BonusVariabel {
   nama: string;
@@ -90,8 +91,11 @@ function DetailGaji() {
   const [showHapusSkilBonus, setShowHapusSkilBonus] = useState(false);
 
   // Dropdown
+  const gajiPeriodContext = useContext(GajiPeriodContext);
   const [period, setPeriod] = useState<{ value: string; label: string }>(
-    dataMonth(new Date(), new Date())[0]
+    gajiPeriodContext
+      ? gajiPeriodContext.period
+      : dataMonth(new Date(), new Date())[0]
   );
 
   // Field
@@ -111,6 +115,7 @@ function DetailGaji() {
   const [dataBonusVariabel, setDataBonusVariabel] = useState([]);
   const [dataBonusSkil, setDataBonusSkil] = useState([]);
 
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const token = user?.token;
   if (user?.role != "BOD") {
@@ -308,9 +313,17 @@ function DetailGaji() {
       </Modal>
 
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
-        <h1 className="mb-12 text-40 font-bold xl:block">
-          Detail Gaji {dataGaji ? dataGaji.nama_karyawan : ""}
-        </h1>
+        <div className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between">
+          <h1 className="text-40 font-bold xl:block">
+            Detail Gaji {dataGaji ? dataGaji.nama_karyawan : ""}
+          </h1>
+          <Button
+            text={"Kembali"}
+            type={"button"}
+            style={"third"}
+            onClick={() => navigate("/gaji")}
+          />
+        </div>
         <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold md:text-24 xl:w-[250px] ">
             Total Gaji
@@ -340,7 +353,10 @@ function DetailGaji() {
                 placeholder={"Select Period"}
                 type={"month"}
                 options={dataMonth(new Date("01/01/2000"), new Date())}
-                onChange={(e) => setPeriod(e!)}
+                onChange={(e) => {
+                  setPeriod(e!);
+                  gajiPeriodContext?.updatePeriod(e!);
+                }}
                 isClearable={false}
                 value={period}
               />

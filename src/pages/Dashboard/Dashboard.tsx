@@ -13,6 +13,8 @@ import DateFieldNormal from "../../components/DateFieldNormal";
 import TextField from "../../components/TextField";
 import TextArea from "../../components/TextArea";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -197,7 +199,7 @@ function Dashboard() {
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pendapatan_id: kategoriPendapatanVal?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           pengirim: pengirim,
           deskripsi: deskripsi,
         },
@@ -264,7 +266,7 @@ function Dashboard() {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pengeluaran_id: kategoriPengeluaranVal?.value,
           jenis_pengeluaran_id: jenis?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           deskripsi: deskripsi,
         },
         token ?? ""
@@ -293,8 +295,8 @@ function Dashboard() {
             return {
               id: data.id,
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
-              noAwal: data.no_awal,
-              noAkhir: data.no_akhir,
+              noAwal: sparator(data.no_awal),
+              noAkhir: sparator(data.no_akhir),
               jumlahAkta: data.jumlah_akta,
             };
           })
@@ -331,8 +333,8 @@ function Dashboard() {
         {
           rekan_id: rekan?.value,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          no_awal: noAwal,
-          no_akhir: noAkhir,
+          no_awal: sparatorReverse(noAwal),
+          no_akhir: sparatorReverse(noAkhir),
         },
         token ?? ""
       );
@@ -356,8 +358,8 @@ function Dashboard() {
           id: idEditAkta,
           rekan_id: rekan?.value,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          no_awal: noAwal,
-          no_akhir: noAkhir,
+          no_awal: sparatorReverse(noAwal),
+          no_akhir: sparatorReverse(noAkhir),
         },
         token ?? ""
       );
@@ -444,7 +446,7 @@ function Dashboard() {
         {
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahAmbil,
+          jumlah: sparatorReverse(jumlahAmbil),
           nama_pengambil: namaPengambil,
         },
         token ?? ""
@@ -485,7 +487,7 @@ function Dashboard() {
 
   useEffect(() => {
     getStok();
-  }, [period]);
+  }, [period, triggerBarang]);
 
   useEffect(() => {
     getJenisData();
@@ -542,6 +544,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(jumlah)}
                 onChange={(e) => setJumlah(e.target.value)}
               />
             </div>
@@ -619,6 +622,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(jumlah)}
                 onChange={(e) => setJumlah(e.target.value)}
               />
             </div>
@@ -684,6 +688,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"No Akta Awal"}
+                value={sparator(noAwal)}
                 onChange={(e) => setNoAwal(e.target.value)}
               />
             </div>
@@ -693,6 +698,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"No Akta Akhir"}
+                value={sparator(noAkhir)}
                 onChange={(e) => setNoAkhir(e.target.value)}
               />
             </div>
@@ -742,7 +748,7 @@ function Dashboard() {
                 type={"standart"}
                 placeholder={"No Akta Awal"}
                 onChange={(e) => setNoAwal(e.target.value)}
-                value={noAwal}
+                value={sparator(noAwal)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -752,7 +758,7 @@ function Dashboard() {
                 type={"standart"}
                 placeholder={"No Akta Akhir"}
                 onChange={(e) => setNoAkhir(e.target.value)}
-                value={noAkhir}
+                value={sparator(noAkhir)}
               />
             </div>
           </div>
@@ -812,6 +818,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Nama"}
+                value={namaPengambil}
                 onChange={(e) => setNamaPengambil(e.target.value)}
               />
             </div>
@@ -821,6 +828,7 @@ function Dashboard() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Jumlah"}
+                value={sparator(jumlahAmbil)}
                 onChange={(e) => setJumlahAmbil(e.target.value)}
               />
             </div>
@@ -862,7 +870,12 @@ function Dashboard() {
           {/* PENDAPATAN */}
           <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
-              <h1 className="text-20 font-bold xl:text-24">Pendapatan</h1>
+              <Link
+                className="text-20 font-bold hover:text-kOrange-300 active:text-kOrange-500 xl:text-24"
+                to={"/pendapatan"}
+              >
+                Pendapatan
+              </Link>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kGreen xl:text-28 ">
                 <FormatRupiah value={totalPendapatan} />
               </h1>
@@ -890,7 +903,11 @@ function Dashboard() {
                 text={"Tambah Pendapatan +"}
                 type={"button"}
                 style={"primary"}
-                onClick={() => setShowTambahPendapatan(true)}
+                onClick={() => {
+                  setShowTambahPendapatan(true);
+                  // Reset
+                  setJumlah("");
+                }}
               />
             </div>
           </div>
@@ -898,7 +915,12 @@ function Dashboard() {
           {/* PENGELUARAN */}
           <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between">
-              <h1 className="text-20 font-bold xl:text-24">Pengeluaran</h1>
+              <Link
+                className="text-20 font-bold hover:text-kOrange-300 active:text-kOrange-500 xl:text-24"
+                to={"/pengeluaran"}
+              >
+                Pengeluaran
+              </Link>
               <h1 className="whitespace-nowrap text-20 font-semibold text-kRed xl:text-28 ">
                 <FormatRupiah value={totalPengeluaran} />
               </h1>
@@ -926,14 +948,23 @@ function Dashboard() {
                 text={"Tambah Pengeluaran +"}
                 type={"button"}
                 style={"primary"}
-                onClick={() => setShowTambahPengeluaran(true)}
+                onClick={() => {
+                  setShowTambahPengeluaran(true);
+                  // Reset
+                  setJumlah("");
+                }}
               />
             </div>
           </div>
 
           {/* PAJAK REKAN */}
           <div className="h-[450px] w-full overflow-auto rounded-[10px] bg-white p-[30px] drop-shadow-card xl:w-[49%] xl:p-[50px]">
-            <h1 className="text-20 font-bold xl:text-24">Pajak Rekan</h1>
+            <Link
+              className="text-20 font-bold hover:text-kOrange-300 active:text-kOrange-500 xl:text-24"
+              to={"/pajak-rekan"}
+            >
+              Pajak Rekan
+            </Link>
             <hr className="my-3 bg-black" />
             <div className="my-3 flex items-center justify-between">
               <h1 className="text-14 font-semibold xl:text-20">
@@ -949,7 +980,12 @@ function Dashboard() {
                 text={"Tambah Data +"}
                 type={"button"}
                 style={"primary"}
-                onClick={() => setShowTambahAkta(true)}
+                onClick={() => {
+                  setShowTambahAkta(true);
+                  // Reset
+                  setNoAwal("");
+                  setNoAkhir("");
+                }}
               />
             </div>
             <div className="mt-2 w-full px-12 md:px-40 lg:px-20">
@@ -985,7 +1021,12 @@ function Dashboard() {
           {/* STOK BARANG */}
           <div className="w-full xl:w-[49%]">
             <div className="h-auto w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:p-[50px]">
-              <h1 className="text-20 font-bold xl:text-24">Stok Barang</h1>
+              <Link
+                className="text-20 font-bold hover:text-kOrange-300 active:text-kOrange-500 xl:text-24"
+                to={"/stok"}
+              >
+                Stok Barang
+              </Link>
               <hr className="my-3 bg-black" />
               <h1 className="my-3 text-14 font-semibold xl:text-20">
                 Stok Hampir Habis
@@ -1011,7 +1052,12 @@ function Dashboard() {
                   text={"Ambil Barang +"}
                   type={"button"}
                   style={"primary"}
-                  onClick={() => setShowTambahAmbil(true)}
+                  onClick={() => {
+                    setShowTambahAmbil(true);
+                    setNamaPengambil(user.nama);
+                    // Reset
+                    setJumlahAmbil("");
+                  }}
                 />
               </div>
             </div>

@@ -16,6 +16,7 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
 
 function Pendapatan() {
   // Loading
@@ -175,7 +176,7 @@ function Pendapatan() {
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pendapatan_id: kategori?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           pengirim: pengirim,
           deskripsi: deskripsi,
         },
@@ -201,7 +202,7 @@ function Pendapatan() {
           id: idEdit,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pendapatan_id: kategori?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           pengirim: pengirim,
           deskripsi: deskripsi,
         },
@@ -319,6 +320,7 @@ function Pendapatan() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(jumlah)}
                 onChange={(e) => setJumlah(e.target.value)}
               />
             </div>
@@ -399,7 +401,7 @@ function Pendapatan() {
                 type={"standart"}
                 placeholder={"Rp"}
                 onChange={(e) => setJumlah(e.target.value)}
-                value={jumlah}
+                value={sparator(jumlah)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -497,7 +499,11 @@ function Pendapatan() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => setShowTambahPendapatan(true)}
+              onClick={() => {
+                setShowTambahPendapatan(true);
+                // Reset
+                setJumlah("");
+              }}
               text={"Tambah Data +"}
               type={"button"}
               style={"primary"}

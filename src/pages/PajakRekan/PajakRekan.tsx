@@ -14,6 +14,8 @@ import moment from "moment";
 import { dataYear } from "../../data/year";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import { PajakPeriodContext } from "../../Context/PajakPeriodContext";
 
 function PajakRekan() {
   // Loading
@@ -41,8 +43,11 @@ function PajakRekan() {
   >([]);
 
   //Field
+  const pajakPeriodContext = useContext(PajakPeriodContext);
   const [year, setYear] = useState<{ value: string; label: string }>(
-    dataYear(new Date(), new Date())[0]
+    pajakPeriodContext
+      ? pajakPeriodContext.period
+      : dataYear(new Date(), new Date())[0]
   );
   const [rekan, setRekan] = useState<{ value: string; label: string }>();
   const [namaRekan, setNamaRekan] = useState("");
@@ -120,7 +125,7 @@ function PajakRekan() {
               id: data.rekan_id,
               nama: data.nama,
               biaya_jasa: formatRp(data.biaya_jasa),
-              jumlah_akta: data.jumlah_akta,
+              jumlah_akta: sparator(data.jumlah_akta),
               jasa_bruto: formatRp(data.jasa_bruto),
               dpp_akumulasi: formatRp(data.dpp_akumulasi),
               pajak_akumulasi: formatRp(data.pph_akumulasi),
@@ -165,9 +170,9 @@ function PajakRekan() {
             return {
               id: data.id,
               tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
-              noAwal: data.no_awal,
-              noAkhir: data.no_akhir,
-              jumlahAkta: data.jumlah_akta,
+              noAwal: sparator(data.no_awal),
+              noAkhir: sparator(data.no_akhir),
+              jumlahAkta: sparator(data.jumlah_akta),
               update: `${data.user.nama} pada ${moment(data.updated_at).format(
                 "DD MMMM YYYY HH:MM"
               )}`,
@@ -222,7 +227,7 @@ function PajakRekan() {
         "rekan",
         {
           nama_rekan: namaRekan,
-          biaya_jasa: biayaJasa,
+          biaya_jasa: sparatorReverse(biayaJasa),
         },
         token ?? ""
       );
@@ -245,7 +250,7 @@ function PajakRekan() {
         {
           id: idEditRekan,
           nama_rekan: namaRekan,
-          biaya_jasa: biayaJasa,
+          biaya_jasa: sparatorReverse(biayaJasa),
           tahun: year.value,
         },
         token ?? ""
@@ -290,8 +295,8 @@ function PajakRekan() {
         {
           rekan_id: rekan?.value,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          no_awal: noAwal,
-          no_akhir: noAkhir,
+          no_awal: sparatorReverse(noAwal),
+          no_akhir: sparatorReverse(noAkhir),
         },
         token ?? ""
       );
@@ -315,8 +320,8 @@ function PajakRekan() {
           id: idEditAkta,
           rekan_id: rekan?.value,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
-          no_awal: noAwal,
-          no_akhir: noAkhir,
+          no_awal: sparatorReverse(noAwal),
+          no_akhir: sparatorReverse(noAkhir),
         },
         token ?? ""
       );
@@ -386,6 +391,7 @@ function PajakRekan() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(biayaJasa)}
                 onChange={(e) => setBiayaJasa(e.target.value)}
               />
             </div>
@@ -435,7 +441,7 @@ function PajakRekan() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
-                value={biayaJasa}
+                value={sparator(biayaJasa)}
                 onChange={(e) => setBiayaJasa(e.target.value)}
               />
             </div>
@@ -515,6 +521,7 @@ function PajakRekan() {
                 required
                 type={"standart"}
                 placeholder={"No Akta Awal"}
+                value={sparator(noAwal)}
                 onChange={(e) => setNoAwal(e.target.value)}
               />
             </div>
@@ -524,6 +531,7 @@ function PajakRekan() {
                 required
                 type={"standart"}
                 placeholder={"No Akta Akhir"}
+                value={sparator(noAkhir)}
                 onChange={(e) => setNoAkhir(e.target.value)}
               />
             </div>
@@ -576,7 +584,7 @@ function PajakRekan() {
                 type={"standart"}
                 placeholder={"No Akta Awal"}
                 onChange={(e) => setNoAwal(e.target.value)}
-                value={noAwal}
+                value={sparator(noAwal)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -586,7 +594,7 @@ function PajakRekan() {
                 type={"standart"}
                 placeholder={"No Akta Akhir"}
                 onChange={(e) => setNoAkhir(e.target.value)}
-                value={noAkhir}
+                value={sparator(noAkhir)}
               />
             </div>
           </div>
@@ -657,13 +665,20 @@ function PajakRekan() {
               type={"year"}
               value={year}
               options={dataYear(new Date("01/01/2000"), new Date())}
-              onChange={(e) => setYear(e!)}
+              onChange={(e) => {
+                setYear(e!);
+                pajakPeriodContext?.updatePeriod(e!);
+              }}
             />
           </div>
         </div>
         <div className="mb-5 hidden w-full justify-center gap-4 xl:flex xl:justify-end">
           <Button
-            onClick={() => setShowTambahRekan(true)}
+            onClick={() => {
+              setShowTambahRekan(true);
+              // Reset
+              setBiayaJasa("");
+            }}
             text={"Tambah Rekan +"}
             type={"button"}
             style={"primary"}
@@ -674,7 +689,11 @@ function PajakRekan() {
         </p>
         <div className="mb-5 flex w-full gap-4 xl:hidden xl:justify-end">
           <Button
-            onClick={() => setShowTambahRekan(true)}
+            onClick={() => {
+              setShowTambahRekan(true);
+              // Reset
+              setBiayaJasa("");
+            }}
             text={"Tambah Rekan +"}
             type={"button"}
             style={"primary"}
@@ -735,7 +754,12 @@ function PajakRekan() {
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24  xl:px-48">
         <div className="mb-5 hidden xl:block xl:text-end">
           <Button
-            onClick={() => setShowTambahAkta(true)}
+            onClick={() => {
+              setShowTambahAkta(true);
+              // Reset
+              setNoAwal("");
+              setNoAkhir("");
+            }}
             text={"Tambah Data +"}
             type={"button"}
             style={"primary"}
@@ -746,7 +770,12 @@ function PajakRekan() {
         </p>
         <div className="mb-5 block xl:hidden xl:justify-end">
           <Button
-            onClick={() => setShowTambahAkta(true)}
+            onClick={() => {
+              setShowTambahAkta(true);
+              // Reset
+              setNoAwal("");
+              setNoAkhir("");
+            }}
             text={"Tambah Data +"}
             type={"button"}
             style={"primary"}

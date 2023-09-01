@@ -14,6 +14,7 @@ import moment from "moment";
 import { dataMonth } from "../../data/month";
 import Filter from "../../components/Filter";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
 
 function Stok() {
   // Loading
@@ -142,7 +143,7 @@ function Stok() {
               id: data.id,
               nama_barang: data.nama_barang,
               jenis: data.jenis.nama,
-              jumlah: data.jumlah,
+              jumlah: sparator(data.jumlah),
               satuan: data.satuan,
             };
           })
@@ -192,7 +193,7 @@ function Stok() {
               nama_pengambil: data.nama_pengambil,
               nama_barang: data.barang.nama_barang,
               jenis: data.barang.jenis.nama,
-              jumlah: data.jumlah,
+              jumlah: sparator(data.jumlah),
               satuan: data.barang.satuan,
             };
           })
@@ -271,7 +272,7 @@ function Stok() {
         {
           nama_barang: namaBarang,
           jenis_barang_id: jenisBarang?.value,
-          jumlah: jumlahBarang,
+          jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
         },
         token ?? ""
@@ -296,7 +297,7 @@ function Stok() {
           id: idEditBarang,
           nama_barang: namaBarang,
           jenis_barang_id: jenisBarang?.value,
-          jumlah: jumlahBarang,
+          jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
         },
         token ?? ""
@@ -341,7 +342,7 @@ function Stok() {
         {
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahAmbil,
+          jumlah: sparatorReverse(jumlahAmbil),
           nama_pengambil: namaPengambil,
         },
         token ?? ""
@@ -366,7 +367,7 @@ function Stok() {
           id: idEditAmbil,
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahAmbil,
+          jumlah: sparatorReverse(jumlahAmbil),
           nama_pengambil: namaPengambil,
         },
         token ?? ""
@@ -484,6 +485,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Jumlah Stok"}
+                value={sparator(jumlahBarang)}
                 onChange={(e) => setJumlahBarang(e.target.value)}
               />
             </div>
@@ -554,7 +556,7 @@ function Stok() {
                 type={"standart"}
                 placeholder={"Masukkan Jumlah Stok"}
                 onChange={(e) => setJumlahBarang(e.target.value)}
-                value={jumlahBarang}
+                value={sparator(jumlahBarang)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -656,6 +658,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Nama"}
+                value={namaPengambil}
                 onChange={(e) => setNamaPengambil(e.target.value)}
               />
             </div>
@@ -665,6 +668,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Jumlah"}
+                value={sparator(jumlahAmbil)}
                 onChange={(e) => setJumlahAmbil(e.target.value)}
               />
             </div>
@@ -712,8 +716,8 @@ function Stok() {
                 placeholder={"Kategori"}
                 type={"Kategori"}
                 options={barangDataDropdown}
-                onChange={(e) => setBarangAmbil(e!)}
                 value={barangAmbil}
+                onChange={(e) => setBarangAmbil(e!)}
               />
             </div>
           </div>
@@ -735,7 +739,7 @@ function Stok() {
                 type={"standart"}
                 placeholder={"Masukkan Jumlah"}
                 onChange={(e) => setJumlahAmbil(e.target.value)}
-                value={jumlahAmbil}
+                value={sparator(jumlahAmbil)}
               />
             </div>
           </div>
@@ -804,7 +808,11 @@ function Stok() {
           <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card xl:w-1/2">
             <div className="mb-5 flex justify-end gap-5 px-3">
               <Button
-                onClick={() => setShowTambahBarang(true)}
+                onClick={() => {
+                  setShowTambahBarang(true);
+                  // Reset
+                  setJumlahBarang("");
+                }}
                 type="button"
                 style="primary"
                 text="Tambah Barang +"
@@ -876,7 +884,12 @@ function Stok() {
           <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card xl:w-1/2">
             <div className="mb-5 flex justify-end gap-5 px-3">
               <Button
-                onClick={() => setShowTambahAmbil(true)}
+                onClick={() => {
+                  setShowTambahAmbil(true);
+                  setNamaPengambil(user!.nama);
+                  // Reset
+                  setJumlahAmbil("");
+                }}
                 type="button"
                 style="primary"
                 text="Ambil Stok"
