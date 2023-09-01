@@ -288,7 +288,9 @@ function Dashboard() {
       try {
         const akta = await getWithAuth(
           token,
-          `pajak-rekan-akta?rekan_id=${rekan ? rekan?.value : ""}`
+          `pajak-rekan-akta?rekan_id=${rekan ? rekan?.value : ""}&year=${
+            period ? period.value.split("-")[1] : ""
+          }`
         );
         setDataAkta(
           akta.data.data.table.data.map((data: any) => {
@@ -479,7 +481,7 @@ function Dashboard() {
 
   useEffect(() => {
     getAkta();
-  }, [triggerAkta, rekan]);
+  }, [triggerAkta, rekan, period]);
 
   useEffect(() => {
     getRekan();
