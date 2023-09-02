@@ -1014,6 +1014,8 @@ function Dashboard() {
                 isLoading={isTableLoadAkta}
                 page={1}
                 dataLimit={10}
+                isCheck={user?.role == "BOD"}
+                isEdit={user?.role == "BOD"}
                 onEdit={(val) => {
                   setIdEditAkta((dataAkta[val] as any).id);
                   setShowEditAkta(true);

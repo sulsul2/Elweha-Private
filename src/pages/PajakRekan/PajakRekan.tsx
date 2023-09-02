@@ -730,6 +730,8 @@ function PajakRekan() {
             column={kolomRekan}
             isLoading={isTableLoad}
             page={pageRekan}
+            isEdit={user?.role == "BOD"}
+            isCheck={user?.role == "BOD"}
             dataLimit={10}
             onEdit={(val) => {
               setIdEditRekan((dataRekan[val] as any).id);
@@ -813,6 +815,8 @@ function PajakRekan() {
             isLoading={isTableLoadAkta}
             page={pageAkta}
             dataLimit={10}
+            isEdit={user?.role == "BOD"}
+            isCheck={user?.role == "BOD"}
             onEdit={(val) => {
               setIdEditAkta((dataAkta[val] as any).id);
               setShowEditAkta(true);

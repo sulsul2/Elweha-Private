@@ -836,12 +836,14 @@ function Stok() {
         <div className="mt-10 flex flex-col justify-between gap-5 xl:flex-row">
           <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card xl:w-1/2">
             <div className="mb-5 flex justify-end gap-5 px-3">
-              <Button
-                onClick={() => setShowEditJenis(true)}
-                type="button"
-                style="third"
-                text="Edit Jenis"
-              />
+              {user?.role == "BOD" && (
+                <Button
+                  onClick={() => setShowEditJenis(true)}
+                  type="button"
+                  style="third"
+                  text="Edit Jenis"
+                />
+              )}
               <Button
                 onClick={() => {
                   setShowTambahBarang(true);
@@ -888,6 +890,8 @@ function Stok() {
               isLoading={isTableLoadBarang}
               page={pageBarang}
               dataLimit={10}
+              isEdit={user?.role == "BOD"}
+              isCheck={user?.role == "BOD"}
               onEdit={(val) => {
                 setIdEditBarang((dataBarang[val] as any).id);
                 setShowEditBarang(true);
@@ -959,6 +963,8 @@ function Stok() {
               isLoading={isTableLoadAmbil}
               page={pageAmbil}
               dataLimit={10}
+              isEdit={user?.role == "BOD"}
+              isCheck={user?.role == "BOD"}
               onEdit={(val) => {
                 setIdEditAmbil((dataAmbil[val] as any).id);
                 setShowEditAmbil(true);

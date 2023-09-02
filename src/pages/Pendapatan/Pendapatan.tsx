@@ -512,12 +512,14 @@ function Pendapatan() {
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowEditKategori(true)}
-              text={"Edit Kategori"}
-              type={"button"}
-              style={"third"}
-            />
+            {user?.role == "BOD" && (
+              <Button
+                onClick={() => setShowEditKategori(true)}
+                text={"Edit Kategori"}
+                type={"button"}
+                style={"third"}
+              />
+            )}
             <Button
               onClick={() => {
                 setShowTambahPendapatan(true);
@@ -567,6 +569,8 @@ function Pendapatan() {
             isLoading={isTableLoad}
             page={page}
             dataLimit={10}
+            isCheck={user?.role == "BOD"}
+            isEdit={user?.role == "BOD"}
             onEdit={(val) => {
               setIdEdit((data[val] as any).id);
               setShowEditPendapatan(true);
