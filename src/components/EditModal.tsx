@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "./Button";
 import Modal from "./Modal";
 import TextField from "./TextField";
+import { toastError } from "./Toast";
 
 function EditModal({
   dataItems,
@@ -23,6 +24,7 @@ function EditModal({
   const [edit, setEdit] = useState<{ value: string; label: string }>();
   const [add, setAdd] = useState("");
   const [hapus, setHapus] = useState("");
+  const [konfirmasi, setKonfirmasi] = useState("");
   const [showHapus, setShowHapus] = useState(false);
 
   return (
@@ -138,8 +140,12 @@ function EditModal({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onDelete(hapus);
-            setShowHapus(false);
+            if (konfirmasi === "Saya Yakin Menghapus") {
+              onDelete(hapus);
+              setShowHapus(false);
+            } else {
+              toastError("Konfirmasi Salah");
+            }
           }}
           className="flex w-full flex-col gap-4"
         >
@@ -148,8 +154,15 @@ function EditModal({
           </h1>
           <p className="mb-5 w-full text-center text-12 xl:text-left xl:text-16">
             Apakah Anda yakin menghapus? <br /> Semua data dengan {title}{" "}
-            tersebut akan terhapus
+            tersebut akan terhapus. Ketik pesan konfirmasi berikut.
           </p>
+          <p className="font-bold">Saya Yakin Menghapus</p>
+          <TextField
+            required
+            type={"standart"}
+            placeholder={"Masukan konfirmasi di atas"}
+            onChange={(e) => setKonfirmasi(e.target.value)}
+          />
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowHapus(false)}
