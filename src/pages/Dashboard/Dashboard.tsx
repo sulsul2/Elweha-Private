@@ -157,7 +157,7 @@ function Dashboard() {
           token,
           `pendapatan?month=${period ? period?.value.split("-")[0] : ""}&year=${
             period ? period?.value.split("-")[1] : ""
-          }`
+          }${user.role == "OFFICER" && "&user_id=" + user.id}`
         );
         setDataPendapatan(
           pendapatan.data.data.table.data.map((data: any) => {
@@ -224,7 +224,9 @@ function Dashboard() {
           token,
           `pengeluaran?month=${
             period ? period?.value.split("-")[0] : ""
-          }&year=${period ? period?.value.split("-")[1] : ""}`
+          }&year=${period ? period?.value.split("-")[1] : ""}${
+            user.role == "OFFICER" && "&user_id=" + user.id
+          }`
         );
         setDataPengeluaran(
           pengeluaran.data.data.table.data.map((data: any) => {
