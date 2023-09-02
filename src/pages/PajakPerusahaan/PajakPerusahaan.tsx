@@ -15,6 +15,7 @@ import { toastError, toastSuccess } from "../../components/Toast";
 import moment from "moment";
 import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
+import { sparator, sparatorReverse } from "../../data/sparator";
 
 function PajakPerusahaan() {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,7 +55,7 @@ function PajakPerusahaan() {
 
   const [sifat, setSifat] = useState("POSITIF");
   const [jenis, setJenis] = useState("");
-  const [jumlah, setJumlah] = useState(0);
+  const [jumlah, setJumlah] = useState("");
   const [selectedId, setSelectedId] = useState(0);
 
   const [isAddKoreksi, setIsAddKoreksi] = useState(false);
@@ -107,7 +108,7 @@ function PajakPerusahaan() {
               onClick={() => {
                 setShowUpdateKoreksi(true);
                 setJenis(row.jenis_koreksi);
-                setJumlah(row.jumlah);
+                setJumlah(sparator(row.jumlah));
                 setSifat(row.sifat_koreksi);
                 setSelectedId(row.id);
               }}
@@ -297,7 +298,7 @@ function PajakPerusahaan() {
           {
             sifat_koreksi: sifat,
             jenis_koreksi: jenis,
-            jumlah: jumlah,
+            jumlah: sparatorReverse(jumlah.toString()),
           },
           token ?? ""
         );
@@ -327,7 +328,7 @@ function PajakPerusahaan() {
             id: selectedId,
             sifat_koreksi: sifat,
             jenis_koreksi: jenis,
-            jumlah: jumlah,
+            jumlah: sparatorReverse(jumlah),
           },
           token ?? ""
         );
@@ -452,7 +453,6 @@ function PajakPerusahaan() {
                   required
                   placeholder="Jenis Koreksi"
                   type="standart"
-                  value={jenis}
                   onChange={(e) => setJenis(e.target.value)}
                 />
               </div>
@@ -461,22 +461,16 @@ function PajakPerusahaan() {
                 <TextField
                   required
                   type={"standart"}
-                  label={""}
                   placeholder={"Rp"}
-                  helpertext={""}
-                  value={jumlah}
-                  onChange={(e) => setJumlah(parseInt(e.target.value))}
+                  value={sparator(jumlah)}
+                  onChange={(e) => setJumlah(e.target.value)}
                 />
               </div>
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => {
-                setShowTambahKoreksi(false);
-                setJenis("");
-                setJumlah(0);
-              }}
+              onClick={() => setShowTambahKoreksi(false)}
               text={"Batalkan"}
               type={"button"}
               style={"third"}
@@ -500,7 +494,7 @@ function PajakPerusahaan() {
           className="flex w-full flex-col gap-4"
         >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Koreksi
+            Edit Koreksi
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full items-center justify-between gap-16 xl:flex">
@@ -519,22 +513,16 @@ function PajakPerusahaan() {
                 <TextField
                   required
                   type={"standart"}
-                  label={""}
                   placeholder={"Rp"}
-                  helpertext={""}
-                  value={jumlah}
-                  onChange={(e) => setJumlah(parseInt(e.target.value))}
+                  value={sparator(jumlah)}
+                  onChange={(e) => setJumlah(e.target.value)}
                 />
               </div>
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => {
-                setShowUpdateKoreksi(false);
-                setJenis("");
-                setJumlah(0);
-              }}
+              onClick={() => setShowUpdateKoreksi(false)}
               text={"Batalkan"}
               type={"button"}
               style={"third"}
@@ -682,6 +670,7 @@ function PajakPerusahaan() {
                     onClick={() => {
                       setShowTambahKoreksi(true);
                       setSifat("POSITIF");
+                      setJumlah("");
                     }}
                   />
                 </div>
@@ -702,6 +691,7 @@ function PajakPerusahaan() {
                     onClick={() => {
                       setShowTambahKoreksi(true);
                       setSifat("NEGATIF");
+                      setJumlah("");
                     }}
                   />
                 </div>

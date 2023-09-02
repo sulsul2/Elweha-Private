@@ -5,9 +5,11 @@ import { dataYear } from "../../data/year";
 import { getWithAuth } from "../../api/api";
 import { toastError } from "../../components/Toast";
 import { convertMonth } from "../../data/convertMonth";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { formatRp } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
+import Button from "../../components/Button";
+import { PajakPeriodContext } from "../../Context/PajakPeriodContext";
 
 function DetailPajakRekan() {
   const { id } = useParams();
@@ -15,8 +17,11 @@ function DetailPajakRekan() {
   const [isTableLoad, setIsTableLoad] = useState(false);
 
   //Field
+  const pajakPeriodContext = useContext(PajakPeriodContext);
   const [year, setYear] = useState<{ value: string; label: string }>(
-    dataYear(new Date(), new Date())[0]
+    pajakPeriodContext
+      ? pajakPeriodContext.period
+      : dataYear(new Date(), new Date())[0]
   );
 
   // Data
@@ -30,11 +35,12 @@ function DetailPajakRekan() {
     "Jasa Bruto",
     "DPP",
     "DPP Akumulasi",
-    "PPH Dipotong",
     "Pajak Akumulasi",
+    "PPH Dipotong",
     "Transfer",
   ];
 
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const token = user?.token;
 
@@ -48,6 +54,7 @@ function DetailPajakRekan() {
             year ? year.value : ""
           }`
         );
+        console.log(pajak_rekan.data.data.table.data);
         setData(
           pajak_rekan.data.data.table.data.map((data: any) => {
             return {
@@ -57,8 +64,8 @@ function DetailPajakRekan() {
               jasa_bruto: formatRp(data.jasa_bruto),
               dpp: formatRp(data.dpp),
               dpp_akumulasi: formatRp(data.dpp_akumulasi),
-              pph_potong: formatRp(data.pph),
               pajak_akumulasi: formatRp(data.pph_akumulasi),
+              pph_potong: formatRp(data.pph),
               transfer: formatRp(data.transfer),
             };
           })
@@ -79,10 +86,17 @@ function DetailPajakRekan() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-9 pt-[104px] xl:px-24">
-      <h1 className="mb-12 text-40 font-bold xl:block">
-        Detail Pajak Rekan {nama}
-      </h1>
-
+      <div className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h1 className="text-40 font-bold xl:block">
+          Detail Pajak Rekan {nama}
+        </h1>
+        <Button
+          text={"Kembali"}
+          type={"button"}
+          style={"third"}
+          onClick={() => navigate("/pajak-rekan")}
+        />
+      </div>
       <div className="mb-5 flex w-full items-center justify-between xl:justify-start">
         <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
           Periode
@@ -94,7 +108,10 @@ function DetailPajakRekan() {
             type={"year"}
             value={year}
             options={dataYear(new Date("01/01/2000"), new Date())}
-            onChange={(e) => setYear(e!)}
+            onChange={(e) => {
+              setYear(e!);
+              pajakPeriodContext?.updatePeriod(e!);
+            }}
           />
         </div>
       </div>

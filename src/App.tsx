@@ -21,6 +21,8 @@ import DetailPajakRekan from "./pages/DetailPajakRekan/DetailPajakRekan";
 import DetailGaji from "./pages/DetailGaji/DetailGaji";
 import UserProvider from "./Context/UserContext";
 import Cookies from "js-cookie";
+import GajiPeriodProvider from "./Context/GajiPeriodContext";
+import PajakPeriodProvider from "./Context/PajakPeriodContext";
 
 const router = createBrowserRouter([{ path: "*", Component: Root }]);
 
@@ -33,8 +35,12 @@ const ProtectedRoute = () => {
 
   return (
     <UserProvider>
-      <Navbar />
-      <Outlet />
+      <GajiPeriodProvider>
+        <PajakPeriodProvider>
+          <Navbar />
+          <Outlet />
+        </PajakPeriodProvider>
+      </GajiPeriodProvider>
     </UserProvider>
   );
 };

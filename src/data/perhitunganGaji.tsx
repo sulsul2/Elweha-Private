@@ -1,35 +1,35 @@
 import { formatRp } from "./formatRp";
 
 export const perhitungan = (gaji: any) => {
-  function hitungPajak(totalGaji: number) {
-    var satuJuta = 1000000;
-    if (totalGaji <= 60 * satuJuta) {
-      return totalGaji * 0.05;
-    } else if (totalGaji > 60 * satuJuta && totalGaji <= 250 * satuJuta) {
-      return 60 * satuJuta * 0.05 + (totalGaji - 60 * satuJuta) * 0.15;
-    } else if (totalGaji > 250 * satuJuta && totalGaji <= 500 * satuJuta) {
-      return (
-        60 * satuJuta * 0.05 +
-        190 * satuJuta * 0.15 +
-        (totalGaji - 250 * satuJuta) * 0.25
-      );
-    } else if (totalGaji > 500 * satuJuta && totalGaji <= 5000 * satuJuta) {
-      return (
-        60 * satuJuta * 0.05 +
-        190 * satuJuta * 0.15 +
-        250 * satuJuta * 0.25 +
-        (totalGaji - 500 * satuJuta) * 0.3
-      );
-    } else {
-      return (
-        60 * satuJuta * 0.05 +
-        190 * satuJuta * 0.15 +
-        250 * satuJuta * 0.25 +
-        4500 * satuJuta * 0.3 +
-        (totalGaji - 5000 * satuJuta) * 0.35
-      );
-    }
-  }
+  // function hitungPajak(totalGaji: number) {
+  //   var satuJuta = 1000000;
+  //   if (totalGaji <= 60 * satuJuta) {
+  //     return totalGaji * 0.05;
+  //   } else if (totalGaji > 60 * satuJuta && totalGaji <= 250 * satuJuta) {
+  //     return 60 * satuJuta * 0.05 + (totalGaji - 60 * satuJuta) * 0.15;
+  //   } else if (totalGaji > 250 * satuJuta && totalGaji <= 500 * satuJuta) {
+  //     return (
+  //       60 * satuJuta * 0.05 +
+  //       190 * satuJuta * 0.15 +
+  //       (totalGaji - 250 * satuJuta) * 0.25
+  //     );
+  //   } else if (totalGaji > 500 * satuJuta && totalGaji <= 5000 * satuJuta) {
+  //     return (
+  //       60 * satuJuta * 0.05 +
+  //       190 * satuJuta * 0.15 +
+  //       250 * satuJuta * 0.25 +
+  //       (totalGaji - 500 * satuJuta) * 0.3
+  //     );
+  //   } else {
+  //     return (
+  //       60 * satuJuta * 0.05 +
+  //       190 * satuJuta * 0.15 +
+  //       250 * satuJuta * 0.25 +
+  //       4500 * satuJuta * 0.3 +
+  //       (totalGaji - 5000 * satuJuta) * 0.35
+  //     );
+  //   }
+  // }
 
   let total = 0;
   var hasil = gaji.data.data.data.map((data: any) => {
@@ -50,12 +50,7 @@ export const perhitungan = (gaji: any) => {
 
     var totalGaji = 0;
     if (data.jenis_gaji == "Tetap") {
-      totalGaji =
-        (data.kehadiran_actual / (data.kehadiran_standart - 1)) *
-          data.besar_gaji +
-        bonus_kehadiran +
-        variabel +
-        skil;
+      totalGaji = data.kehadiran_actual * data.besar_gaji + bonus_kehadiran;
     } else {
       totalGaji =
         data.kehadiran_actual * data.besar_gaji +
@@ -64,7 +59,8 @@ export const perhitungan = (gaji: any) => {
         bonus_kehadiran;
     }
 
-    var pph = hitungPajak(totalGaji);
+    // var pph = hitungPajak(totalGaji);
+    var pph = 0;
 
     total += totalGaji - pph;
 

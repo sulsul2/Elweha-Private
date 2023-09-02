@@ -14,11 +14,12 @@ import moment from "moment";
 import { dataMonth } from "../../data/month";
 import Filter from "../../components/Filter";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import EditModal from "../../components/EditModal";
 
 function Stok() {
   // Loading
   const [isLoading, setIsLoading] = useState(true);
-  const [isAddJenis, setIsAddJenis] = useState(false);
   const [isTableLoadBarang, setIsTableLoadBarang] = useState(false);
   const [isAddBarang, setIsAddBarang] = useState(false);
   const [isEditBarang, setIsEditBarang] = useState(false);
@@ -29,7 +30,7 @@ function Stok() {
   const [isHapusAmbil, setIsHapusAmbil] = useState(false);
 
   // PopUp
-  const [showTambahJenis, setShowTambahJenis] = useState(false);
+  const [showEditJenis, setShowEditJenis] = useState(false);
   const [showTambahBarang, setShowTambahBarang] = useState(false);
   const [showEditBarang, setShowEditBarang] = useState(false);
   const [showHapusBarang, setShowHapusBarang] = useState(false);
@@ -47,7 +48,6 @@ function Stok() {
 
   //Field
   const [period, setPeriod] = useState<{ value: string; label: string }>();
-  const [addJenis, setAddJenis] = useState("");
   const [namaBarang, setNamaBarang] = useState("");
   const [jenisBarang, setJenisBarang] = useState<{
     value: string;
@@ -142,7 +142,7 @@ function Stok() {
               id: data.id,
               nama_barang: data.nama_barang,
               jenis: data.jenis.nama,
-              jumlah: data.jumlah,
+              jumlah: sparator(data.jumlah),
               satuan: data.satuan,
             };
           })
@@ -192,7 +192,7 @@ function Stok() {
               nama_pengambil: data.nama_pengambil,
               nama_barang: data.barang.nama_barang,
               jenis: data.barang.jenis.nama,
-              jumlah: data.jumlah,
+              jumlah: sparator(data.jumlah),
               satuan: data.barang.satuan,
             };
           })
@@ -233,19 +233,16 @@ function Stok() {
     totalDataBarang,
   ]);
 
-  const tambahJenis = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsAddJenis(true);
+  const tambahJenis = async (nama: string) => {
     try {
       const response = await postWithAuth(
         "jenis-barang",
         {
-          nama: addJenis,
+          nama: nama,
         },
         token ?? ""
       );
       toastSuccess(response.data.meta.message);
-      setShowTambahJenis(false);
       setJenisData([
         ...jenisData,
         {
@@ -257,8 +254,68 @@ function Stok() {
       setJenisIdAmbil([...jenisIdAmbil, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
-    } finally {
-      setIsAddJenis(false);
+    }
+  };
+
+  const deleteJenis = async (id: string) => {
+    try {
+      const response = await postWithAuth(
+        "delete-jenis-barang",
+        {
+          id: id,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setJenisData([...jenisData.filter((el) => el.value != id)]);
+      setJenisIdBarang([
+        ...jenisIdBarang.filter((el) => el != Number.parseInt(id)),
+      ]);
+      setJenisIdAmbil([
+        ...jenisIdAmbil.filter((el) => el != Number.parseInt(id)),
+      ]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const editJenis = async (id: string, nama: string) => {
+    try {
+      const response = await postWithAuth(
+        "update-jenis-barang",
+        {
+          id: id,
+          nama: nama,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      var found = jenisData.find((element) => element.value == id);
+      var idx = jenisData.indexOf(found!);
+      var tempData = [...jenisData.filter((el) => el.value != id)];
+      var tempBarangId = [
+        ...jenisIdBarang.filter((el) => el != Number.parseInt(id)),
+      ];
+      var tempAmbilId = [
+        ...jenisIdAmbil.filter((el) => el != Number.parseInt(id)),
+      ];
+      setJenisData([
+        ...tempData.slice(0, idx),
+        { value: id, label: nama },
+        ...tempData.slice(idx),
+      ]);
+      setJenisIdBarang([
+        ...tempBarangId.slice(0, idx),
+        Number.parseInt(id),
+        ...tempBarangId.slice(idx),
+      ]);
+      setJenisIdAmbil([
+        ...tempAmbilId.slice(0, idx),
+        Number.parseInt(id),
+        ...tempAmbilId.slice(idx),
+      ]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
     }
   };
 
@@ -271,7 +328,7 @@ function Stok() {
         {
           nama_barang: namaBarang,
           jenis_barang_id: jenisBarang?.value,
-          jumlah: jumlahBarang,
+          jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
         },
         token ?? ""
@@ -296,7 +353,7 @@ function Stok() {
           id: idEditBarang,
           nama_barang: namaBarang,
           jenis_barang_id: jenisBarang?.value,
-          jumlah: jumlahBarang,
+          jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
         },
         token ?? ""
@@ -341,7 +398,7 @@ function Stok() {
         {
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahAmbil,
+          jumlah: sparatorReverse(jumlahAmbil),
           nama_pengambil: namaPengambil,
         },
         token ?? ""
@@ -366,7 +423,7 @@ function Stok() {
           id: idEditAmbil,
           tanggal: moment(tanggalAmbil).format("YYYY-MM-DD HH:mm:ss"),
           barang_id: barangAmbil?.value,
-          jumlah: jumlahAmbil,
+          jumlah: sparatorReverse(jumlahAmbil),
           nama_pengambil: namaPengambil,
         },
         token ?? ""
@@ -406,43 +463,16 @@ function Stok() {
     <>
       <LoadingPage isLoad={isLoading} />
 
-      {/* Add Jenis */}
-      <Modal
-        visible={showTambahJenis}
-        onClose={() => setShowTambahJenis(false)}
-      >
-        <form
-          onSubmit={(e) => tambahJenis(e)}
-          className="flex w-full flex-col gap-4"
-        >
-          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Jenis Barang
-          </h1>
-          <div className="mb-5 w-full">
-            <p className="mb-2 text-16 font-semibold">Nama Kategori</p>
-            <TextField
-              required
-              type={"standart"}
-              placeholder={"Masukkan Nama Jenis"}
-              onChange={(e) => setAddJenis(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowTambahJenis(false)}
-              text={"Batalkan"}
-              type={"button"}
-              style={"third"}
-            />
-            <Button
-              isLoading={isAddJenis}
-              text={"Simpan Data"}
-              type={"submit"}
-              style={"primary"}
-            />
-          </div>
-        </form>
-      </Modal>
+      {/* Edit Jenis */}
+      <EditModal
+        dataItems={jenisData}
+        visible={showEditJenis}
+        onClose={() => setShowEditJenis(false)}
+        onEdit={(e) => editJenis(e.value, e.label)}
+        onDelete={(e) => deleteJenis(e)}
+        onAdd={(e) => tambahJenis(e)}
+        title={"Jenis"}
+      />
 
       {/* Add Barang */}
       <Modal
@@ -484,6 +514,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Jumlah Stok"}
+                value={sparator(jumlahBarang)}
                 onChange={(e) => setJumlahBarang(e.target.value)}
               />
             </div>
@@ -554,7 +585,7 @@ function Stok() {
                 type={"standart"}
                 placeholder={"Masukkan Jumlah Stok"}
                 onChange={(e) => setJumlahBarang(e.target.value)}
-                value={jumlahBarang}
+                value={sparator(jumlahBarang)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -656,6 +687,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Nama"}
+                value={namaPengambil}
                 onChange={(e) => setNamaPengambil(e.target.value)}
               />
             </div>
@@ -665,6 +697,7 @@ function Stok() {
                 required
                 type={"standart"}
                 placeholder={"Masukkan Jumlah"}
+                value={sparator(jumlahAmbil)}
                 onChange={(e) => setJumlahAmbil(e.target.value)}
               />
             </div>
@@ -712,8 +745,8 @@ function Stok() {
                 placeholder={"Kategori"}
                 type={"Kategori"}
                 options={barangDataDropdown}
-                onChange={(e) => setBarangAmbil(e!)}
                 value={barangAmbil}
+                onChange={(e) => setBarangAmbil(e!)}
               />
             </div>
           </div>
@@ -735,7 +768,7 @@ function Stok() {
                 type={"standart"}
                 placeholder={"Masukkan Jumlah"}
                 onChange={(e) => setJumlahAmbil(e.target.value)}
-                value={jumlahAmbil}
+                value={sparator(jumlahAmbil)}
               />
             </div>
           </div>
@@ -804,16 +837,20 @@ function Stok() {
           <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card xl:w-1/2">
             <div className="mb-5 flex justify-end gap-5 px-3">
               <Button
-                onClick={() => setShowTambahBarang(true)}
+                onClick={() => setShowEditJenis(true)}
+                type="button"
+                style="third"
+                text="Edit Jenis"
+              />
+              <Button
+                onClick={() => {
+                  setShowTambahBarang(true);
+                  // Reset
+                  setJumlahBarang("");
+                }}
                 type="button"
                 style="primary"
                 text="Tambah Barang +"
-              />
-              <Button
-                onClick={() => setShowTambahJenis(true)}
-                type="button"
-                style="third"
-                text="Tambah Jenis +"
               />
             </div>
             <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
@@ -876,7 +913,12 @@ function Stok() {
           <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card xl:w-1/2">
             <div className="mb-5 flex justify-end gap-5 px-3">
               <Button
-                onClick={() => setShowTambahAmbil(true)}
+                onClick={() => {
+                  setShowTambahAmbil(true);
+                  setNamaPengambil(user!.nama);
+                  // Reset
+                  setJumlahAmbil("");
+                }}
                 type="button"
                 style="primary"
                 text="Ambil Stok"

@@ -205,7 +205,7 @@ function Table({
                 );
               })
             )}
-            {isWithSum && (
+            {isWithSum && data.length > 0 && (
               <tr className="w-full">
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
                   Total
@@ -236,11 +236,15 @@ function Table({
                 </th>
                 <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
                   {formatRp(
-                    data.reduce(
-                      (total: any, { dpp_akumulasi }: any) =>
-                        total +
-                        Number.parseFloat(formatRpReverse(dpp_akumulasi)),
-                      0
+                    Number.parseFloat(
+                      formatRpReverse(data[data.length - 1].dpp_akumulasi)
+                    )
+                  )}
+                </th>
+                <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
+                  {formatRp(
+                    Number.parseFloat(
+                      formatRpReverse(data[data.length - 1].pajak_akumulasi)
                     )
                   )}
                 </th>
@@ -249,16 +253,6 @@ function Table({
                     data.reduce(
                       (total: any, { pph_potong }: any) =>
                         total + Number.parseFloat(formatRpReverse(pph_potong)),
-                      0
-                    )
-                  )}
-                </th>
-                <th className="h-auto w-auto border-collapse bg-kOrange-100 px-2 py-1 text-center font-semibold xl:px-4">
-                  {formatRp(
-                    data.reduce(
-                      (total: any, { pajak_akumulasi }: any) =>
-                        total +
-                        Number.parseFloat(formatRpReverse(pajak_akumulasi)),
                       0
                     )
                   )}

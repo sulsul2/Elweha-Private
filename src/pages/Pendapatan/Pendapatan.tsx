@@ -16,18 +16,19 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 import Filter from "../../components/Filter";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import EditModal from "../../components/EditModal";
 
 function Pendapatan() {
   // Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoad, setIsTableLoad] = useState(false);
-  const [isAddKategori, setIsAddKategori] = useState(false);
   const [isAddPendapatan, setIsAddPendapatan] = useState(false);
   const [isEditPendapatan, setIsEditPendapatan] = useState(false);
   const [isHapusPendapatan, setIsHapusPendapatan] = useState(false);
 
   // PopUp
-  const [showTambahKategori, setShowTambahKategori] = useState(false);
+  const [showEditKategori, setShowEditKategori] = useState(false);
   const [showTambahPendapatan, setShowTambahPendapatan] = useState(false);
   const [showEditPendapatan, setShowEditPendapatan] = useState(false);
   const [showHapusPendapatan, setShowHapusPendapatan] = useState(false);
@@ -40,7 +41,6 @@ function Pendapatan() {
   //Field
   const [period, setPeriod] = useState<{ value: string; label: string }>();
   const [kategori, setKategori] = useState<{ value: string; label: string }>();
-  const [addKategori, setAddKategori] = useState("");
   const [tanggal, setTanggal] = useState<Date | null>();
   const [jumlah, setJumlah] = useState("");
   const [pengirim, setPengirim] = useState("");
@@ -138,19 +138,16 @@ function Pendapatan() {
     getPendapatan();
   }, [page, totalData, period, search, kategoriId]);
 
-  const tambahKategori = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsAddKategori(true);
+  const tambahKategori = async (nama: string) => {
     try {
       const response = await postWithAuth(
         "kategori-pendapatan",
         {
-          nama: addKategori,
+          nama: nama,
         },
         token ?? ""
       );
       toastSuccess(response.data.meta.message);
-      setShowTambahKategori(false);
       setKategoriData([
         ...kategoriData,
         {
@@ -161,8 +158,53 @@ function Pendapatan() {
       setKategoriId([...kategoriId, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
-    } finally {
-      setIsAddKategori(false);
+    }
+  };
+
+  const deleteKategori = async (id: string) => {
+    try {
+      const response = await postWithAuth(
+        "delete-kategori-pendapatan",
+        {
+          id: id,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setKategoriData([...kategoriData.filter((el) => el.value != id)]);
+      setKategoriId([...kategoriId.filter((el) => el != Number.parseInt(id))]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const editKategori = async (id: string, nama: string) => {
+    try {
+      const response = await postWithAuth(
+        "update-kategori-pendapatan",
+        {
+          id: id,
+          nama: nama,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      var found = kategoriData.find((element) => element.value == id);
+      var idx = kategoriData.indexOf(found!);
+      var tempData = [...kategoriData.filter((el) => el.value != id)];
+      var tempId = [...kategoriId.filter((el) => el != Number.parseInt(id))];
+      setKategoriData([
+        ...tempData.slice(0, idx),
+        { value: id, label: nama },
+        ...tempData.slice(idx),
+      ]);
+      setKategoriId([
+        ...tempId.slice(0, idx),
+        Number.parseInt(id),
+        ...tempId.slice(idx),
+      ]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
     }
   };
 
@@ -175,7 +217,7 @@ function Pendapatan() {
         {
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pendapatan_id: kategori?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           pengirim: pengirim,
           deskripsi: deskripsi,
         },
@@ -201,7 +243,7 @@ function Pendapatan() {
           id: idEdit,
           tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
           kategori_pendapatan_id: kategori?.value,
-          jumlah: jumlah,
+          jumlah: sparatorReverse(jumlah),
           pengirim: pengirim,
           deskripsi: deskripsi,
         },
@@ -242,43 +284,16 @@ function Pendapatan() {
     <>
       <LoadingPage isLoad={isLoading} />
 
-      {/* Add Kategori */}
-      <Modal
-        visible={showTambahKategori}
-        onClose={() => setShowTambahKategori(false)}
-      >
-        <form
-          onSubmit={(e) => tambahKategori(e)}
-          className="flex w-full flex-col gap-4"
-        >
-          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Kategori Pendapatan
-          </h1>
-          <div className="mb-5 w-full">
-            <p className="mb-2 text-16 font-semibold">Nama Kategori</p>
-            <TextField
-              required
-              type={"standart"}
-              placeholder={"Masukkan Nama Kategori"}
-              onChange={(e) => setAddKategori(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowTambahKategori(false)}
-              text={"Batalkan"}
-              type={"button"}
-              style={"third"}
-            />
-            <Button
-              isLoading={isAddKategori}
-              text={"Simpan Data"}
-              type={"submit"}
-              style={"primary"}
-            />
-          </div>
-        </form>
-      </Modal>
+      {/* Edit Kategori */}
+      <EditModal
+        dataItems={kategoriData}
+        visible={showEditKategori}
+        onClose={() => setShowEditKategori(false)}
+        onEdit={(e) => editKategori(e.value, e.label)}
+        onDelete={(e) => deleteKategori(e)}
+        onAdd={(e) => tambahKategori(e)}
+        title={"Kategori"}
+      />
 
       {/* Add Pendapatan */}
       <Modal
@@ -319,6 +334,7 @@ function Pendapatan() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(jumlah)}
                 onChange={(e) => setJumlah(e.target.value)}
               />
             </div>
@@ -399,7 +415,7 @@ function Pendapatan() {
                 type={"standart"}
                 placeholder={"Rp"}
                 onChange={(e) => setJumlah(e.target.value)}
-                value={jumlah}
+                value={sparator(jumlah)}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -497,16 +513,20 @@ function Pendapatan() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
-              onClick={() => setShowTambahPendapatan(true)}
+              onClick={() => setShowEditKategori(true)}
+              text={"Edit Kategori"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              onClick={() => {
+                setShowTambahPendapatan(true);
+                // Reset
+                setJumlah("");
+              }}
               text={"Tambah Data +"}
               type={"button"}
               style={"primary"}
-            />
-            <Button
-              onClick={() => setShowTambahKategori(true)}
-              text={"Tambah Kategori +"}
-              type={"button"}
-              style={"third"}
             />
           </div>
         </div>

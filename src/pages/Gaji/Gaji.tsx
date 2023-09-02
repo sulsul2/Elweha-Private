@@ -18,6 +18,8 @@ import { formatRpReverse } from "../../data/formatRp";
 import { perhitungan } from "../../data/perhitunganGaji";
 import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
+import { sparator, sparatorReverse } from "../../data/sparator";
+import { GajiPeriodContext } from "../../Context/GajiPeriodContext";
 
 function Gaji() {
   //Loading
@@ -43,8 +45,11 @@ function Gaji() {
   ]);
 
   //Field
+  const gajiPeriodContext = useContext(GajiPeriodContext);
   const [period, setPeriod] = useState<{ value: string; label: string }>(
-    dataMonth(new Date(), new Date())[0]
+    gajiPeriodContext
+      ? gajiPeriodContext.period
+      : dataMonth(new Date(), new Date())[0]
   );
   const [namaKaryawan, setNamaKaryawan] = useState("");
   const [jenisGaji, setJenisGaji] = useState<{
@@ -53,6 +58,7 @@ function Gaji() {
   }>();
   const [besarGaji, setBesarGaji] = useState("");
   const [searchGaji, setSearchGaji] = useState("");
+  const [konfirmasi, setKonfirmasi] = useState("");
 
   // Excel
   const [emt, setEmt] = useState<File | null>(null);
@@ -103,7 +109,7 @@ function Gaji() {
   const getGaji = async () => {
     setOnSelectedGaji([]);
     setIsTableLoad(true);
-    var filter = "";
+    var filter = "&jenis[2]=KOSONG";
     gajiFilter.forEach((id, idx) => {
       filter += `&jenis[${idx}]=${jenisGajiData[id].label}`;
     });
@@ -111,10 +117,11 @@ function Gaji() {
       try {
         const gaji = await getWithAuth(
           token,
-          `gaji?limit=10&search=${searchGaji}&page=${pageGaji}&month=${
+          `gaji?limit=15&search=${searchGaji}&page=${pageGaji}&month=${
             period ? period?.value.split("-")[0] : ""
           }&year=${period ? period?.value.split("-")[1] : ""}${filter}`
         );
+        console.log(gaji);
         setDataGaji(perhitungan(gaji).hasil);
         setTotalGaji(perhitungan(gaji).total);
         setTotalPageGaji(gaji.data.data.last_page);
@@ -144,7 +151,7 @@ function Gaji() {
         {
           nama_karyawan: namaKaryawan,
           jenis_gaji: jenisGaji?.label,
-          besar_gaji: besarGaji,
+          besar_gaji: sparatorReverse(besarGaji),
         },
         token ?? ""
       );
@@ -168,7 +175,7 @@ function Gaji() {
           id: idEditGaji,
           nama_karyawan: namaKaryawan,
           jenis_gaji: jenisGaji?.label,
-          besar_gaji: besarGaji,
+          besar_gaji: sparatorReverse(besarGaji),
           tahun: period?.value.split("-")[1],
           bulan: period?.value.split("-")[0],
         },
@@ -187,18 +194,22 @@ function Gaji() {
 
   const hapusGaji = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsHapusGaji(true);
     try {
-      const response = await postWithAuth(
-        "delete-gaji",
-        {
-          selectedId: onSelectedGaji,
-        },
-        token ?? ""
-      );
-      toastSuccess(response.data.meta.message);
-      setShowHapusGaji(false);
-      setTotalDataGaji(totalDataGaji + 1);
+      if (konfirmasi === "Saya Yakin Menghapus") {
+        setIsHapusGaji(true);
+        const response = await postWithAuth(
+          "delete-gaji",
+          {
+            selectedId: onSelectedGaji,
+          },
+          token ?? ""
+        );
+        toastSuccess(response.data.meta.message);
+        setShowHapusGaji(false);
+        setTotalDataGaji(totalDataGaji + 1);
+      } else {
+        toastError("Konfirmasi Salah");
+      }
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
     } finally {
@@ -225,11 +236,15 @@ function Gaji() {
             const worksheetName = workbook.SheetNames[1];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
-            await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
+            try {
+              await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
+              toastSuccess("Upload successfully");
+              setShowEMT(false);
+              setTotalDataGaji(totalDataGaji + 1);
+            } catch (error) {
+              toastError(error as string);
+            }
           };
-          toastSuccess("Upload successfully");
-          setShowEMT(false);
-          setTotalDataGaji(totalDataGaji + 1);
         } else {
           toastError("Please select only excel file types");
           setEmt(null);
@@ -263,11 +278,19 @@ function Gaji() {
             const worksheetName = workbook.SheetNames[2];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
-            await postWithAuthJson("kehadiran", readNonEmt(data), token ?? "");
+            try {
+              await postWithAuthJson(
+                "kehadiran",
+                readNonEmt(data),
+                token ?? ""
+              );
+              toastSuccess("Upload successfully");
+              setShowNonEMT(false);
+              setTotalDataGaji(totalDataGaji + 1);
+            } catch (error) {
+              toastError(error as string);
+            }
           };
-          toastSuccess("Upload successfully");
-          setShowNonEMT(false);
-          setTotalDataGaji(totalDataGaji + 1);
         } else {
           toastError("Please select only excel file types");
           setNonEmt(null);
@@ -382,6 +405,7 @@ function Gaji() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
+                value={sparator(besarGaji)}
                 onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
@@ -442,7 +466,7 @@ function Gaji() {
                 required
                 type={"standart"}
                 placeholder={"Rp"}
-                value={besarGaji}
+                value={sparator(besarGaji)}
                 onChange={(e) => setBesarGaji(e.target.value)}
               />
             </div>
@@ -474,8 +498,16 @@ function Gaji() {
             Hapus Karyawan
           </h1>
           <p className="mb-5 w-full text-center text-12 xl:text-left xl:text-16">
-            Apakah Anda yakin menghapus data?
+            Apakah Anda yakin menghapus data? <br /> Data seluruh gaji pada
+            karyawan tersebut akan hilang. Ketik pesan konfirmasi berikut.
           </p>
+          <p className="font-bold">Saya Yakin Menghapus</p>
+          <TextField
+            required
+            type={"standart"}
+            placeholder={"Masukan konfirmasi di atas"}
+            onChange={(e) => setKonfirmasi(e.target.value)}
+          />
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowHapusGaji(false)}
@@ -512,7 +544,10 @@ function Gaji() {
               placeholder={"Select Period"}
               type={"month"}
               options={dataMonth(new Date("01/01/2000"), new Date())}
-              onChange={(e) => setPeriod(e!)}
+              onChange={(e) => {
+                setPeriod(e!);
+                gajiPeriodContext?.updatePeriod(e!);
+              }}
               value={period}
               isClearable={false}
             />
@@ -534,7 +569,11 @@ function Gaji() {
             />
           </div>
           <Button
-            onClick={() => setShowTambahGaji(true)}
+            onClick={() => {
+              setShowTambahGaji(true);
+              // reset
+              setBesarGaji("");
+            }}
             text={"Tambah Data +"}
             type={"button"}
             style={"primary"}
@@ -578,7 +617,7 @@ function Gaji() {
             column={kolom}
             isLoading={isTableLoad}
             page={pageGaji}
-            dataLimit={10}
+            dataLimit={15}
             onEdit={(val) => {
               setIdEditGaji((dataGaji[val] as any).id);
               setShowEditGaji(true);
@@ -598,7 +637,7 @@ function Gaji() {
             totalPages={totalPageGaji}
             current={(page) => setPageGaji(page)}
             totalData={totalDataGaji}
-            dataLimit={10}
+            dataLimit={15}
           />
         </div>
       </div>
