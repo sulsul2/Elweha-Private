@@ -20,6 +20,7 @@ import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
 import { sparator, sparatorReverse } from "../../data/sparator";
 import { GajiPeriodContext } from "../../Context/GajiPeriodContext";
+import moment from "moment";
 
 function Gaji() {
   //Loading
@@ -121,13 +122,37 @@ function Gaji() {
             period ? period?.value.split("-")[0] : ""
           }&year=${period ? period?.value.split("-")[1] : ""}${filter}`
         );
-        console.log(gaji);
         setDataGaji(perhitungan(gaji).hasil);
         setTotalGaji(perhitungan(gaji).total);
         setTotalPageGaji(gaji.data.data.last_page);
         setTotalDataGaji(gaji.data.data.total);
       } catch (error) {
         toastError("Get Data Table Failed");
+      } finally {
+        setIsTableLoad(false);
+      }
+    }
+  };
+
+  const linkGaji = async (tanggal: Date | null = null) => {
+    if (token) {
+      try {
+        const gaji = await getWithAuth(
+          token,
+          `gaji?&month=${tanggal ? tanggal.getMonth() + 1 : ""}&year=${
+            tanggal ? tanggal.getFullYear() : ""
+          }`
+        );
+        await postWithAuth(
+          "pengeluaran-gaji",
+          {
+            tanggal: moment(tanggal).format("YYYY-MM-DD HH:mm:ss"),
+            jumlah: perhitungan(gaji).total,
+          },
+          token ?? ""
+        );
+      } catch (error) {
+        toastError("Link Gaji to Pengeluaran Failed");
       } finally {
         setIsTableLoad(false);
       }
@@ -185,7 +210,6 @@ function Gaji() {
       setShowEditGaji(false);
       setTotalDataGaji(totalDataGaji + 1);
     } catch (error) {
-      console.log(error);
       toastError((error as any).response.data.data.error as string);
     } finally {
       setIsEditGaji(false);
@@ -208,7 +232,7 @@ function Gaji() {
         setShowHapusGaji(false);
         setTotalDataGaji(totalDataGaji + 1);
       } else {
-        toastError("Konfirmasi Salah");
+        toastError("Konfirmasi");
       }
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
@@ -240,7 +264,10 @@ function Gaji() {
               await postWithAuthJson("kehadiran", readEmt(data), token ?? "");
               toastSuccess("Upload successfully");
               setShowEMT(false);
-              setTotalDataGaji(totalDataGaji + 1);
+              if (readEmt(data).length > 0) {
+                linkGaji(readEmt(data)[0].tanggal);
+              }
+              getGaji();
             } catch (error) {
               toastError(error as string);
             }
@@ -286,7 +313,10 @@ function Gaji() {
               );
               toastSuccess("Upload successfully");
               setShowNonEMT(false);
-              setTotalDataGaji(totalDataGaji + 1);
+              if (readNonEmt(data).length > 0) {
+                linkGaji(readNonEmt(data)[0].tanggal);
+              }
+              getGaji();
             } catch (error) {
               toastError(error as string);
             }
