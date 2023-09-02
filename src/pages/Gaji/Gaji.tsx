@@ -232,7 +232,7 @@ function Gaji() {
         setShowHapusGaji(false);
         setTotalDataGaji(totalDataGaji + 1);
       } else {
-        toastError("Konfirmasi");
+        toastError("Konfirmasi Salah");
       }
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
