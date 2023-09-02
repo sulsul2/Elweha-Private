@@ -655,14 +655,16 @@ function PajakRekan() {
 
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-9 pt-[104px] xl:px-24">
         <h1 className="mb-12 hidden text-40 font-bold xl:block">Pajak Rekan</h1>
-        <div className="mb-5 flex w-full justify-between xl:justify-start">
-          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24">
-            Total Transfer
-          </p>
-          <p className="text-16 font-semibold text-kText xl:text-24">
-            <FormatRupiah value={totalTransfer} />
-          </p>
-        </div>
+        {user?.role == "BOD" && (
+          <div className="mb-5 flex w-full justify-between xl:justify-start">
+            <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24">
+              Total Transfer
+            </p>
+            <p className="text-16 font-semibold text-kText xl:text-24">
+              <FormatRupiah value={totalTransfer} />
+            </p>
+          </div>
+        )}
         <div className="flex w-full items-center justify-between xl:justify-start">
           <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24 ">
             Periode
