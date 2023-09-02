@@ -592,18 +592,22 @@ function Pengeluaran() {
             </div>
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowEditJenis(true)}
-              text={"Edit Jenis"}
-              type={"button"}
-              style={"third"}
-            />
-            <Button
-              onClick={() => setShowEditKategori(true)}
-              text={"Edit Kategori"}
-              type={"button"}
-              style={"third"}
-            />
+            {user?.role == "BOD" && (
+              <Button
+                onClick={() => setShowEditJenis(true)}
+                text={"Edit Jenis"}
+                type={"button"}
+                style={"third"}
+              />
+            )}
+            {user?.role == "BOD" && (
+              <Button
+                onClick={() => setShowEditKategori(true)}
+                text={"Edit Kategori"}
+                type={"button"}
+                style={"third"}
+              />
+            )}
             <Button
               onClick={() => {
                 setShowTambahPengeluaran(true);
@@ -653,6 +657,8 @@ function Pengeluaran() {
             isLoading={isTableLoad}
             page={page}
             dataLimit={10}
+            isEdit={user?.role == "BOD"}
+            isCheck={user?.role == "BOD"}
             onEdit={(val) => {
               setIdEdit((data[val] as any).id);
               setShowEditPengeluaran(true);
