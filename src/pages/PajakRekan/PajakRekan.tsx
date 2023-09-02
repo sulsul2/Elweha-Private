@@ -75,7 +75,7 @@ function PajakRekan() {
   const [idEditAkta, setIdEditAkta] = useState(-1);
   const [triggerAkta, setTriggerAkta] = useState(0);
   const [onSelectedAkta, setOnSelectedAkta] = useState<Array<number>>([]);
-  const kolomRekan = [
+  const kolomRekanBod = [
     "No",
     "Nama Rekan",
     "Biaya Jasa",
@@ -85,6 +85,7 @@ function PajakRekan() {
     "Pajak Akumulasi",
     "Transfer",
   ];
+  const kolomRekanOfficer = ["No", "Nama Rekan", "Jumlah Akta"];
   const kolomAkta = [
     "No",
     "Tanggal",
@@ -117,20 +118,28 @@ function PajakRekan() {
           token,
           `pajak-rekan-by-tahun?limit=10&page=${pageRekan}&search=${searchRekan}&year=${
             year ? year.value : ""
-          }${user.role == "OFFICER" && "&user_id=" + user.id}`
+          }`
         );
         setDataRekan(
           pajak_rekan.data.data.table.data.map((data: any) => {
-            return {
-              id: data.rekan_id,
-              nama: data.nama,
-              biaya_jasa: formatRp(data.biaya_jasa),
-              jumlah_akta: sparator(data.jumlah_akta),
-              jasa_bruto: formatRp(data.jasa_bruto),
-              dpp_akumulasi: formatRp(data.dpp_akumulasi),
-              pajak_akumulasi: formatRp(data.pph_akumulasi),
-              transfer: formatRp(data.transfer),
-            };
+            if (user.role == "OFFICER") {
+              return {
+                id: data.rekan_id,
+                nama: data.nama,
+                jumlah_akta: sparator(data.jumlah_akta),
+              };
+            } else {
+              return {
+                id: data.rekan_id,
+                nama: data.nama,
+                biaya_jasa: formatRp(data.biaya_jasa),
+                jumlah_akta: sparator(data.jumlah_akta),
+                jasa_bruto: formatRp(data.jasa_bruto),
+                dpp_akumulasi: formatRp(data.dpp_akumulasi),
+                pajak_akumulasi: formatRp(data.pph_akumulasi),
+                transfer: formatRp(data.transfer),
+              };
+            }
           })
         );
         setRekanData(
@@ -672,7 +681,11 @@ function PajakRekan() {
             />
           </div>
         </div>
-        <div className="mb-5 hidden w-full justify-center gap-4 xl:flex xl:justify-end">
+        <div
+          className={`mb-5 hidden w-full justify-center gap-4 xl:flex xl:justify-end ${
+            user?.role == "OFFICER" && "xl:pr-80"
+          }`}
+        >
           <Button
             onClick={() => {
               setShowTambahRekan(true);
@@ -699,7 +712,11 @@ function PajakRekan() {
             style={"primary"}
           />
         </div>
-        <div className="flex grow flex-col rounded-lg bg-white py-5 shadow-card">
+        <div
+          className={`flex grow flex-col rounded-lg bg-white py-5 shadow-card ${
+            user?.role == "OFFICER" && "xl:mx-80"
+          }`}
+        >
           <div className="mb-5 flex w-full items-center justify-between gap-1 px-3">
             <p className="hidden text-16 font-bold xl:block xl:text-24">
               Daftar Pajak Rekan
@@ -727,7 +744,7 @@ function PajakRekan() {
           </div>
           <Table
             data={dataRekan}
-            column={kolomRekan}
+            column={user?.role == "BOD" ? kolomRekanBod : kolomRekanOfficer}
             isLoading={isTableLoad}
             page={pageRekan}
             isEdit={user?.role == "BOD"}
@@ -741,7 +758,7 @@ function PajakRekan() {
             }}
             onSelected={(val) => setOnSelectedRekan(val)}
             selected={onSelectedRekan}
-            detailUrl="/detail-rekan"
+            detailUrl={user?.role == "BOD" ? "/detail-rekan" : ""}
           />
           <Paginate
             totalPages={totalPageRekan}
