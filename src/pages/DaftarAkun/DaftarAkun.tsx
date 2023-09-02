@@ -108,7 +108,7 @@ function DaftarAkun() {
         "add-account",
         {
           nama: nama,
-          email: email,
+          email: email == "" ? null : email,
           username: username,
           password: password,
           role: role?.value,
@@ -134,7 +134,7 @@ function DaftarAkun() {
         {
           id: idEdit,
           nama: nama,
-          email: email,
+          email: email == "" ? null : email,
           username: username,
           password: password == "" ? null : password,
           role: role?.value,
@@ -207,7 +207,6 @@ function DaftarAkun() {
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Email</p>
               <TextField
-                required
                 type={"standart"}
                 placeholder={"Masukkan Email"}
                 onChange={(e) => setEmail(e.target.value)}
@@ -287,7 +286,6 @@ function DaftarAkun() {
             <div className="w-full xl:w-1/2">
               <p className="mb-2 text-16 font-semibold">Email</p>
               <TextField
-                required
                 type={"standart"}
                 placeholder={"Masukkan Email"}
                 onChange={(e) => setEmail(e.target.value)}
@@ -324,7 +322,7 @@ function DaftarAkun() {
               style={"third"}
             />
             <Button
-              text={"Tambah Akun"}
+              text={"Edit Akun"}
               type={"submit"}
               style={"primary"}
               isLoading={isEditAkun}
@@ -374,7 +372,10 @@ function DaftarAkun() {
             </p>
           </div>
           <Button
-            onClick={() => setShowTambahAkun(true)}
+            onClick={() => {
+              setShowTambahAkun(true);
+              setEmail("");
+            }}
             text={"Tambah Akun +"}
             type={"button"}
             style={"primary"}

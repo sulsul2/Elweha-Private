@@ -17,18 +17,19 @@ import Filter from "../../components/Filter";
 import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
 import { sparator, sparatorReverse } from "../../data/sparator";
+import EditModal from "../../components/EditModal";
 
 function Pengeluaran() {
   // Loading
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoad, setIsTableLoad] = useState(false);
-  const [isAddKategori, setIsAddKategori] = useState(false);
   const [isAddPengeluaran, setIsAddPengeluaran] = useState(false);
   const [isEditPengeluaran, setIsEditPengeluaran] = useState(false);
   const [isHapusPengeluaran, setIsHapusPengeluaran] = useState(false);
 
   // PopUp
-  const [showTambahKategori, setShowTambahKategori] = useState(false);
+  const [showEditKategori, setShowEditKategori] = useState(false);
+  const [showEditJenis, setShowEditJenis] = useState(false);
   const [showTambahPengeluaran, setShowTambahPengeluaran] = useState(false);
   const [showEditPengeluaran, setShowEditPengeluaran] = useState(false);
   const [showHapusPengeluaran, setShowHapusPengeluaran] = useState(false);
@@ -45,7 +46,6 @@ function Pengeluaran() {
   const [period, setPeriod] = useState<{ value: string; label: string }>();
   const [kategori, setKategori] = useState<{ value: string; label: string }>();
   const [jenis, setJenis] = useState<{ value: string; label: string }>();
-  const [addKategori, setAddKategori] = useState("");
   const [tanggal, setTanggal] = useState<Date | null>();
   const [jumlah, setJumlah] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
@@ -141,19 +141,16 @@ function Pengeluaran() {
     getPengeluaran();
   }, [page, totalData, period, search, kategoriId]);
 
-  const tambahKategori = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsAddKategori(true);
+  const tambahKategori = async (nama: string) => {
     try {
       const response = await postWithAuth(
         "kategori-pengeluaran",
         {
-          nama: addKategori,
+          nama: nama,
         },
         token ?? ""
       );
       toastSuccess(response.data.meta.message);
-      setShowTambahKategori(false);
       setKategoriData([
         ...kategoriData,
         {
@@ -164,8 +161,117 @@ function Pengeluaran() {
       setKategoriId([...kategoriId, response.data.data.id]);
     } catch (error) {
       toastError((error as any).response.data.data.error as string);
-    } finally {
-      setIsAddKategori(false);
+    }
+  };
+
+  const deleteKategori = async (id: string) => {
+    try {
+      const response = await postWithAuth(
+        "delete-kategori-pengeluaran",
+        {
+          id: id,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setKategoriData([...kategoriData.filter((el) => el.value != id)]);
+      setKategoriId([...kategoriId.filter((el) => el != Number.parseInt(id))]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const editKategori = async (id: string, nama: string) => {
+    try {
+      const response = await postWithAuth(
+        "update-kategori-pengeluaran",
+        {
+          id: id,
+          nama: nama,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      var found = kategoriData.find((element) => element.value == id);
+      var idx = kategoriData.indexOf(found!);
+      var tempData = [...kategoriData.filter((el) => el.value != id)];
+      var tempId = [...kategoriId.filter((el) => el != Number.parseInt(id))];
+      setKategoriData([
+        ...tempData.slice(0, idx),
+        { value: id, label: nama },
+        ...tempData.slice(idx),
+      ]);
+      setKategoriId([
+        ...tempId.slice(0, idx),
+        Number.parseInt(id),
+        ...tempId.slice(idx),
+      ]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const tambahJenis = async (nama: string) => {
+    try {
+      const response = await postWithAuth(
+        "jenis-pengeluaran",
+        {
+          nama: nama,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setJenisData([
+        ...jenisData,
+        {
+          value: response.data.data.id,
+          label: response.data.data.nama,
+        },
+      ]);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const deleteJenis = async (id: string) => {
+    try {
+      const response = await postWithAuth(
+        "delete-jenis-pengeluaran",
+        {
+          id: id,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setJenisData([...jenisData.filter((el) => el.value != id)]);
+      setTotalData(totalData + 1);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    }
+  };
+
+  const editJenis = async (id: string, nama: string) => {
+    try {
+      const response = await postWithAuth(
+        "update-jenis-pengeluaran",
+        {
+          id: id,
+          nama: nama,
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      var found = jenisData.find((element) => element.value == id);
+      var idx = jenisData.indexOf(found!);
+      var tempData = [...jenisData.filter((el) => el.value != id)];
+      setJenisData([
+        ...tempData.slice(0, idx),
+        { value: id, label: nama },
+        ...tempData.slice(idx),
+      ]);
+      setTotalData(totalData + 1);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
     }
   };
 
@@ -245,43 +351,27 @@ function Pengeluaran() {
     <>
       <LoadingPage isLoad={isLoading} />
 
-      {/* Add Kategori */}
-      <Modal
-        visible={showTambahKategori}
-        onClose={() => setShowTambahKategori(false)}
-      >
-        <form
-          onSubmit={(e) => tambahKategori(e)}
-          className="flex w-full flex-col gap-4"
-        >
-          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Kategori Pengeluaran
-          </h1>
-          <div className="mb-5 w-full">
-            <p className="mb-2 text-16 font-semibold">Nama Kategori</p>
-            <TextField
-              required
-              type={"standart"}
-              placeholder={"Masukkan Nama Kategori"}
-              onChange={(e) => setAddKategori(e.target.value)}
-            />
-          </div>
-          <div className="flex w-full justify-center gap-4 xl:justify-end">
-            <Button
-              onClick={() => setShowTambahKategori(false)}
-              text={"Batalkan"}
-              type={"button"}
-              style={"third"}
-            />
-            <Button
-              isLoading={isAddKategori}
-              text={"Simpan Data"}
-              type={"submit"}
-              style={"primary"}
-            />
-          </div>
-        </form>
-      </Modal>
+      {/* Edit Kategori */}
+      <EditModal
+        dataItems={kategoriData}
+        visible={showEditKategori}
+        onClose={() => setShowEditKategori(false)}
+        onEdit={(e) => editKategori(e.value, e.label)}
+        onDelete={(e) => deleteKategori(e)}
+        onAdd={(e) => tambahKategori(e)}
+        title={"Kategori"}
+      />
+
+      {/* Edit Jenis */}
+      <EditModal
+        dataItems={jenisData}
+        visible={showEditJenis}
+        onClose={() => setShowEditJenis(false)}
+        onEdit={(e) => editJenis(e.value, e.label)}
+        onDelete={(e) => deleteJenis(e)}
+        onAdd={(e) => tambahJenis(e)}
+        title={"Jenis"}
+      />
 
       {/* Add Pengeluaran */}
       <Modal
@@ -503,6 +593,18 @@ function Pengeluaran() {
           </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
+              onClick={() => setShowEditJenis(true)}
+              text={"Edit Jenis"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              onClick={() => setShowEditKategori(true)}
+              text={"Edit Kategori"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
               onClick={() => {
                 setShowTambahPengeluaran(true);
                 // Reset
@@ -511,12 +613,6 @@ function Pengeluaran() {
               text={"Tambah Data +"}
               type={"button"}
               style={"primary"}
-            />
-            <Button
-              onClick={() => setShowTambahKategori(true)}
-              text={"Tambah Kategori +"}
-              type={"button"}
-              style={"third"}
             />
           </div>
         </div>

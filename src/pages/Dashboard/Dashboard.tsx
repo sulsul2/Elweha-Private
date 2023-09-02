@@ -142,6 +142,7 @@ function Dashboard() {
           })
         );
       } catch (error) {
+        console.log(error);
         toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
@@ -183,6 +184,7 @@ function Dashboard() {
         );
         setTotalPendapatan(pendapatan.data.data.total_pendapatan);
       } catch (error) {
+        console.log(error);
         toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
@@ -249,6 +251,7 @@ function Dashboard() {
         );
         setTotalPengeluaran(pengeluaran.data.data.total_pengeluaran);
       } catch (error) {
+        console.log(error);
         toastError("Get Some Data Failed");
       } finally {
         setIsLoading(false);
@@ -322,7 +325,10 @@ function Dashboard() {
           }&rekan_id=${rekan ? rekan?.value : ""}`
         );
         setAktaTersisa(tersisa.data.data);
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+        toastError("Get Data Table Failed");
+      }
     }
   };
 
@@ -388,6 +394,7 @@ function Dashboard() {
           })
         );
       } catch (error) {
+        console.log(error);
         toastError("Get Rekan Data Failed");
       }
     }
@@ -406,6 +413,7 @@ function Dashboard() {
           })
         );
       } catch (error) {
+        console.log(error);
         toastError("Get Data Barang Table Failed");
       }
     }
@@ -434,6 +442,7 @@ function Dashboard() {
             })
         );
       } catch (error) {
+        console.log(error);
         toastError("Get Data Barang Table Failed");
       }
     }
