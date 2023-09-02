@@ -58,6 +58,7 @@ function Gaji() {
   }>();
   const [besarGaji, setBesarGaji] = useState("");
   const [searchGaji, setSearchGaji] = useState("");
+  const [konfirmasi, setKonfirmasi] = useState("");
 
   // Excel
   const [emt, setEmt] = useState<File | null>(null);
@@ -193,18 +194,22 @@ function Gaji() {
 
   const hapusGaji = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsHapusGaji(true);
     try {
-      const response = await postWithAuth(
-        "delete-gaji",
-        {
-          selectedId: onSelectedGaji,
-        },
-        token ?? ""
-      );
-      toastSuccess(response.data.meta.message);
-      setShowHapusGaji(false);
-      setTotalDataGaji(totalDataGaji + 1);
+      if (konfirmasi === "Saya Yakin Menghapus") {
+        setIsHapusGaji(true);
+        const response = await postWithAuth(
+          "delete-gaji",
+          {
+            selectedId: onSelectedGaji,
+          },
+          token ?? ""
+        );
+        toastSuccess(response.data.meta.message);
+        setShowHapusGaji(false);
+        setTotalDataGaji(totalDataGaji + 1);
+      } else {
+        toastError("Konfirmasi Salah");
+      }
     } catch (error) {
       toastError((error as any).response.data.meta.message as string);
     } finally {
@@ -493,8 +498,16 @@ function Gaji() {
             Hapus Karyawan
           </h1>
           <p className="mb-5 w-full text-center text-12 xl:text-left xl:text-16">
-            Apakah Anda yakin menghapus data?
+            Apakah Anda yakin menghapus data? <br /> Data seluruh gaji pada
+            karyawan tersebut akan hilang. Ketik pesan konfirmasi berikut.
           </p>
+          <p className="font-bold">Saya Yakin Menghapus</p>
+          <TextField
+            required
+            type={"standart"}
+            placeholder={"Masukan konfirmasi di atas"}
+            onChange={(e) => setKonfirmasi(e.target.value)}
+          />
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowHapusGaji(false)}
