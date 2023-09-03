@@ -5,7 +5,7 @@ import { FormatRupiah } from "@arismun/format-rupiah";
 import { BiSolidPencil } from "react-icons/bi";
 import { HiTrash } from "react-icons/hi";
 import { IconContext } from "react-icons";
-import { dataMonth } from "../../data/month";
+import { dataYear } from "../../data/year";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import TextField from "../../components/TextField";
@@ -63,7 +63,9 @@ function PajakPerusahaan() {
   const [isHapusKoreksi, setIsHapusKoreksi] = useState(false);
   const [pph, setPph] = useState(0);
 
-  const [period, setPeriod] = useState<{ value: string; label: string }>();
+  const [year, setYear] = useState<{ value: string; label: string }>(
+    dataYear(new Date(), new Date())[0]
+  );
 
   const countPph = () => {
     const laba =
@@ -196,7 +198,7 @@ function PajakPerusahaan() {
       try {
         const koreksi = await getWithAuth(
           token,
-          "koreksi?sifat_koreksi=" + sifat
+          "koreksi?sifat_koreksi=" + sifat + "&year=" + year.value
         );
         if (sifat == "POSITIF") {
           setKoreksiPositifData(koreksi?.data?.data?.table);
@@ -219,8 +221,7 @@ function PajakPerusahaan() {
       try {
         const pendapatan = await getWithAuth(
           token,
-          `pendapatan?month=${period ? period?.value.split("-")[0] : ""}&year=${
-            period ? period?.value.split("-")[1] : ""
+          `pendapatan?year=${year.value}
           }`
         );
         setDataPendapatan(
@@ -258,9 +259,7 @@ function PajakPerusahaan() {
       try {
         const pengeluaran = await getWithAuth(
           token,
-          `pengeluaran?month=${
-            period ? period?.value.split("-")[0] : ""
-          }&year=${period ? period?.value.split("-")[1] : ""}`
+          `pengeluaran?year=${year.value}`
         );
         setDataPengeluaran(
           pengeluaran.data.data.table.data.map((data: any) => {
@@ -302,6 +301,7 @@ function PajakPerusahaan() {
             sifat_koreksi: sifat,
             jenis_koreksi: jenis,
             jumlah: sparatorReverse(jumlah.toString()),
+            tahun: year.value,
           },
           token ?? ""
         );
@@ -415,7 +415,7 @@ function PajakPerusahaan() {
   useEffect(() => {
     getTotalPendapatan();
     getTotalPengeluaran();
-  }, [period]);
+  }, [year]);
 
   useEffect(() => {
     countPph();
@@ -431,11 +431,11 @@ function PajakPerusahaan() {
 
   useEffect(() => {
     getKoreksi("POSITIF");
-  }, [totalKoreksiPositif]);
+  }, [totalKoreksiPositif,year]);
 
   useEffect(() => {
     getKoreksi("NEGATIF");
-  }, [totalKoreksiNegatif]);
+  }, [totalKoreksiNegatif,year]);
 
   return (
     <>
@@ -584,10 +584,12 @@ function PajakPerusahaan() {
             <h2 className="text-16 font-bold lg:mr-10 xl:text-24">Periode</h2>
             <div className="w-[160px] md:w-[200px]">
               <Dropdown
+                isClearable={false}
                 placeholder={"Select Period"}
-                type={"month"}
-                options={dataMonth(new Date("01/01/2000"), new Date())}
-                onChange={(e) => setPeriod(e!)}
+                type={"year"}
+                value={year}
+                options={dataYear(new Date("01/01/2000"), new Date())}
+                onChange={(e) => setYear(e!)}
               />
             </div>
           </div>
