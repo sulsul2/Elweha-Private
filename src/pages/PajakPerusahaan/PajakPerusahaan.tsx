@@ -82,7 +82,7 @@ function PajakPerusahaan() {
       if (laba < 4800000000) {
         setPph(laba * 0.11);
       } else if (laba < 50000000000) {
-        setPph((laba - 4800000000) * 0.22);
+        setPph(((laba - 4800000000) * 0.22) + 4800000000 * 0.11);
       } else {
         setPph(laba * 0.22);
       }
