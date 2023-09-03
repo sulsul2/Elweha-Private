@@ -74,13 +74,16 @@ function PajakPerusahaan() {
           (totalKoreksiPositif - totalDummyPengeluaran)) /
           1000
       );
-
-    if (laba < 4800000000) {
-      setPph(laba * 0.11);
-    } else if (laba < 50000000000) {
-      setPph((laba - 4800000000) * 0.22);
+    if (laba < 0) {
+      setPph(0);
     } else {
-      setPph(laba * 0.22);
+      if (laba < 4800000000) {
+        setPph(laba * 0.11);
+      } else if (laba < 50000000000) {
+        setPph((laba - 4800000000) * 0.22);
+      } else {
+        setPph(laba * 0.22);
+      }
     }
   };
 
@@ -383,7 +386,9 @@ function PajakPerusahaan() {
     if (tipe == "pendapatan") {
       if (!isChecked) {
         setOnSelectedPendapatan([...onSelectedPendapatan, label]);
-        setTotalDummyPendapatan(temppendapatan + value);
+        if (value > 0) {
+          setTotalDummyPendapatan(temppendapatan + value);
+        }
       } else {
         setOnSelectedPendapatan(
           onSelectedPendapatan.filter((item) => item !== label)
@@ -394,7 +399,9 @@ function PajakPerusahaan() {
     } else {
       if (!isChecked) {
         setOnSelectedPengeluaran([...onSelectedPengeluaran, label]);
-        setTotalDummyPengeluaran(temppengeluaran + value);
+        if (value > 0) {
+          setTotalDummyPengeluaran(temppengeluaran + value);
+        }
       } else {
         setOnSelectedPengeluaran(
           onSelectedPengeluaran.filter((item) => item !== label)
@@ -651,7 +658,11 @@ function PajakPerusahaan() {
         </div>
         <div className=" mt-3 w-full rounded-[10px] bg-white p-[30px] drop-shadow-card xl:mx-auto xl:w-fit">
           <div className=" xl:flex xl:items-center xl:gap-9">
-            <p className=" text-20 font-bold">Laba Sebelum Pajak</p>
+            <p className=" text-20 font-bold">
+              {totalDummyPendapatan - totalDummyPengeluaran >= 0
+                ? "Laba Sebelum Pajak"
+                : "Rugi Sebelum Pajak"}
+            </p>
             <span className="text-20">
               <FormatRupiah
                 value={totalDummyPendapatan - totalDummyPengeluaran}
@@ -704,7 +715,14 @@ function PajakPerusahaan() {
               </div>
             </div>
             <div className=" mt-6">
-              <p className="text-20 font-bold">Laba Bersih Fiskal</p>
+              <p className="text-20 font-bold">
+                {totalDummyPendapatan -
+                  totalKoreksiNegatif +
+                  (totalKoreksiPositif - totalDummyPengeluaran) >=
+                0
+                  ? "Laba Bersih Fiskal"
+                  : "Rugi Bersih Fiskal"}
+              </p>
               <span className="text-20">
                 <FormatRupiah
                   value={
@@ -735,6 +753,32 @@ function PajakPerusahaan() {
               <p className="text-20 font-bold">PPH</p>
               <span className="text-20">
                 <FormatRupiah value={pph} />
+              </span>
+            </div>
+            <div className=" mt-6">
+              <p className="text-20 font-bold">PPN</p>
+              <span className="text-20">
+                <FormatRupiah
+                  value={
+                    1000 *
+                      Math.floor(
+                        (totalDummyPendapatan -
+                          totalKoreksiNegatif +
+                          (totalKoreksiPositif - totalDummyPengeluaran)) /
+                          1000
+                      ) >=
+                    0
+                      ? 0.11 *
+                        1000 *
+                        Math.floor(
+                          (totalDummyPendapatan -
+                            totalKoreksiNegatif +
+                            (totalKoreksiPositif - totalDummyPengeluaran)) /
+                            1000
+                        )
+                      : 0
+                  }
+                />
               </span>
             </div>
           </div>
