@@ -104,7 +104,7 @@ function Pendapatan() {
           }&year=${
             period ? period?.value.split("-")[1] : ""
           }&search=${search}${filter}${
-            user.role == "OFFICER" && "&user_id=" + user.id
+            user.role == "OFFICER" ? "&user_id=" + user.id : ""
           }`
         );
         setData(

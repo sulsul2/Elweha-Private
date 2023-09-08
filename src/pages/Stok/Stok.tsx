@@ -133,7 +133,7 @@ function Stok() {
           }&year=${
             period ? period?.value.split("-")[1] : ""
           }&search=${searchBarang}${filter}${
-            user.role == "OFFICER" && "&user_id=" + user.id
+            user.role == "OFFICER" ? "&user_id=" + user.id : ""
           }`
         );
         setDataBarang(
@@ -181,7 +181,7 @@ function Stok() {
           }&year=${
             period ? period?.value.split("-")[1] : ""
           }&search=${searchAmbil}${filter}${
-            user.role == "OFFICER" && "&user_id=" + user.id
+            user.role == "OFFICER" ? "&user_id=" + user.id : ""
           }`
         );
         setDataAmbil(
