@@ -13,12 +13,18 @@ function DateFieldRange({ text }: { text: string }) {
   };
   const CustomInput = forwardRef(
     (
-      { value, onClick }: { value: string | number | readonly string[] | undefined; onClick: MouseEventHandler<HTMLInputElement> | undefined;},
+      {
+        value,
+        onClick,
+      }: {
+        value: string | number | readonly string[] | undefined;
+        onClick: MouseEventHandler<HTMLInputElement> | undefined;
+      },
       ref: LegacyRef<HTMLInputElement> | undefined
     ) => (
       <input
         value={value}
-        className="w-full rounded-lg border-2 border-kGrey-200 bg-[url(./assets/calendar_icon.svg)] bg-right bg-no-repeat bg-origin-content px-3 py-2 outline-kBlue hover:border-kOrange-200 focus:outline-kOrange-400"
+        className="outline-kBlue w-full rounded-lg border-2 border-kGrey-200 bg-[url(/assets/calendar_icon.svg)] bg-right bg-no-repeat bg-origin-content px-3 py-2 hover:border-kOrange-200 focus:outline-kOrange-400"
         onClick={onClick}
         ref={ref}
       ></input>
@@ -26,22 +32,22 @@ function DateFieldRange({ text }: { text: string }) {
   );
   return (
     <>
-        <DatePicker
-          wrapperClassName="w-full"
-          dateFormat={"dd.MM.yyyy"}
-          showMonthDropdown
-          showYearDropdown
-          scrollableYearDropdown
-          popperPlacement="bottom"
-          showPopperArrow={false}
-          selected={startDate}
-          onChange={onChange}
-          startDate={startDate}
-          endDate={endDate}
-          selectsRange
-          customInput={<CustomInput value={undefined} onClick={undefined} />}
-          placeholderText={text}
-        />
+      <DatePicker
+        wrapperClassName="w-full"
+        dateFormat={"dd.MM.yyyy"}
+        showMonthDropdown
+        showYearDropdown
+        scrollableYearDropdown
+        popperPlacement="bottom"
+        showPopperArrow={false}
+        selected={startDate}
+        onChange={onChange}
+        startDate={startDate}
+        endDate={endDate}
+        selectsRange
+        customInput={<CustomInput value={undefined} onClick={undefined} />}
+        placeholderText={text}
+      />
     </>
   );
 }

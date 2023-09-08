@@ -36,7 +36,7 @@ function Login() {
 
   return (
     <>
-      <div className="flex h-screen w-full flex-col justify-center bg-[url(./assets/background.svg)] bg-cover px-5 md:px-[20%] lg:px-[35%]">
+      <div className="flex h-screen w-full flex-col justify-center bg-[url(/assets/background.svg)] bg-cover px-5 md:px-[20%] lg:px-[35%]">
         <form
           onSubmit={(e) => onLogin(e)}
           className="flex h-auto w-full flex-col items-center rounded-lg bg-seccondaryWhite px-9 py-14"

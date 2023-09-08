@@ -1,5 +1,5 @@
 export const dataYear = (start: Date, end: Date) => {
-  const data = [];
+  const data: Array<{ value: string; label: string }> = [];
 
   var yearStart = start.getFullYear();
   var yearEnd = end.getFullYear();
