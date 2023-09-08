@@ -1,5 +1,5 @@
 export const dataMonth = (start: Date, end: Date) => {
-  const data = [];
+  const data: Array<{ value: string; label: string }> = [];
   const month = [
     "January",
     "February",
