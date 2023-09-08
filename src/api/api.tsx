@@ -20,9 +20,10 @@ export const postWithAuth = async (
   token: string
 ): Promise<AxiosResponse<any, any>> => {
   return await axios.post(url + api, form, {
+    withCredentials: true,
     headers: {
       // Accept: "multipart/form-data",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "http://192.168.1.97:8000/",
       "Content-Type": "multipart/form-data",
       Authorization: "Bearer " + token,
     },
