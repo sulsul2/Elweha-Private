@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 // const url = "http://elweha-backend.test/api/";
-const url = "http://127.0.0.1:8000/api/";
+const url = "http://192.168.1.97:8000/api/";
 
 export const post = async (
   api: string,
