@@ -71,12 +71,11 @@ function Navbar() {
     setIsLoading(true);
     try {
       await postWithAuth("logout", null, user?.token ?? "");
-      Cookies.remove("access_token");
-      navigator("/login");
     } catch (error) {
-      console.log(error);
       toastError((error as any).response.data.meta.message as string);
     } finally {
+      Cookies.remove("access_token");
+      navigator("/login");
       setIsLoading(false);
     }
   };
