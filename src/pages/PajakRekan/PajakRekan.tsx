@@ -171,7 +171,7 @@ function PajakRekan() {
           `pajak-rekan-akta?limit=10&page=${pageAkta}&year=${
             year ? year.value : ""
           }&rekan_id=${rekan ? rekan?.value : ""}${
-            user.role == "OFFICER" && "&user_id=" + user.id
+            user.role == "OFFICER" ? "&user_id=" + user.id : ""
           }`
         );
         setDataAkta(
