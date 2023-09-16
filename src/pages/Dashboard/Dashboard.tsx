@@ -528,7 +528,7 @@ function Dashboard() {
 
       <Modal visible={showAlert} onClose={() => setShowAlert(false)}>
         <div className="flex w-full flex-col gap-4">
-          <h1 className="text-center text-24 font-bold text-kOrange-400 xl:text-start xl:text-40">
+          <h1 className="text-center text-24 font-bold text-kRed xl:text-start xl:text-40">
             Stok Hampir Habis
           </h1>
           <p>Berikut barang yang stoknya hampir habis:</p>
