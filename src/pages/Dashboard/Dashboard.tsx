@@ -17,6 +17,7 @@ import { sparator, sparatorReverse } from "../../data/sparator";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
+  const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isTableLoadAkta, setIsTableLoadAkta] = useState(false);
 
@@ -433,7 +434,7 @@ function Dashboard() {
         );
         setHampirHabis(
           barang.data.data.data
-            .filter((datum: any) => datum.jumlah <= 20)
+            .filter((datum: any) => datum.jumlah <= 5)
             .map((row: any) => {
               return {
                 id: row.id,
@@ -444,6 +445,12 @@ function Dashboard() {
               };
             })
         );
+        if (
+          barang.data.data.data.filter((datum: any) => datum.jumlah <= 5)
+            .length > 0
+        ) {
+          setShowAlert(true);
+        }
       } catch (error) {
         console.log(error);
         toastError("Get Data Barang Table Failed");
@@ -518,6 +525,31 @@ function Dashboard() {
   return (
     <>
       <LoadingPage isLoad={isLoading} />
+
+      <Modal visible={showAlert} onClose={() => setShowAlert(false)}>
+        <div className="flex w-full flex-col gap-4">
+          <h1 className="text-center text-24 font-bold text-kOrange-400 xl:text-start xl:text-40">
+            Stok Hampir Habis
+          </h1>
+          <p>Berikut barang yang stoknya hampir habis:</p>
+          {hampirHabis &&
+            hampirHabis.map((row: any, index: number) => (
+              <div key={index} className="flex">
+                <h1 className="text-14 font-medium xl:text-20">
+                  {row.nama_barang}
+                </h1>
+              </div>
+            ))}
+          <div className="flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowAlert(false)}
+              text={"Close"}
+              type={"button"}
+              style={"primary"}
+            />
+          </div>
+        </div>
+      </Modal>
 
       {/* Modal Add Pendapatan */}
       <Modal
@@ -1044,9 +1076,15 @@ function Dashboard() {
                 Stok Barang
               </Link>
               <hr className="my-3 bg-black" />
-              <h1 className="my-3 text-14 font-semibold xl:text-20">
-                Stok Hampir Habis
-              </h1>
+              {hampirHabis && hampirHabis.length > 0 ? (
+                <h1 className="my-3 text-14 font-semibold xl:text-20">
+                  Stok Hampir Habis {"(<=5)"}
+                </h1>
+              ) : (
+                <h1 className="my-3 text-14 xl:text-20">
+                  Stok Masih Cukup {"(>5)"}
+                </h1>
+              )}
               <div className="h-[120px] w-full overflow-auto pr-2">
                 {hampirHabis &&
                   hampirHabis.map((row: any, index: number) => (
