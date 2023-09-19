@@ -570,15 +570,7 @@ function Dashboard() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
-                value={
-                  period
-                    ? new Date(
-                        `${period.value.split("-")[1]}-${
-                          period.value.split("-")[0]
-                        }-01`
-                      )
-                    : null
-                }
+                value={tanggal}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -657,15 +649,7 @@ function Dashboard() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
-                value={
-                  period
-                    ? new Date(
-                        `${period.value.split("-")[1]}-${
-                          period.value.split("-")[0]
-                        }-01`
-                      )
-                    : null
-                }
+                value={tanggal}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -742,6 +726,7 @@ function Dashboard() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
+                value={tanggal}
               />
             </div>
           </div>
@@ -862,15 +847,7 @@ function Dashboard() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggalAmbil(val)}
-                value={
-                  period
-                    ? new Date(
-                        `${period.value.split("-")[1]}-${
-                          period.value.split("-")[0]
-                        }-01`
-                      )
-                    : null
-                }
+                value={tanggalAmbil}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -980,6 +957,15 @@ function Dashboard() {
                   setShowTambahPendapatan(true);
                   // Reset
                   setJumlah("");
+                  setTanggal(
+                    period
+                      ? new Date(
+                          `${period.value.split("-")[1]}-${
+                            period.value.split("-")[0]
+                          }-01`
+                        )
+                      : null
+                  );
                 }}
               />
             </div>
@@ -1025,6 +1011,15 @@ function Dashboard() {
                   setShowTambahPengeluaran(true);
                   // Reset
                   setJumlah("");
+                  setTanggal(
+                    period
+                      ? new Date(
+                          `${period.value.split("-")[1]}-${
+                            period.value.split("-")[0]
+                          }-01`
+                        )
+                      : null
+                  );
                 }}
               />
             </div>
@@ -1049,17 +1044,28 @@ function Dashboard() {
             </div>
             <div className="my-3 flex items-center justify-between">
               <h1 className="text-14 font-semibold xl:text-20">Daftar Akta</h1>
-              <Button
-                text={"Tambah Data +"}
-                type={"button"}
-                style={"primary"}
-                onClick={() => {
-                  setShowTambahAkta(true);
-                  // Reset
-                  setNoAwal("");
-                  setNoAkhir("");
-                }}
-              />
+              {rekan && (
+                <Button
+                  text={"Tambah Data +"}
+                  type={"button"}
+                  style={"primary"}
+                  onClick={() => {
+                    setShowTambahAkta(true);
+                    // Reset
+                    setNoAwal("");
+                    setNoAkhir("");
+                    setTanggal(
+                      period
+                        ? new Date(
+                            `${period.value.split("-")[1]}-${
+                              period.value.split("-")[0]
+                            }-01`
+                          )
+                        : null
+                    );
+                  }}
+                />
+              )}
             </div>
             <div className="mt-2 w-full px-12 md:px-40 lg:px-20">
               <Dropdown
@@ -1138,6 +1144,15 @@ function Dashboard() {
                     setNamaPengambil(user.nama);
                     // Reset
                     setJumlahAmbil("");
+                    setTanggalAmbil(
+                      period
+                        ? new Date(
+                            `${period.value.split("-")[1]}-${
+                              period.value.split("-")[0]
+                            }-01`
+                          )
+                        : null
+                    );
                   }}
                 />
               </div>

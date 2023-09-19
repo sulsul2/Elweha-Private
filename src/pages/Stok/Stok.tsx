@@ -539,15 +539,7 @@ function Stok() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggalBarang(val)}
-                value={
-                  period
-                    ? new Date(
-                        `${period.value.split("-")[1]}-${
-                          period.value.split("-")[0]
-                        }-01`
-                      )
-                    : null
-                }
+                value={tanggalBarang}
               />
             </div>
           </div>
@@ -701,15 +693,7 @@ function Stok() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggalAmbil(val)}
-                value={
-                  period
-                    ? new Date(
-                        `${period.value.split("-")[1]}-${
-                          period.value.split("-")[0]
-                        }-01`
-                      )
-                    : null
-                }
+                value={tanggalAmbil}
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -892,6 +876,15 @@ function Stok() {
                   setShowTambahBarang(true);
                   // Reset
                   setJumlahBarang("");
+                  setTanggalBarang(
+                    period
+                      ? new Date(
+                          `${period.value.split("-")[1]}-${
+                            period.value.split("-")[0]
+                          }-01`
+                        )
+                      : null
+                  );
                 }}
                 type="button"
                 style="primary"
@@ -968,6 +961,15 @@ function Stok() {
                   setNamaPengambil(user!.nama);
                   // Reset
                   setJumlahAmbil("");
+                  setTanggalAmbil(
+                    period
+                      ? new Date(
+                          `${period.value.split("-")[1]}-${
+                            period.value.split("-")[0]
+                          }-01`
+                        )
+                      : null
+                  );
                 }}
                 type="button"
                 style="primary"
