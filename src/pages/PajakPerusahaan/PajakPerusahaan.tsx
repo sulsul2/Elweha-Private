@@ -82,7 +82,7 @@ function PajakPerusahaan() {
       if (laba < 4800000000) {
         setPph(laba * 0.11);
       } else if (laba < 50000000000) {
-        setPph(((laba - 4800000000) * 0.22) + 4800000000 * 0.11);
+        setPph((laba - 4800000000) * 0.22 + 4800000000 * 0.11);
       } else {
         setPph(laba * 0.22);
       }
@@ -221,8 +221,7 @@ function PajakPerusahaan() {
       try {
         const pendapatan = await getWithAuth(
           token,
-          `pendapatan?year=${year.value}
-          }`
+          `pendapatan?year=${year.value}`
         );
         setDataPendapatan(
           pendapatan.data.data.table.data.map((data: any) => {
@@ -431,11 +430,11 @@ function PajakPerusahaan() {
 
   useEffect(() => {
     getKoreksi("POSITIF");
-  }, [totalKoreksiPositif,year]);
+  }, [totalKoreksiPositif, year]);
 
   useEffect(() => {
     getKoreksi("NEGATIF");
-  }, [totalKoreksiNegatif,year]);
+  }, [totalKoreksiNegatif, year]);
 
   return (
     <>
