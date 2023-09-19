@@ -314,6 +314,15 @@ function Pendapatan() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
+                value={
+                  period
+                    ? new Date(
+                        `${period.value.split("-")[1]}-${
+                          period.value.split("-")[0]
+                        }-01`
+                      )
+                    : null
+                }
               />
             </div>
             <div className="w-full xl:w-1/2">
