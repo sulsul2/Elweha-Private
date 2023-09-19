@@ -48,6 +48,7 @@ function Stok() {
 
   //Field
   const [period, setPeriod] = useState<{ value: string; label: string }>();
+  const [tanggalBarang, setTanggalBarang] = useState<Date | null>();
   const [namaBarang, setNamaBarang] = useState("");
   const [jenisBarang, setJenisBarang] = useState<{
     value: string;
@@ -84,7 +85,7 @@ function Stok() {
   const [idEditAmbil, setIdEditAmbil] = useState(-1);
   const [jenisIdAmbil, setJenisIdAmbil] = useState<Array<number>>([]);
   const [onSelectedAmbil, setOnSelectedAmbil] = useState<Array<number>>([]);
-  const kolomBarang = ["No", "Barang", "Jenis", "Jumlah", "Satuan"];
+  const kolomBarang = ["No", "Tanggal", "Barang", "Jenis", "Jumlah", "Satuan"];
   const kolomAmbil = [
     "No",
     "Tanggal",
@@ -140,6 +141,7 @@ function Stok() {
           barang.data.data.data.map((data: any) => {
             return {
               id: data.id,
+              tanggal: moment(data.tanggal).format("DD MMMM YYYY"),
               nama_barang: data.nama_barang,
               jenis: data.jenis.nama,
               jumlah: sparator(data.jumlah),
@@ -327,6 +329,7 @@ function Stok() {
         "barang",
         {
           nama_barang: namaBarang,
+          tanggal: moment(tanggalBarang).format("YYYY-MM-DD HH:mm:ss"),
           jenis_barang_id: jenisBarang?.value,
           jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
@@ -352,6 +355,7 @@ function Stok() {
         {
           id: idEditBarang,
           nama_barang: namaBarang,
+          tanggal: moment(tanggalBarang).format("YYYY-MM-DD HH:mm:ss"),
           jenis_barang_id: jenisBarang?.value,
           jumlah: sparatorReverse(jumlahBarang),
           satuan: satuanBarang,
@@ -528,6 +532,25 @@ function Stok() {
               />
             </div>
           </div>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal
+                required
+                text={"Masukkan Tanggal"}
+                onChange={(val: Date) => setTanggalBarang(val)}
+                value={
+                  period
+                    ? new Date(
+                        `${period.value.split("-")[1]}-${
+                          period.value.split("-")[0]
+                        }-01`
+                      )
+                    : null
+                }
+              />
+            </div>
+          </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowTambahBarang(false)}
@@ -599,6 +622,17 @@ function Stok() {
               />
             </div>
           </div>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Tanggal</p>
+              <DateFieldNormal
+                required
+                text={"Masukkan Tanggal"}
+                onChange={(val: Date) => setTanggalBarang(val)}
+                value={tanggalBarang}
+              />
+            </div>
+          </div>
           <div className="flex w-full justify-center gap-4 xl:justify-end">
             <Button
               onClick={() => setShowEditBarang(false)}
@@ -667,6 +701,15 @@ function Stok() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggalAmbil(val)}
+                value={
+                  period
+                    ? new Date(
+                        `${period.value.split("-")[1]}-${
+                          period.value.split("-")[0]
+                        }-01`
+                      )
+                    : null
+                }
               />
             </div>
             <div className="w-full xl:w-1/2">
@@ -903,6 +946,9 @@ function Stok() {
                 setNamaBarang((dataBarang[val] as any).nama_barang);
                 setJumlahBarang((dataBarang[val] as any).jumlah);
                 setSatuanBarang((dataBarang[val] as any).satuan);
+                setTanggalBarang(
+                  moment(Date.parse((dataBarang[val] as any).tanggal)).toDate()
+                );
               }}
               onSelected={(val) => setOnSelectedBarang(val)}
               selected={onSelectedBarang}
