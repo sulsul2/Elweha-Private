@@ -517,7 +517,6 @@ function PajakRekan() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
-                value={tanggal}
               />
             </div>
           </div>
@@ -803,7 +802,6 @@ function PajakRekan() {
             onClick={() => {
               setShowTambahAkta(true);
               // Reset
-              setTanggal(year ? new Date(`${year.value}-01-01`) : null);
               setNoAwal("");
               setNoAkhir("");
             }}
