@@ -517,6 +517,7 @@ function PajakRekan() {
                 required
                 text={"Masukkan Tanggal"}
                 onChange={(val: Date) => setTanggal(val)}
+                value={tanggal}
               />
             </div>
           </div>
@@ -773,13 +774,18 @@ function PajakRekan() {
 
       {/* daftar akta */}
       <div className="flex min-h-screen w-full flex-col bg-background px-5 pb-24  xl:px-48">
-        <div className="mb-5 hidden xl:block xl:text-end">
+        <div
+          className={`${
+            !rekan && "invisible"
+          } mb-5 hidden xl:block xl:text-end`}
+        >
           <Button
             onClick={() => {
               setShowTambahAkta(true);
               // Reset
               setNoAwal("");
               setNoAkhir("");
+              setTanggal(year ? new Date(`${year.value}-01-01`) : null);
             }}
             text={"Tambah Data +"}
             type={"button"}
@@ -789,11 +795,16 @@ function PajakRekan() {
         <p className="mb-5 block text-16 font-bold xl:hidden xl:text-24">
           Daftar Akta
         </p>
-        <div className="mb-5 block xl:hidden xl:justify-end">
+        <div
+          className={`${
+            !rekan && "invisible"
+          } mb-5 block xl:hidden xl:justify-end`}
+        >
           <Button
             onClick={() => {
               setShowTambahAkta(true);
               // Reset
+              setTanggal(year ? new Date(`${year.value}-01-01`) : null);
               setNoAwal("");
               setNoAkhir("");
             }}

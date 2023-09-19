@@ -9,30 +9,29 @@ import { useNavigate, useParams } from "react-router-dom";
 import { perhitungan } from "../../data/perhitunganGaji";
 import { toastError, toastSuccess } from "../../components/Toast";
 import Modal from "../../components/Modal";
-import { formatRp } from "../../data/formatRp";
+import { formatRp, formatRpReverse } from "../../data/formatRp";
 import { UserContext } from "../../Context/UserContext";
 import NotFound from "../../components/NotFound";
 import { GajiPeriodContext } from "../../Context/GajiPeriodContext";
+import { sparator, sparatorReverse } from "../../data/sparator";
 
 interface BonusVariabel {
   nama: string;
   besar: string;
   jumlah: string;
   total: string;
-  key: React.Key | null | undefined;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 interface BonusSkil {
   nama: string;
   besar: string;
-  key: React.Key | null | undefined;
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
 function BonusVariabelTile(bonus: BonusVariabel) {
   return (
-    <div key={bonus.key} className="mt-2 flex justify-between">
+    <div className="mt-2 flex justify-between">
       <div className="flex items-center gap-3 rounded-[10px]">
         <p className="font-semibold xl:text-20">{bonus.nama}</p>
         <p className="text-center">
@@ -58,7 +57,7 @@ function BonusVariabelTile(bonus: BonusVariabel) {
 
 function BonusSkilTile(bonus: BonusSkil) {
   return (
-    <div key={bonus.key} className="mt-2 flex justify-between">
+    <div className="mt-2 flex justify-between">
       <div className="flex items-center gap-12 rounded-[10px]">
         <p className="font-semibold xl:text-20">{bonus.nama}</p>
         <p className="text-center">
@@ -85,10 +84,17 @@ function DetailGaji() {
   const [isTambahBonusVariabel, setIsTambahBonusVariabel] = useState(false);
   const [isHapusBonusVariabel, setIsHapusBonusVariabel] = useState(false);
   const [isHapusBonusSkil, setIsHapusBonusSkil] = useState(false);
+  const [isEditGaji, setIsEditGaji] = useState(false);
 
   // PopUp
   const [showHapusVaribelBonus, setShowHapusVaribelBonus] = useState(false);
   const [showHapusSkilBonus, setShowHapusSkilBonus] = useState(false);
+  const [showEditGaji, setShowEditGaji] = useState(false);
+  const [jenisGaji, setJenisGaji] = useState<{
+    value: string;
+    label: string;
+  }>();
+  const [besarGaji, setBesarGaji] = useState("");
 
   // Dropdown
   const gajiPeriodContext = useContext(GajiPeriodContext);
@@ -105,6 +111,12 @@ function DetailGaji() {
   const [namaBonusSkil, setNamaBonusSkil] = useState("");
   const [kehadiranId, setKehadiranId] = useState("");
   const [besarBonusSkil, setBesarBonusSkil] = useState("");
+
+  // Dropdown
+  const [jenisGajiData] = useState<Array<{ value: string; label: string }>>([
+    { value: "0", label: "Tetap" },
+    { value: "1", label: "Variabel" },
+  ]);
 
   // Id Hapus
   const [hapusBonusVariabel, setHapusBonusVariabel] = useState(0);
@@ -138,7 +150,9 @@ function DetailGaji() {
           gaji.data.data.data.length == 0 ? [] : gaji.data.data.data[0].skil
         );
         setKehadiranId(
-          gaji.data.data.data.length == 0 ? "" : gaji.data.data.data[0].id
+          gaji.data.data.data.length == 0
+            ? ""
+            : gaji.data.data.data[0].kehadiran_id
         );
         setDataGaji(perhitungan(gaji).hasil[0]);
         setTrigger(false);
@@ -155,13 +169,14 @@ function DetailGaji() {
   const tambahBonusVariabel = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsTambahBonusVariabel(true);
+    console.log(kehadiranId);
     try {
       const response = await postWithAuth(
         "variabel-bonus",
         {
           nama_bonus: namaBonusVariabel,
-          besar_bonus: besarBonusVariabel,
-          jumlah: jumlahBonusVariabel,
+          besar_bonus: sparatorReverse(besarBonusVariabel),
+          jumlah: sparatorReverse(jumlahBonusVariabel),
           kehadiran_id: kehadiranId,
         },
         token ?? ""
@@ -186,7 +201,7 @@ function DetailGaji() {
         "skil-bonus",
         {
           nama_bonus: namaBonusSkil,
-          besar_bonus: besarBonusSkil,
+          besar_bonus: sparatorReverse(besarBonusSkil),
           kehadiran_id: kehadiranId,
         },
         token ?? ""
@@ -246,8 +261,82 @@ function DetailGaji() {
     }
   };
 
+  const editGaji = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsEditGaji(true);
+    try {
+      const response = await postWithAuth(
+        "update-gaji",
+        {
+          id: id,
+          nama_karyawan: dataGaji ? dataGaji.nama_karyawan : "",
+          jenis_gaji: jenisGaji?.label,
+          besar_gaji: sparatorReverse(besarGaji),
+          tahun: period?.value.split("-")[1],
+          bulan: period?.value.split("-")[0],
+        },
+        token ?? ""
+      );
+      toastSuccess(response.data.meta.message);
+      setShowEditGaji(false);
+      setTrigger(true);
+    } catch (error) {
+      toastError((error as any).response.data.data.error as string);
+    } finally {
+      setIsEditGaji(false);
+    }
+  };
+
   return (
     <>
+      {/* Edit Gaji */}
+      <Modal visible={showEditGaji} onClose={() => setShowEditGaji(false)}>
+        <form
+          onSubmit={(e) => editGaji(e)}
+          className="flex w-full flex-col gap-4"
+        >
+          <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
+            Edit Gaji Karyawan
+          </h1>
+          <div className="flex flex-col justify-between gap-4 xl:flex-row">
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Besar Gaji</p>
+              <TextField
+                required
+                type={"standart"}
+                placeholder={"Rp"}
+                value={sparator(besarGaji)}
+                onChange={(e) => setBesarGaji(e.target.value)}
+              />
+            </div>
+            <div className="w-full xl:w-1/2">
+              <p className="mb-2 text-16 font-semibold">Jenis Gaji</p>
+              <Dropdown
+                placeholder={"Jenis"}
+                type={"Jenis"}
+                options={jenisGajiData}
+                value={jenisGaji}
+                onChange={(e) => setJenisGaji(e!)}
+              />
+            </div>
+          </div>
+          <div className="mt-10 flex w-full justify-center gap-4 xl:justify-end">
+            <Button
+              onClick={() => setShowEditGaji(false)}
+              text={"Batalkan"}
+              type={"button"}
+              style={"third"}
+            />
+            <Button
+              text={"Edit Data"}
+              type={"submit"}
+              style={"primary"}
+              isLoading={isEditGaji}
+            />
+          </div>
+        </form>
+      </Modal>
+
       {/* Hapus Bonus Varibel */}
       <Modal
         visible={showHapusVaribelBonus}
@@ -366,7 +455,7 @@ function DetailGaji() {
 
         {/* dekstop */}
         <div className="mt-10 grid grid-cols-1 gap-x-5 gap-y-5 xl:grid-cols-2">
-          <div className="rounded-[10px] bg-white drop-shadow-card xl:h-[172px]">
+          <div className="rounded-[10px] bg-white drop-shadow-card xl:h-[240px]">
             <div className="p-5 xl:p-12">
               <div className="flex items-center justify-between">
                 <p className="text-[16px] font-bold xl:text-[24px]">
@@ -376,9 +465,27 @@ function DetailGaji() {
                   {dataGaji ? dataGaji.besar_gaji : "Rp 0"}
                 </p>
               </div>
-              <div className="mt-2 flex justify-between">
+              <div className="mb-6 mt-2 flex justify-between">
                 <p className="text-20">{dataGaji ? dataGaji.jenis_gaji : ""}</p>
               </div>
+              <Button
+                onClick={() => {
+                  setShowEditGaji(true);
+                  setBesarGaji(
+                    dataGaji ? formatRpReverse(dataGaji.besar_gaji) : ""
+                  );
+                  setJenisGaji(
+                    dataGaji
+                      ? jenisGajiData.filter(
+                          (item) => item.label == dataGaji.jenis_gaji
+                        )[0]
+                      : undefined
+                  );
+                }}
+                text={"Edit Data"}
+                type={"button"}
+                style={"primary"}
+              />
             </div>
           </div>
 
@@ -411,7 +518,7 @@ function DetailGaji() {
                 />
               ))}
             </div>
-            {dataGaji && dataGaji.jenis_gaji == "Variabel" ? (
+            {dataGaji && dataGaji.jenis_gaji == "Variabel" && kehadiranId ? (
               <form
                 onSubmit={(e) => tambahBonusVariabel(e)}
                 className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
@@ -428,7 +535,7 @@ function DetailGaji() {
                     type="standart"
                     placeholder="Besar Bonus"
                     onChange={(e) => setBesarBonusVariabel(e.target.value)}
-                    value={besarBonusVariabel}
+                    value={sparator(besarBonusVariabel)}
                     required
                   />
                   <p className="text-16 font-semibold">X</p>
@@ -436,14 +543,22 @@ function DetailGaji() {
                     type="standart"
                     placeholder="Jumlah"
                     onChange={(e) => setJumlahBonusVariabel(e.target.value)}
-                    value={jumlahBonusVariabel}
+                    value={sparator(jumlahBonusVariabel)}
                     required
                   />
                   <p className="text-20 font-semibold">=</p>
                   <p className="text-20 font-semibold">
                     {besarBonusVariabel && jumlahBonusVariabel
-                      ? Number.parseFloat(besarBonusVariabel) *
-                        Number.parseFloat(jumlahBonusVariabel)
+                      ? sparator(
+                          (
+                            Number.parseFloat(
+                              sparatorReverse(besarBonusVariabel)
+                            ) *
+                            Number.parseFloat(
+                              sparatorReverse(jumlahBonusVariabel)
+                            )
+                          ).toString()
+                        )
                       : 0}
                   </p>
                 </div>
@@ -457,7 +572,11 @@ function DetailGaji() {
                 </div>
               </form>
             ) : (
-              <h1 className="text-center">Jenis Gaji Anda Tetap</h1>
+              <h1 className="text-center">
+                {kehadiranId
+                  ? "Jenis Gaji Anda Tetap"
+                  : "Anda belum mengisi presensi pada bulan ini"}
+              </h1>
             )}
           </div>
 
@@ -516,7 +635,7 @@ function DetailGaji() {
                 />
               ))}
             </div>
-            {dataGaji && dataGaji.jenis_gaji == "Variabel" ? (
+            {dataGaji && dataGaji.jenis_gaji == "Variabel" && kehadiranId ? (
               <form
                 onSubmit={(e) => tambahBonusSkil(e)}
                 className="mt-2 flex flex-col items-center xl:flex-row xl:justify-between"
@@ -533,7 +652,7 @@ function DetailGaji() {
                     type="standart"
                     placeholder="Besar Bonus"
                     onChange={(e) => setBesarBonusSkil(e.target.value)}
-                    value={besarBonusSkil}
+                    value={sparator(besarBonusSkil)}
                     required
                   />
                 </div>
@@ -547,7 +666,11 @@ function DetailGaji() {
                 </div>
               </form>
             ) : (
-              <h1 className="text-center">Jenis Gaji Anda Tetap</h1>
+              <h1 className="text-center">
+                {kehadiranId
+                  ? "Jenis Gaji Anda Tetap"
+                  : "Anda belum mengisi presensi pada bulan ini"}
+              </h1>
             )}
           </div>
         </div>
