@@ -785,7 +785,6 @@ function PajakRekan() {
               // Reset
               setNoAwal("");
               setNoAkhir("");
-              setTanggal(year ? new Date(`${year.value}-01-01`) : null);
             }}
             text={"Tambah Data +"}
             type={"button"}

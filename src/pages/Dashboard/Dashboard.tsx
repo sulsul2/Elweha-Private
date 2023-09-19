@@ -1054,15 +1054,7 @@ function Dashboard() {
                     // Reset
                     setNoAwal("");
                     setNoAkhir("");
-                    setTanggal(
-                      period
-                        ? new Date(
-                            `${period.value.split("-")[1]}-${
-                              period.value.split("-")[0]
-                            }-01`
-                          )
-                        : null
-                    );
+                    setTanggal(null);
                   }}
                 />
               )}
