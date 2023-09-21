@@ -902,7 +902,7 @@ function Dashboard() {
 
       {/* <Navbar onLoading={(navLoad: boolean) => setNavLoad(navLoad)} /> */}
       <div className="min-h-screen w-full bg-background px-5 pb-24 pt-[104px] xl:px-24">
-        <div className="xl:flex xl:justify-between xl:pr-16">
+        <div className="mb-12 xl:flex xl:justify-between xl:pr-16">
           <h1 className="hidden text-40 font-bold xl:block">Dashboard</h1>
           <div className="flex items-center justify-between">
             <h2 className="text-16 font-bold lg:mr-10 xl:text-24">Periode</h2>
@@ -915,6 +915,27 @@ function Dashboard() {
               />
             </div>
           </div>
+        </div>
+        <div className="mb-5 flex w-full justify-between xl:justify-start">
+          <p className="w-auto text-16 font-bold xl:w-[250px] xl:text-24">
+            Saldo PNBP
+          </p>
+          <p className="text-16 font-semibold xl:text-24">
+            <FormatRupiah
+              value={
+                (kategoriPendapatan.filter((val) => val.label == "PNBP")
+                  .length == 0
+                  ? 0
+                  : kategoriPendapatan.filter((val) => val.label == "PNBP")[0]
+                      .value) -
+                (kategoriPengeluaran.filter((val) => val.label == "PNBP")
+                  .length == 0
+                  ? 0
+                  : kategoriPengeluaran.filter((val) => val.label == "PNBP")[0]
+                      .value)
+              }
+            />
+          </p>
         </div>
         <div className="mt-10 flex w-full flex-wrap justify-center gap-5">
           {/* PENDAPATAN */}
