@@ -152,6 +152,7 @@ export function readNonEmt(originalData: any) {
         cekUser = false;
       }
     }
+    console.log(mappedData);
     return mappedData;
   } catch (error) {
     throw "Please check excel format";
