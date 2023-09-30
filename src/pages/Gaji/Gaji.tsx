@@ -268,6 +268,7 @@ function Gaji() {
                 linkGaji(readEmt(data)[0].tanggal);
               }
               getGaji();
+              console.log(readEmt(data));
             } catch (error) {
               toastError(error as string);
             }
@@ -317,6 +318,7 @@ function Gaji() {
                 linkGaji(readNonEmt(data)[0].tanggal);
               }
               getGaji();
+              console.log(readNonEmt(data));
             } catch (error) {
               toastError(error as string);
             }
