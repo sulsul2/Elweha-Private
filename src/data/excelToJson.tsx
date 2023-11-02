@@ -8,6 +8,13 @@ interface EmployeeAttendance {
   keterlambatan: number;
 }
 
+interface Pendapatan {
+  tanggal: Date;
+  jumlah: number;
+  pengirim: string;
+  deskripsi: number;
+}
+
 export function readEmt(originalData: any) {
   try {
     const mappedData: EmployeeAttendance[] = [];
@@ -151,6 +158,25 @@ export function readNonEmt(originalData: any) {
         mappedData.push(employeeInfo);
         cekUser = false;
       }
+    }
+    return mappedData;
+  } catch (error) {
+    throw "Please check excel format";
+  }
+}
+
+export function readPendapatan(originalData: any) {
+  try {
+    const mappedData: Pendapatan[] = [];
+
+    for (let i = 1; i < originalData.length; i++) {
+      const pendapatanInfo: Pendapatan = {
+        tanggal: moment(originalData[i]["__EMPTY_1"], "YYYY-MM-DD").toDate(),
+        jumlah: Object.keys(originalData[i]).length,
+        pengirim: originalData[i],
+        deskripsi: originalData[i],
+      };
+      mappedData.push(pendapatanInfo);
     }
     return mappedData;
   } catch (error) {

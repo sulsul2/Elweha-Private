@@ -407,7 +407,7 @@ function Dashboard() {
   const getBarang = async () => {
     if (token) {
       try {
-        const barang = await getWithAuth(token, `barang`);
+        const barang = await getWithAuth(token, `barang?kategori_barang=Stok`);
         setBarangDataDropdown(
           barang.data.data.data.map((data: any) => {
             return {
