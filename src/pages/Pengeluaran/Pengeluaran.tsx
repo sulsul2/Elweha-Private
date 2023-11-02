@@ -20,7 +20,7 @@ import { sparator, sparatorReverse } from "../../data/sparator";
 import EditModal from "../../components/EditModal";
 import UploadFile from "../../components/UploadFile";
 import * as XLSX from "xlsx";
-import { readPendapatan } from "../../data/excelToJson";
+import { readPengeluaran } from "../../data/excelToJson";
 import * as FileSaver from "file-saver";
 
 function Pengeluaran() {
@@ -144,7 +144,7 @@ function Pengeluaran() {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [totalData]);
 
   useEffect(() => {
     getPengeluaran();
@@ -372,18 +372,19 @@ function Pengeluaran() {
           reader.onload = async (e) => {
             var excelFile = e.target!.result;
             const workbook = XLSX.read(excelFile, { type: "buffer" });
-            const worksheetName = workbook.SheetNames[1];
+            const worksheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
+
             try {
               await postWithAuthJson(
-                "pengeluaran",
-                readPendapatan(data),
+                "upload-pengeluaran",
+                readPengeluaran(data),
                 token ?? ""
               );
               toastSuccess("Upload successfully");
               setShowUpload(false);
-              console.log(readPendapatan(data));
+              setTotalData(totalData + 1 + readPengeluaran(data).length);
             } catch (error) {
               toastError(error as string);
             }
@@ -608,7 +609,7 @@ function Pengeluaran() {
         </form>
       </Modal>
 
-      {/* Hapus Pendapatan */}
+      {/* Hapus Pengeluaran */}
       <Modal
         visible={showHapusPengeluaran}
         onClose={() => setShowHapusPengeluaran(false)}
@@ -647,7 +648,7 @@ function Pengeluaran() {
           className="flex w-full flex-col gap-4"
         >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Upload File Pendapatan
+            Upload File Pengeluaran
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <UploadFile childToParent={(e) => setFile(e)} />

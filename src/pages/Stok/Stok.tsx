@@ -574,7 +574,7 @@ function Stok() {
           className="flex w-full flex-col gap-4"
         >
           <h1 className="text-center text-24 font-bold xl:text-start xl:text-40">
-            Tambah Barang
+            Tambah Stok
           </h1>
           <div className="flex flex-col justify-between gap-4 xl:flex-row">
             <div className="w-full xl:w-1/2">
@@ -1057,7 +1057,7 @@ function Stok() {
                   }}
                   type="button"
                   style="primary"
-                  text="Tambah Barang +"
+                  text="Tambah Stok +"
                 />
               </div>
               <div className="mb-5 flex w-full items-center justify-between gap-8 px-3">
@@ -1126,14 +1126,6 @@ function Stok() {
             </div>
             <div className="flex w-full flex-col rounded-xl bg-white py-5 shadow-card mt-4">
               <div className="mb-5 flex justify-end gap-5 px-3">
-                {user?.role == "BOD" && (
-                  <Button
-                    onClick={() => setShowEditJenis(true)}
-                    type="button"
-                    style="third"
-                    text="Edit Jenis"
-                  />
-                )}
                 <Button
                   onClick={() => {
                     setShowTambahAset(true);

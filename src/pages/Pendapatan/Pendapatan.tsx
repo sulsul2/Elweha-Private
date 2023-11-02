@@ -141,7 +141,7 @@ function Pendapatan() {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [totalData]);
 
   useEffect(() => {
     getPendapatan();
@@ -232,6 +232,7 @@ function Pendapatan() {
         },
         token ?? ""
       );
+      console.log(response);
       toastSuccess(response.data.meta.message);
       setShowTambahPendapatan(false);
       setTotalData(totalData + 1);
@@ -305,20 +306,24 @@ function Pendapatan() {
           reader.onload = async (e) => {
             var excelFile = e.target!.result;
             const workbook = XLSX.read(excelFile, { type: "buffer" });
-            const worksheetName = workbook.SheetNames[1];
+            const worksheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[worksheetName];
             const data = XLSX.utils.sheet_to_json(worksheet);
+            console.log(data);
+            console.log(readPendapatan(data));
             try {
               await postWithAuthJson(
-                "pendapatan",
+                "upload-pendapatan",
                 readPendapatan(data),
                 token ?? ""
               );
               toastSuccess("Upload successfully");
               setShowUpload(false);
+              setTotalData(totalData + readPendapatan(data).length)
               console.log(readPendapatan(data));
             } catch (error) {
               toastError(error as string);
+              console.log(error);
             }
           };
         } else {

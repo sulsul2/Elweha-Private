@@ -96,6 +96,7 @@ function Dashboard() {
   const [onSelectedAkta, setOnSelectedAkta] = useState<Array<number>>([]);
 
   const [hampirHabis, setHampirHabis] = useState<any | null>(null);
+  const [stok, setStok] = useState<any | null>(null);
 
   const [period, setPeriod] = useState<{ value: string; label: string }>();
 
@@ -428,12 +429,13 @@ function Dashboard() {
       try {
         const barang = await getWithAuth(
           token,
-          `barang?kategori_barang=Stok&month=${period ? period?.value.split("-")[0] : ""}&year=${
-            period ? period?.value.split("-")[1] : ""
-          }`
+          `barang?kategori_barang=Stok&month=${
+            period ? period?.value.split("-")[0] : ""
+          }&year=${period ? period?.value.split("-")[1] : ""}`
         );
         setHampirHabis(
           barang.data.data.data
+            .filter((datum: any) => datum.jumlah <= 5)
             .map((row: any) => {
               return {
                 id: row.id,
@@ -443,6 +445,17 @@ function Dashboard() {
                 satuan: row.satuan,
               };
             })
+        );
+        setStok(
+          barang.data.data.data.map((row: any) => {
+            return {
+              id: row.id,
+              nama_barang: row.nama_barang,
+              jenis: row.jenis.nama,
+              jumlah: row.jumlah,
+              satuan: row.satuan,
+            };
+          })
         );
         if (
           barang.data.data.data.filter((datum: any) => datum.jumlah <= 5)
@@ -1122,8 +1135,8 @@ function Dashboard() {
               </Link>
               <hr className="my-3 bg-black" />
               <div className="h-[120px] w-full overflow-auto pr-2">
-                {hampirHabis &&
-                  hampirHabis.map((row: any, index: number) => (
+                {stok &&
+                  stok.map((row: any, index: number) => (
                     <div
                       key={index}
                       className="my-3 flex items-center justify-between"
