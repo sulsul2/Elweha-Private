@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: Elweha-private
     build: .
     ports:
       - "7000:7000"
